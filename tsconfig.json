@@ -4,7 +4,16 @@
     "strict": true,
     "types": [
       "react",
-      "node"
+      "node",
+      "jest"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".expo",
+    "playwright-report",
+    "test-results",
+    "coverage/**"
+  ]
 }

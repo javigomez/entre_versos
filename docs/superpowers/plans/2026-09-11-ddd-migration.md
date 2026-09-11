@@ -1,4 +1,4 @@
-# Migración de `src/` a capas DDD — Plan de implementación
+# Migración de `src/` a capas DDD — Plan y registro de implementación
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Read the whole plan before editing. Do not dispatch agents unless the user authorizes delegation.
 
@@ -9,6 +9,8 @@
 **Tech Stack:** Expo 57.0.21, React Native 0.86.3, React 19.2.3, TypeScript estricto, Node `node:test`, Jest 29.7, React Native Testing Library 14.0.1, Zod 4.6.1, AsyncStorage 2.2.0 y yaml 2.9.0.
 
 **Spec:** `docs/ux/UX-001-conversacion-y-scroll.md`, `docs/ux/verification.md` y `AGENTS.md`.
+
+**Estado:** La migración fue implementada en `main` mediante los commits `8b1f5e1`, `629eeb5`, `a678ffe` y `4a52951`. Las casillas siguientes conservan el procedimiento previsto como registro histórico; la evidencia real y las correcciones posteriores se documentan en `docs/ux/verification.md` y en commits posteriores. No interpretar una casilla sin marcar como trabajo de migración pendiente.
 
 ## Global Constraints
 
@@ -295,4 +297,4 @@ El entry point será `src/infrastructure/expo/index.ts`; importa `App` y llama a
 - La política, driver y hook de viewport permanecen juntos.
 - Las suites Node, unitarias Jest, componentes RNTL y e2e Playwright conservan una ruta de ejecución.
 - Las rutas relativas propuestas corresponden a la profundidad del árbol objetivo.
-- Este documento describe una migración futura; actualizarlo no ejecuta ninguna tarea de migración.
+- Este documento conserva el diseño y la secuencia histórica de una migración ya ejecutada; no es una lista de trabajo futuro.

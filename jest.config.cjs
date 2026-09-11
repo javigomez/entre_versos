@@ -14,8 +14,8 @@ module.exports = {
   watchman: false,
   clearMocks: true,
   collectCoverageFrom: [
-    'src/screens/conversationFlow.ts',
-    'src/screens/scrollPolicy.ts',
-    'src/screens/scrollDriver.ts',
+    'src/application/conversation-flow.ts',
+    'src/infrastructure/expo/ui/viewport/scrollPolicy.ts',
+    'src/infrastructure/expo/ui/viewport/scrollDriver.ts',
   ],
 };

@@ -20,7 +20,7 @@ Las dependencias ya están instaladas. En una copia nueva, ejecutar antes `npm c
 - `src/infrastructure/expo/`: composition root, adaptadores de YAML y AsyncStorage, y toda la presentación React Native compartida por Android, iOS y web. Incluye la UI, los componentes de reto y el hook de viewport.
 - `assets/audio/` y `assets/images/`: preparados para recursos futuros. Los retos admiten `audio: archivo.m4a`; esta demo no reproduce audio.
 
-El YAML se transforma durante el empaquetado y se valida con Zod al cargar y en los tests. Para añadir conversación, agrega entradas `master` o `student`; para añadir retos, usa una entrada `single-choice` siguiendo el esquema de `session.yaml`. Cambiar el ID de sesión invalida el progreso anterior. No hay cuentas ni sincronización entre dispositivos.
+El YAML se transforma durante el empaquetado y se valida con Zod al cargar y en los tests. Para añadir conversación, agrega entradas `master` o `student`; para añadir retos, usa una entrada `single-choice` siguiendo el esquema de `training.yaml`. Cambiar el ID de sesión invalida el progreso anterior. No hay cuentas ni sincronización entre dispositivos.
 
 ## Comprobaciones
 
