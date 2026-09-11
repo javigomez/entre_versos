@@ -2,7 +2,7 @@ import { createElement, useCallback, useEffect, useMemo, useRef, useState } from
 import type { ReactNode, RefObject } from 'react';
 import { View } from 'react-native';
 import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, ScrollView, ScrollViewProps } from 'react-native';
-import { anchorOffset, contentTopFromWindow, followingOffset, hasContentBelow, spacerHeight } from './scrollPolicy';
+import { anchorOffset, contentTopFromWindow, followingOffset, hasContentBelow, relativeLeftFromWindow, spacerHeight } from './scrollPolicy';
 import { createScrollDriver } from './scrollDriver';
 import type { ScrollDriver } from './scrollDriver';
 
@@ -37,6 +37,7 @@ export function useConversationViewport(reducedMotion: boolean): ViewportBinding
   const cursorNodes = useRef(new Map<string, View | null>());
   const offset = useRef(0);
   const viewportTop = useRef(0);
+  const viewportLeft = useRef(0);
   const viewportHeight = useRef(0);
   const realBottom = useRef(0);
   const anchorTop = useRef(0);
@@ -64,7 +65,10 @@ export function useConversationViewport(reducedMotion: boolean): ViewportBinding
     return () => { driverRef.current?.dispose(); driverRef.current = null; };
   }, []);
 
-  const measureViewport = () => (scrollRef.current as unknown as View | null)?.measureInWindow((_x, y) => { viewportTop.current = y; });
+  const measureViewport = () => (scrollRef.current as unknown as View | null)?.measureInWindow((x, y) => {
+    viewportLeft.current = x;
+    viewportTop.current = y;
+  });
   const refreshBelow = () => setBelow(hasContentBelow(realBottom.current, offset.current, viewportHeight.current));
   const followCursor = (node: View | null) => {
     node?.measureInWindow((_x, y, _width, height) => {
@@ -119,7 +123,7 @@ export function useConversationViewport(reducedMotion: boolean): ViewportBinding
         const contentTop = contentTopFromWindow(y, viewportTop.current, offset.current);
         const destination = anchorOffset(contentTop, 10);
         const requiredSpacer = spacerHeight(realBottom.current, viewportHeight.current, destination);
-        pendingMove.current = { generation: ownGeneration, from, destination, token, done, overlay: { content: target.renderPreview(), left: x, top: y - viewportTop.current, width, height } };
+        pendingMove.current = { generation: ownGeneration, from, destination, token, done, overlay: { content: target.renderPreview(), left: relativeLeftFromWindow(x, viewportLeft.current), top: y - viewportTop.current, width, height } };
         if (requiredSpacer > spacerValue.current) requestSpacer(requiredSpacer);
         else startPendingMove();
       });

@@ -31,3 +31,7 @@ export function hasContentBelow(realBottom: number, offset: number, viewportHeig
 export function contentTopFromWindow(elementTop: number, viewportTop: number, offset: number): number {
   return elementTop - viewportTop + offset;
 }
+
+export function relativeLeftFromWindow(elementLeft: number, viewportLeft: number): number {
+  return elementLeft - viewportLeft;
+}

@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals';
 import {
   anchorOffset, contentTopFromWindow, followingOffset, hasContentBelow,
-  spacerHeight,
+  relativeLeftFromWindow, spacerHeight,
 } from '../../src/infrastructure/expo/ui/viewport/scrollPolicy';
 
 const base = {
@@ -23,6 +23,7 @@ test('no pelea con el lector ni retrocede al crecer texto', () => {
 
 test('convierte ventana a contenido y permite colocar al final', () => {
   expect(contentTopFromWindow(500, 100, 200)).toBe(600);
+  expect(relativeLeftFromWindow(480, 325)).toBe(155);
   expect(anchorOffset(600, 10)).toBe(590);
   expect(anchorOffset(5, 10)).toBe(0);
   expect(spacerHeight(800, 500, 590)).toBe(290);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { initialProgress, restoreProgress } from '../../../domain/session';
@@ -11,7 +11,7 @@ import type { ProgressRepository } from '../../../application/progress-repositor
 export type TrainingScreenProps = { content: ContentRepository; progress: ProgressRepository };
 
 export function TrainingScreen({ content, progress: progressRepository }: TrainingScreenProps) {
-  const session = content.load();
+  const session = useMemo(() => content.load(), [content]);
   const [progress, setProgress] = useState<Progress>(() => initialProgress(session));
   const [loaded, setLoaded] = useState(false);
   const [restored, setRestored] = useState(false);
