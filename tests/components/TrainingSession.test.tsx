@@ -1,0 +1,106 @@
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
+import { TrainingSession } from '../../src/infrastructure/expo/ui/TrainingSession';
+import { initialProgress } from '../../src/domain/session';
+import { conversation } from '../fixtures/conversation';
+import { createControlledViewport } from '../helpers/controlledViewport';
+
+beforeEach(() => { jest.useFakeTimers(); jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false); });
+afterEach(async () => { await cleanup(); jest.restoreAllMocks(); jest.clearAllTimers(); jest.useRealTimers(); });
+
+async function completeActiveMessage() {
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Mostrar mensaje completo' })); });
+}
+
+async function completeActiveMessageIfNeeded() {
+  const button = screen.queryByRole('button', { name: 'Mostrar mensaje completo' });
+  if (button) await act(async () => { await fireEvent.press(button); });
+}
+
+async function finishTransition(viewport: ReturnType<typeof createControlledViewport>) {
+  await act(async () => { jest.advanceTimersByTime(80); });
+  await act(async () => { viewport.finishMove(); });
+  await act(async () => { viewport.finishPlacement(); });
+  await completeActiveMessageIfNeeded();
+}
+
+async function reachFirstChallenge(viewport: ReturnType<typeof createControlledViewport>) {
+  await completeActiveMessageIfNeeded();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+}
+
+test('R01: Continuar espera movimiento y colocación antes de escribir', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await completeActiveMessageIfNeeded();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
+  expect(screen.getByRole('button', { name: 'Continuar' })).toBeOnTheScreen();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
+  expect(screen.queryByText('Quiero practicar.')).not.toBeOnTheScreen();
+  await act(async () => { jest.advanceTimersByTime(80); });
+  expect(viewport.moves).toHaveLength(1);
+  await act(async () => { viewport.finishMove(); });
+  expect(viewport.placements).toHaveLength(1);
+  await act(async () => { viewport.finishPlacement(); });
+  expect(screen.getByText(/Quiero/)).toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByText(/Verso 1/)).toBeOnTheScreen();
+  expect(screen.queryByText('Estoy preparado.')).not.toBeOnTheScreen();
+});
+
+test('R07: doble pulsación acepta una sola transición', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await completeActiveMessage();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
+  const button = screen.getByRole('button', { name: 'Continuar' });
+  await act(async () => { await fireEvent.press(button); await fireEvent.press(button); });
+  await act(async () => { jest.advanceTimersByTime(80); });
+  expect(viewport.moves).toHaveLength(1);
+});
+
+test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto retira la parrilla antigua', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await reachFirstChallenge(viewport);
+
+  expect(screen.getAllByRole('button').filter(button => ['Abundante', 'Suficiente', 'Completo', 'Variado'].includes(button.props.accessibilityLabel))).toHaveLength(4);
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Suficiente' })); });
+  expect(screen.getByRole('button', { name: 'Abundante' })).toBeDisabled();
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  expect(screen.getAllByRole('button').filter(button => ['Abundante', 'Suficiente', 'Completo', 'Variado'].includes(button.props.accessibilityLabel))).toHaveLength(4);
+
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Abundante' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByText('Suficiente')).toBeOnTheScreen();
+  expect(screen.getByText('No es correcto. Prueba otra vez.')).toBeOnTheScreen();
+  expect(screen.getByText('Abundante')).toBeOnTheScreen();
+  expect(screen.getByText('Correcto.')).toBeOnTheScreen();
+  expect(screen.queryByRole('button', { name: 'Suficiente' })).not.toBeOnTheScreen();
+  expect(screen.getByText(/Ahora cambia/)).toBeOnTheScreen();
+});
+
+test('reset durante moving invalida el callback tardío y guarda solo cambios de progreso', async () => {
+  const viewport = createControlledViewport();
+  const onProgressChange = jest.fn();
+  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={onProgressChange} viewportController={viewport.controller} />);
+  await completeActiveMessage();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
+  expect(onProgressChange).toHaveBeenCalledTimes(1);
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
+  await act(async () => { jest.advanceTimersByTime(80); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenamiento' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar' })); });
+  await act(async () => { viewport.finishMove(); });
+  expect(screen.queryByText('Quiero practicar.')).not.toBeOnTheScreen();
+  expect(onProgressChange).toHaveBeenCalledTimes(2);
+});

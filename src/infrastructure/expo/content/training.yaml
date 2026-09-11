@@ -1,0 +1,570 @@
+# | conserva los saltos de línea.
+# elimina el salto de línea final.
+id: primera-batalla-v1
+startAction: Maestro, estoy listo.
+script:
+- type: master
+  text: |-
+    Dicen que quieres rimar,
+    y entrar en la gran batalla;
+    yo te puedo preparar,
+    si demuestras buena talla.
+- type: student
+  action: Continuar
+  text: |-
+    Si vas a hacerme entrenar,
+    empieza: quiero probar.
+- type: master
+  text: |-
+    No empezarás peleando,
+    primero aprende el oficio;
+    yo te seguiré entrenando,
+    verso a verso, ejercicio.
+- type: student
+  action: Continuar
+  text: |-
+    Me guardo el gallo bravío;
+    hoy entreno el desafío.
+- type: master
+  text: |-
+    Tu oído será primero,
+    luego afilarás tu mente;
+    para ser buen rapero,
+    hay que jugar diferente.
+- type: student
+  action: Continuar
+  text: |-
+    Pon la palabra delante,
+    que respondo en un instante.
+- type: master
+  text: |-
+    Cuando termine el camino,
+    te espera el gran escenario;
+    tú escribirás tu destino,
+    yo seré tu adversario.
+- type: student
+  action: Continuar
+  text: |-
+    ¿Mi maestro, mi rival?
+    Esto se pone brutal.
+- id: antonimos-001
+  type: single-choice
+  master: |-
+    Si te digo que es escaso,
+    dale vuelta a la balanza;
+    elige bien antes del paso,
+    y responde sin tardanza.
+  prompt: ¿Cuál es el contrario más preciso de «escaso»?
+  options:
+  - id: abundante
+    text: Abundante
+    emoji: 🌊
+  - id: suficiente
+    text: Suficiente
+    emoji: 👌
+  - id: completo
+    text: Completo
+    emoji: 🧩
+  - id: variado
+    text: Variado
+    emoji: 🎨
+  correctOptionId: abundante
+  success: |-
+    Abundante: golpe certero,
+    ya respondes como quiero.
+  retry: |-
+    Esa ronda por el barrio,
+    pero no es su adversario.
+- id: antonimos-002
+  type: single-choice
+  master: |-
+    Si te digo: voy sereno,
+    dale vuelta a la jugada;
+    no me traigas algo bueno,
+    trae la calma trastocada.
+  prompt: ¿Qué palabra se enfrenta mejor a «sereno»?
+  options:
+  - id: agitado
+    text: Agitado
+    emoji: 🌪️
+  - id: callado
+    text: Callado
+    emoji: 🤫
+  - id: prudente
+    text: Prudente
+    emoji: 🧐
+  - id: lento
+    text: Lento
+    emoji: 🐢
+  correctOptionId: agitado
+  success: |-
+    Agitado rompe la calma;
+    buen revés, conserva el alma.
+  retry: |-
+    Se le acerca por un lado,
+    busca el ánimo alterado.
+- id: antonimos-003
+  type: single-choice
+  master: |-
+    Si me doblo, soy flexible,
+    pero quiero oposición;
+    busca el golpe incompatible,
+    sin romper la definición.
+  prompt: ¿Cuál es el contrario más exacto de «flexible»?
+  options:
+  - id: rigido
+    text: Rígido
+    emoji: 📏
+  - id: resistente
+    text: Resistente
+    emoji: 🛡️
+  - id: firme
+    text: Firme
+    emoji: 🧱
+  - id: estable
+    text: Estable
+    emoji: ⚖️
+  correctOptionId: rigido
+  success: |-
+    Rígido fue tu respuesta:
+    esa sí me da la vuelta.
+  retry: |-
+    Puede ser firme o pesado,
+    pero busco el otro lado.
+- id: antonimos-004
+  type: single-choice
+  master: |-
+    Si recordar es mi oficio,
+    hazme perder la memoria;
+    búscame justo el vicio
+    que borre toda la historia.
+  prompt: ¿Qué verbo se opone directamente a «recordar»?
+  options:
+  - id: olvidar
+    text: Olvidar
+    emoji: 💭
+  - id: ignorar
+    text: Ignorar
+    emoji: 🙈
+  - id: distraer
+    text: Distraer
+    emoji: 🪁
+  - id: callar
+    text: Callar
+    emoji: 🤐
+  correctOptionId: olvidar
+  success: |-
+    Olvidar borra el recuerdo;
+    bien jugado, estamos de acuerdo.
+  retry: |-
+    Eso cambia la atención,
+    no deshace la evocación.
+- type: master
+  text: |-
+    Ya sabes darles la vuelta,
+    sin perder la dirección;
+    ahora escucha la revuelta:
+    cada grupo es una canción.
+- type: student
+  action: Continuar
+  text: |-
+    Si se juntan por razón,
+    yo descubro la reunión.
+- id: campo-semantico-001
+  type: single-choice
+  master: |-
+    Tres comparten vecindario,
+    una cambia de escenario.
+  prompt: Tres pertenecen a la estructura de una canción. ¿Cuál se ha colado?
+  options:
+  - id: estrofa
+    text: Estrofa
+    emoji: 🎙️
+  - id: estribillo
+    text: Estribillo
+    emoji: 🎶
+  - id: compas
+    text: Compás
+    emoji: 🥁
+  - id: capitulo
+    text: Capítulo
+    emoji: 📖
+  correctOptionId: capitulo
+  success: |-
+    Capítulo salió del coro;
+    no todo texto vale oro.
+  retry: |-
+    Esa sí suena en canción;
+    busca otra habitación.
+- id: campo-semantico-002
+  type: single-choice
+  master: |-
+    Busca el grupo verdadero,
+    y descubre al pasajero.
+  prompt: Tres pueden ser partes de una zapatilla. ¿Cuál pertenece más bien a una sudadera?
+  options:
+  - id: suela
+    text: Suela
+    emoji: 👟
+  - id: lengueta
+    text: Lengüeta
+    emoji: 👟
+  - id: cordon
+    text: Cordón
+    emoji: 🪢
+  - id: puno
+    text: Puño
+    emoji: 👕
+  correctOptionId: puno
+  success: |-
+    Puño se queda en la manga;
+    la zapatilla no lo aguanta.
+  retry: |-
+    Esa sí toca el suelo;
+    busca pieza de otro vuelo.
+- id: campo-semantico-003
+  type: single-choice
+  master: |-
+    Cambio el barrio, cambia el juego;
+    no respondas desde luego.
+  prompt: Tres pertenecen al baloncesto. ¿Cuál viene de otro deporte?
+  options:
+  - id: aro
+    text: Aro
+    emoji: 🏀
+  - id: tablero
+    text: Tablero
+    emoji: 🏀
+  - id: rebote
+    text: Rebote
+    emoji: ⛹️
+  - id: corner
+    text: Córner
+    emoji: ⚽
+  correctOptionId: corner
+  success: |-
+    Córner viene de otro juego;
+    buen recorte, sigue luego.
+  retry: |-
+    Eso vive en la canasta;
+    mira bien, que aún no basta.
+- id: campo-semantico-004
+  type: single-choice
+  master: |-
+    Bajo tierra va el convoy,
+    dime cuál no viaja hoy.
+  prompt: Tres son palabras propias del metro. ¿Cuál encaja mejor con una autopista?
+  options:
+  - id: anden
+    text: Andén
+    emoji: 🚉
+  - id: vagon
+    text: Vagón
+    emoji: 🚇
+  - id: transbordo
+    text: Transbordo
+    emoji: 🔁
+  - id: peaje
+    text: Peaje
+    emoji: 🛣️
+  correctOptionId: peaje
+  success: |-
+    Peaje cobra en autopista;
+    lo expulsaste de la lista.
+  retry: |-
+    Eso encaja en el andén;
+    busca al que no viaja en tren.
+- id: sinonimos-001
+  type: single-choice
+  master: |-
+    Un buen gallo no repite,
+    si otra voz puede encajar;
+    busca el término que imite,
+    sin el sentido cambiar.
+  prompt: ¿Qué palabra es el sinónimo más preciso de «valiente»?
+  options:
+  - id: audaz
+    text: Audaz
+    emoji: ⚡
+  - id: fuerte
+    text: Fuerte
+    emoji: 💪
+  - id: feroz
+    text: Feroz
+    emoji: 🐯
+  - id: orgulloso
+    text: Orgulloso
+    emoji: 😏
+  correctOptionId: audaz
+  success: |-
+    Audaz sabe arriesgar;
+    buena forma de afinar.
+  retry: |-
+    Se parecen al pasar,
+    pero hay que precisar.
+- id: sinonimos-002
+  type: single-choice
+  master: |-
+    Si una palabra se ausenta,
+    otra puede hacer su oficio;
+    busca aquella que representa,
+    casi igual este inicio.
+  prompt: ¿Qué verbo puede sustituir mejor a «comenzar»?
+  options:
+  - id: iniciar
+    text: Iniciar
+    emoji: ▶️
+  - id: preparar
+    text: Preparar
+    emoji: 🧰
+  - id: entrar
+    text: Entrar
+    emoji: 🚪
+  - id: intentar
+    text: Intentar
+    emoji: 🎯
+  correctOptionId: iniciar
+  success: |-
+    Iniciar abre el camino;
+    ese cambio ha sido fino.
+  retry: |-
+    Puede ocurrir al comenzar,
+    pero no lo puede reemplazar.
+- id: sinonimos-003
+  type: single-choice
+  master: |-
+    Quiero precisión, aprendiz,
+    no me vale parecido;
+    elige con buena raíz,
+    el sentido más unido.
+  prompt: ¿Cuál es el sinónimo más preciso de «tranquilo»?
+  options:
+  - id: sereno
+    text: Sereno
+    emoji: 🧘
+  - id: silencioso
+    text: Silencioso
+    emoji: 🤫
+  - id: comodo
+    text: Cómodo
+    emoji: 🛋️
+  - id: lento
+    text: Lento
+    emoji: 🐢
+  correctOptionId: sereno
+  success: |-
+    Sereno guarda la calma;
+    ya tienes filo en el alma.
+  retry: |-
+    Puede sonar conveniente,
+    pero busca equivalente.
+- type: master
+  text: |-
+    Ya no eliges al azar,
+    cada término va medido;
+    ahora toca calibrar,
+    cuánto empuja su sentido.
+- type: student
+  action: Continuar
+  text: |-
+    Si la fuerza he de medir,
+    pon palabras a subir.
+- id: intensidad-001
+  type: single-choice
+  master: |-
+    Si la emoción va subiendo,
+    no te quedes a mitad;
+    cada término va ardiendo,
+    según gana intensidad.
+  prompt: ¿Cuál expresa la alegría con MAYOR intensidad?
+  options:
+  - id: contento
+    text: Contento
+    emoji: 🙂
+  - id: alegre
+    text: Alegre
+    emoji: 😄
+  - id: euforico
+    text: Eufórico
+    emoji: 🤩
+  - id: satisfecho
+    text: Satisfecho
+    emoji: 😌
+  correctOptionId: euforico
+  success: |-
+    Eufórico rompe el techo;
+    ese grado está bien hecho.
+  retry: |-
+    Hay alegría, no lo niego;
+    pero busca mucho más fuego.
+- id: intensidad-002
+  type: single-choice
+  master: |-
+    De la nube al chaparrón,
+    mide ahora la presión.
+  prompt: ¿Cuál expresa la lluvia con MENOR intensidad?
+  options:
+  - id: llovizna
+    text: Llovizna
+    emoji: 🌦️
+  - id: chubasco
+    text: Chubasco
+    emoji: 🌧️
+  - id: aguacero
+    text: Aguacero
+    emoji: 🌧️
+  - id: tormenta
+    text: Tormenta
+    emoji: ⛈️
+  correctOptionId: llovizna
+  success: |-
+    Llovizna apenas aprieta;
+    buena escala, mente inquieta.
+  retry: |-
+    Eso moja con más gana;
+    busca lluvia más liviana.
+- id: familias-001
+  type: single-choice
+  master: |-
+    Las palabras tienen casa,
+    y parientes al crecer;
+    una copia la carcasa,
+    pero no tiene que ver.
+  prompt: ¿Cuál NO pertenece a la familia léxica de «pan»?
+  options:
+  - id: panadero
+    text: Panadero
+    emoji: 🥖
+  - id: panaderia
+    text: Panadería
+    emoji: 🏪
+  - id: empanar
+    text: Empanar
+    emoji: 🍽️
+  - id: panel
+    text: Panel
+    emoji: 🖥️
+  correctOptionId: panel
+  success: |-
+    Panel parecía pariente,
+    pero era un impostor sonriente.
+  retry: |-
+    Esa sí comparte el pan;
+    mira quién se cuela en el clan.
+- id: familias-002
+  type: single-choice
+  master: |-
+    Una sílaba engañosa
+    puede hacerte tropezar;
+    tres nacieron de la rosa,
+    una solo quiere imitar.
+  prompt: ¿Cuál NO pertenece a la familia léxica de «flor»?
+  options:
+  - id: floral
+    text: Floral
+    emoji: 🌸
+  - id: florista
+    text: Florista
+    emoji: 💐
+  - id: florecer
+    text: Florecer
+    emoji: 🌷
+  - id: flotar
+    text: Flotar
+    emoji: 🎈
+  correctOptionId: flotar
+  success: |-
+    Flotar sonaba floral,
+    pero era un truco verbal.
+  retry: |-
+    Esa viene de la flor;
+    busca el falso imitador.
+- id: asociacion-001
+  type: single-choice
+  master: |-
+    Una palabra da ambiente,
+    otra ayuda a dibujar;
+    elige la más coherente,
+    para la escena cerrar.
+  prompt: NOCHE URBANA → neón, asfalto, ___. ¿Qué palabra completa mejor la escena?
+  options:
+  - id: sirena
+    text: Sirena
+    emoji: 🚨
+  - id: faro
+    text: Faro
+    emoji: 🔦
+  - id: relampago
+    text: Relámpago
+    emoji: ⚡
+  - id: linterna
+    text: Linterna
+    emoji: 🔦
+  correctOptionId: sirena
+  success: |-
+    Sirena corta la acera:
+    ya dibujas la ciudad entera.
+  retry: |-
+    Puede alumbrar en la noche,
+    pero piensa en calle y coche.
+- id: asociacion-002
+  type: single-choice
+  master: |-
+    Una escena no es inventario,
+    también necesita emoción;
+    si ya tienes escenario,
+    ponle ahora corazón.
+  prompt: ANDÉN + MALETA + ___. ¿Qué palabra añade mejor la emoción de una despedida?
+  options:
+  - id: abrazo
+    text: Abrazo
+    emoji: 🫂
+  - id: billete
+    text: Billete
+    emoji: 🎫
+  - id: vagon
+    text: Vagón
+    emoji: 🚆
+  - id: horario
+    text: Horario
+    emoji: 🕒
+  correctOptionId: abrazo
+  success: |-
+    Abrazo pone el latido;
+    ya no es lista: tiene sentido.
+  retry: |-
+    Eso completa la estación,
+    pero falta la emoción.
+- id: asociacion-003
+  type: single-choice
+  master: |-
+    Último golpe de hoy,
+    sin que te explote la frente;
+    si digo examen, aquí voy,
+    arma una escena coherente.
+  prompt: EXAMEN + MADRUGADA + CAFÉ + ___. ¿Qué palabra conecta más directamente con estudiar?
+  options:
+  - id: apuntes
+    text: Apuntes
+    emoji: 📝
+  - id: auriculares
+    text: Auriculares
+    emoji: 🎧
+  - id: portatil
+    text: Portátil
+    emoji: 💻
+  - id: sudadera
+    text: Sudadera
+    emoji: 🧥
+  correctOptionId: apuntes
+  success: |-
+    Apuntes: golpe aplicado;
+    hasta el maestro ha estudiado.
+  retry: |-
+    Puede estar sobre la mesa,
+    pero estudiar no lo confiesa.
+completion: |-
+  Hoy ganaste vocabulario,
+  y aprendiste a precisar;
+  aún queda el gran escenario,
+  pero ya sabes golpear.
