@@ -25,6 +25,7 @@
     "@types/react": "~19.2.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^57.0.2",
+    "gh-pages": "^6.3.0",
     "jest": "29.7.0",
     "jest-expo": "57.0.5",
     "test-renderer": "1.2.0",
@@ -43,9 +44,11 @@
     "test:components": "jest --runInBand tests/components",
     "test:ux": "jest --runInBand",
     "test:browser": "playwright test",
-    "test": "npm run test:engine && npm run test:ux",
+    "test:deploy": "node --test tests/deploy-pages.test.mjs",
+    "test": "npm run test:engine && npm run test:ux && npm run test:deploy",
     "lint": "eslint .",
-    "export:web": "expo export --platform web"
+    "export:web": "expo export --platform web",
+    "deploy:web": "node scripts/deploy-web.mjs"
   },
   "private": true
 }

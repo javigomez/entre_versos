@@ -12,6 +12,49 @@ npm run web
 
 Las dependencias ya están instaladas. En una copia nueva, ejecutar antes `npm ci`. Expo muestra la dirección local (normalmente http://localhost:8081). La web mantiene una única columna de móvil, hasta 430 × 900 px; en pantallas pequeñas se ajusta al espacio disponible sin cambiar el diseño. Orientación nativa bloqueada en portrait.
 
+## Publicar en GitHub Pages
+
+El comando exporta la versión web de producción y sube únicamente `dist/` a la rama `gh-pages`. No requiere crear una pipeline propia. La publicación usa tus credenciales de Git y no cambia la rama de trabajo ni el índice. Incluye los cambios locales de la aplicación, aunque todavía no estén en un commit.
+
+### Preparación inicial (una vez)
+
+1. Crea un repositorio **público** en GitHub para tener Pages con GitHub Free. Configura Git con tu nombre, correo y acceso de escritura al repositorio (SSH o HTTPS mediante tu gestor de credenciales).
+2. Si todavía no hay remoto, vincúlalo, sustituyendo `TU_USUARIO` y el nombre del repositorio:
+
+   ```sh
+   git remote add origin git@github.com:TU_USUARIO/batalla-de-gallos.git
+   ```
+
+3. Ejecuta la primera publicación:
+
+   ```sh
+   npm run deploy:web
+   ```
+
+4. En GitHub abre **Settings → Pages → Build and deployment → Source: Deploy from a branch**. Selecciona **gh-pages**, carpeta **/(root)**, y guarda. Activa **Enforce HTTPS** si no está activado.
+
+GitHub puede tardar unos minutos en servir la primera versión. Su despliegue interno de Pages aparece en Actions, pero no necesitas añadir ningún workflow al repositorio.
+
+### Publicaciones posteriores
+
+```sh
+npm run deploy:web
+```
+
+El comando muestra la URL, normalmente `https://TU_USUARIO.github.io/batalla-de-gallos/`. Ábrela desde el móvil para jugar. Calcula la ruta a partir del remoto `origin`, tanto SSH como HTTPS; también admite repositorios `TU_USUARIO.github.io` alojados en la raíz. Está preparado para el dominio estándar de GitHub Pages, sin dominio personalizado.
+
+Para comprobar la exportación sin subir archivos, incluso antes de configurar `origin`:
+
+```sh
+npm run deploy:web -- --dry-run --repo https://github.com/TU_USUARIO/batalla-de-gallos.git
+```
+
+Con `origin` configurado basta con `npm run deploy:web -- --dry-run`. `--repo URL` también permite elegir explícitamente el repositorio de publicación. El repositorio debe existir; el comando no lo crea ni activa Pages por API. Los errores de exportación detienen la publicación.
+
+`app.config.js` aplica la ruta de Pages solo al ejecutar este comando y se genera `.nojekyll` para servir los recursos `_expo`. `npm run web` y `npm run export:web` siguen usando la raíz. Una exportación sustituye el contenido de `dist/`. Las comprobaciones habituales se ejecutan con los comandos del apartado «Comprobaciones» antes de publicar; no se lanzan automáticamente durante el despliegue.
+
+Referencias: [publicación web con Expo](https://docs.expo.dev/guides/publishing-websites/) y [configuración de GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+
 ## Estructura
 
 - `src/infrastructure/expo/content/training.yaml`: guion de la conversación. Cada entrada es `master`, `student` o `single-choice`; los textos `|-` conservan los saltos de línea de los versos. Editarlo actualiza el contenido mediante Metro.
