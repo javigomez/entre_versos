@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
 import { conversation } from '../../tests/fixtures/conversation';
-import { initialProgress } from '../domain/session';
+import { initialProgress } from '../domain/lesson';
 import { createFlow, reduceFlow } from './conversation-flow';
 import type { Message } from './messages';
 

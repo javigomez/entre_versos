@@ -1,13 +1,13 @@
-import type { Challenge, Session } from '../domain/schemas';
-import type { Progress } from '../domain/progress';
-import { challengesOf } from '../domain/session';
+import type { Challenge, Lesson } from '../domain/schemas';
+import type { LessonProgress } from '../domain/lesson-progress';
+import { challengesOf } from '../domain/lesson';
 import type { Message } from './messages';
 
-export function messagesFor(session: Session, progress: Progress): Message[] {
-  const challenges = challengesOf(session);
+export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[] {
+  const challenges = challengesOf(lesson);
   const messages: Message[] = [];
   let challengeIndex = 0;
-  for (const [scriptIndex, item] of session.script.entries()) {
+  for (const [scriptIndex, item] of lesson.script.entries()) {
     if (item.type === 'master') {
       messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text, kind: 'verse' });
       continue;
@@ -31,6 +31,6 @@ export function messagesFor(session: Session, progress: Progress): Message[] {
     if (challengeIndex > progress.completed.length) break;
   }
   if (progress.completed.length === challenges.length)
-    messages.push({ id: 'completion', role: 'master', text: session.completion, label: 'Sesión completada' });
+    messages.push({ id: 'completion', role: 'master', text: lesson.completion, label: 'Sesión completada' });
   return messages;
 }

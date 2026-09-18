@@ -18,7 +18,7 @@ export const challengeSchema = z.object({
   if (!challenge.options.some(o => o.id === challenge.correctOptionId))
     ctx.addIssue({ code: 'custom', message: 'La respuesta correcta debe existir', path: ['correctOptionId'] });
 });
-export const sessionSchema = z.object({
+export const lessonSchema = z.object({
   id: nonempty,
   startAction: nonempty,
   script: z.array(z.discriminatedUnion('type', [
@@ -27,12 +27,12 @@ export const sessionSchema = z.object({
     challengeSchema,
   ])).min(1),
   completion: nonempty,
-}).superRefine((session, ctx) => {
-  const challenges = session.script.filter((item): item is z.infer<typeof challengeSchema> => item.type === 'single-choice');
+}).superRefine((lesson, ctx) => {
+  const challenges = lesson.script.filter((item): item is z.infer<typeof challengeSchema> => item.type === 'single-choice');
   if (challenges.length === 0) ctx.addIssue({ code: 'custom', message: 'El guion debe tener al menos un reto', path: ['script'] });
   if (new Set(challenges.map(c => c.id)).size !== challenges.length)
     ctx.addIssue({ code: 'custom', message: 'Los retos deben tener IDs únicos', path: ['script'] });
 });
-export type ScriptItem = z.infer<typeof sessionSchema>['script'][number];
+export type LessonStep = z.infer<typeof lessonSchema>['script'][number];
 export type Challenge = z.infer<typeof challengeSchema>;
-export type Session = z.infer<typeof sessionSchema>;
+export type Lesson = z.infer<typeof lessonSchema>;

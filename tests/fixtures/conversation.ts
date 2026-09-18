@@ -1,6 +1,6 @@
-import type { Session } from '../../src/domain/schemas';
+import type { Lesson } from '../../src/domain/schemas';
 
-export const conversation: Session = {
+export const conversation: Lesson = {
   id: 'ux-fixture-v1',
   startAction: 'Empezar',
   completion: 'Fin del entrenamiento.',

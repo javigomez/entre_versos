@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/refs -- the viewport hook intentionally exposes native refs and imperative bindings. */
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { Session } from '../../../domain/schemas';
-import type { Progress } from '../../../domain/progress';
-import { challengesOf } from '../../../domain/session';
+import type { Lesson } from '../../../domain/schemas';
+import type { LessonProgress } from '../../../domain/lesson-progress';
+import { challengesOf } from '../../../domain/lesson';
 import { Action } from './Action';
 import { ChatMessage } from './ChatMessage';
 import { SingleChoiceChallenge } from './SingleChoiceChallenge';
@@ -12,17 +12,17 @@ import { createFlow, reduceFlow } from '../../../application/conversation-flow';
 import { useConversationViewport } from './viewport/useConversationViewport';
 import type { ControlTarget, ViewportController } from './viewport/useConversationViewport';
 
-export type TrainingSessionProps = { session: Session; initialProgress: Progress; restored: boolean; onProgressChange: (progress: Progress) => void; storageNotice?: boolean; viewportController?: ViewportController };
+export type TrainingSessionProps = { lesson: Lesson; initialProgress: LessonProgress; restored: boolean; onProgressChange: (progress: LessonProgress) => void; storageNotice?: boolean; viewportController?: ViewportController };
 
-export function TrainingSession({ session, initialProgress, restored, onProgressChange, storageNotice = false, viewportController }: TrainingSessionProps) {
-  const [state, dispatch] = useReducer((current: ReturnType<typeof createFlow>, event: Parameters<typeof reduceFlow>[2]) => reduceFlow(session, current, event), createFlow(session, initialProgress, restored));
+export function TrainingSession({ lesson, initialProgress, restored, onProgressChange, storageNotice = false, viewportController }: TrainingSessionProps) {
+  const [state, dispatch] = useReducer((current: ReturnType<typeof createFlow>, event: Parameters<typeof reduceFlow>[2]) => reduceFlow(lesson, current, event), createFlow(lesson, initialProgress, restored));
   const [reducedMotion, setReducedMotion] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const target = useRef<ControlTarget | null>(null);
   const previousProgress = useRef(initialProgress);
   const viewport = useConversationViewport(reducedMotion);
   const controller = viewportController ?? viewport.controller;
-  const challenges = challengesOf(session);
+  const challenges = challengesOf(lesson);
   const challenge = challenges[state.progress.completed.length];
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function TrainingSession({ session, initialProgress, restored, onProgress
       <ScrollView ref={viewport.scrollRef} style={s.scroll} contentContainerStyle={s.content} showsVerticalScrollIndicator={false} scrollEventThrottle={16} {...viewport.scrollProps}>
         <View {...viewport.bindRealContent}>
           {state.messages.slice(0, visibleCount).map((message, index) => <View key={message.id} {...viewport.bindMessage(message.id)} style={placing && index === state.revealed ? s.hidden : undefined}><View {...viewport.bindCursor(message.id)}><ChatMessage message={message} animate={state.phase === 'writing' && index === state.revealed} reducedMotion={reducedMotion} token={state.token} onDone={(messageId, token) => dispatch({ type: 'MESSAGE_DONE', messageId, token })} /></View></View>)}
-          {state.phase === 'waiting-start' && <Action id="start" label={session.startAction} onPress={() => dispatch({ type: 'START' })} />}
+          {state.phase === 'waiting-start' && <Action id="start" label={lesson.startAction} onPress={() => dispatch({ type: 'START' })} />}
           {(state.phase === 'waiting-student' || (transition && activeMessage?.action)) && activeMessage?.action && <Action label={activeMessage.action} disabled={transition} selected={transition && pendingControl === 'continue'} onPress={activateStudent} />}
           {(state.phase === 'waiting-choice' || (transition && challenge)) && challenge && <SingleChoiceChallenge challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} />}
           {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>Ya hay chispa.</Text><Text style={s.finishText}>{state.progress.completed.length} retos superados. Sigue jugando con tu voz.</Text><Action label="Volver a entrenar" onPress={reset} secondary /></View>}

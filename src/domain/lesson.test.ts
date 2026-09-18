@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals';
 import { conversation } from '../../tests/fixtures/conversation';
-import { sessionSchema } from './schemas';
-import { answer, challengesOf, initialProgress, restoreProgress } from './session';
+import { lessonSchema } from './schemas';
+import { submitChallengeAnswer, challengesOf, initialProgress, restoreProgress } from './lesson';
 
 test('challengesOf devuelve solo los retos single-choice en orden', () => {
   const challenges = challengesOf(conversation);
@@ -12,37 +12,37 @@ test('challengesOf devuelve solo los retos single-choice en orden', () => {
 
 test('ignora selecciones inválidas o anteriores al inicio', () => {
   const p = initialProgress(conversation);
-  expect(answer(conversation, p, 'a')).toBe(p);
+  expect(submitChallengeAnswer(conversation, p, 'a')).toBe(p);
   const started = { ...p, started: true };
-  expect(answer(conversation, started, 'inexistente')).toBe(started);
+  expect(submitChallengeAnswer(conversation, started, 'inexistente')).toBe(started);
 });
 
 test('fallar no avanza el progreso; acertar suma el reto a completados', () => {
   const started = { ...initialProgress(conversation), started: true };
-  const wrong = answer(conversation, started, 'b');
+  const wrong = submitChallengeAnswer(conversation, started, 'b');
   expect(wrong.completed).toEqual([]);
-  const correct = answer(conversation, wrong, 'a');
+  const correct = submitChallengeAnswer(conversation, wrong, 'a');
   expect(correct.completed).toEqual(['q1']);
 });
 
 test('restaura historial correcto y descarta guardados corruptos o de otro contenido', () => {
   const fresh = initialProgress(conversation);
   expect(restoreProgress(conversation, null)).toEqual(fresh);
-  expect(restoreProgress(conversation, { ...fresh, sessionId: 'old' })).toEqual(fresh);
+  expect(restoreProgress(conversation, { ...fresh, lessonId: 'old' })).toEqual(fresh);
   expect(restoreProgress(conversation, { ...fresh, started: true, history: [{ challengeId: 'no-existe', optionId: 'a' }] })).toEqual(fresh);
   expect(restoreProgress(conversation, { ...fresh, completed: ['inventado'] })).toEqual(fresh);
 
   const started = { ...initialProgress(conversation), started: true };
-  const advanced = answer(conversation, started, 'a');
+  const advanced = submitChallengeAnswer(conversation, started, 'a');
   expect(restoreProgress(conversation, JSON.parse(JSON.stringify(advanced)))).toEqual(advanced);
 
-  const finalProgress = answer(conversation, advanced, 'e');
-  expect(answer(conversation, finalProgress, 'cualquiera')).toBe(finalProgress);
+  const finalProgress = submitChallengeAnswer(conversation, advanced, 'e');
+  expect(submitChallengeAnswer(conversation, finalProgress, 'cualquiera')).toBe(finalProgress);
 });
 
 test.each(['solution', 'option', 'text'])('P01: conserva logro al cambiar %s', kind => {
-  const saved = answer(conversation, { ...initialProgress(conversation), started: true }, 'a');
-  const updated = sessionSchema.parse({ ...conversation,
+  const saved = submitChallengeAnswer(conversation, { ...initialProgress(conversation), started: true }, 'a');
+  const updated = lessonSchema.parse({ ...conversation,
     script: conversation.script.map(item => {
       if (item.type !== 'single-choice' || item.id !== 'q1') return item;
       if (kind === 'solution') return { ...item, correctOptionId: 'b' };
@@ -55,7 +55,7 @@ test.each(['solution', 'option', 'text'])('P01: conserva logro al cambiar %s', k
   const restored = restoreProgress(updated, JSON.parse(JSON.stringify(saved)));
   expect(restored.completed).toEqual(['q1']);
   expect(restoreProgress(updated, restored)).toEqual(restored);
-  expect(answer(updated, restored, 'e').completed).toEqual(['q1', 'q2']);
+  expect(submitChallengeAnswer(updated, restored, 'e').completed).toEqual(['q1', 'q2']);
 });
 
 test.each([
@@ -68,9 +68,9 @@ test.each([
 });
 
 test('P06: conserva sesión finalizada y el reinicio sigue limpio', () => {
-  const saved = answer(conversation,
-    answer(conversation, { ...initialProgress(conversation), started: true }, 'a'), 'e');
-  const updated = sessionSchema.parse({ ...conversation, script: conversation.script.map(item =>
+  const saved = submitChallengeAnswer(conversation,
+    submitChallengeAnswer(conversation, { ...initialProgress(conversation), started: true }, 'a'), 'e');
+  const updated = lessonSchema.parse({ ...conversation, script: conversation.script.map(item =>
     item.type === 'single-choice' ? { ...item, correctOptionId: item.options[1].id } : item) });
   expect(restoreProgress(updated, saved).completed).toEqual(['q1', 'q2']);
   expect(initialProgress(updated).completed).toEqual([]);
