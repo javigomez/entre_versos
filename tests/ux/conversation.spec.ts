@@ -65,6 +65,24 @@ test('R03 / R09: retry restores four choices and history contains only replies',
   }
 });
 
+test('R02 / R09 / L04: canonical lessonId save loads the next challenge and writes lessonId only', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('batalla-de-gallos:progress:v1', JSON.stringify({
+      lessonId: 'primera-batalla-v1', started: true, completed: ['antonimos-001'],
+      history: [{ challengeId: 'antonimos-001', optionId: 'abundante' }],
+    }));
+  });
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Agitado', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Abundante', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Agitado', exact: true }).tap();
+  await expect(page.getByText('Agitado rompe la calma;\nbuen revés, conserva el alma.', { exact: true })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem('batalla-de-gallos:progress:v1')!);
+    return { lessonId: saved.lessonId, hasSessionId: 'sessionId' in saved, completed: saved.completed.length, history: saved.history.length };
+  })).toEqual({ lessonId: 'primera-batalla-v1', hasSessionId: false, completed: 2, history: 2 });
+});
+
 test('R07: two rapid taps create one answer and one attempt', async ({ page }) => {
   await firstChallenge(page);
   const option = page.getByRole('button', { name: 'Abundante', exact: true });

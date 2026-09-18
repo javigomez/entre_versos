@@ -153,3 +153,50 @@ pruebas de esta entrega son de dominio, integración y componente con reloj y
 geometría controlados; no miden pintura, suavidad ni dispositivos. UX-001 y
 R01–R10 conservan sus expectativas: esta entrega no cambia conversación,
 botones, animación, retos ni scroll.
+
+## Cobertura canónica en navegador y etiqueta de cierre · 2026-09-18
+
+Entrega posterior a la fusión de ambas ramas, autorizada expresamente por el
+usuario. Cambia la etiqueta visible del cierre de «Sesión completada» a
+«Lección completada» (`message-projector`), alineada con el vocabulario de
+dominio; el texto del guion, la geometría, los controles y el resto de textos
+visibles —incluido el diálogo de reinicio— permanecen intactos. La suite de
+navegador ahora cubre también guardados canónicos: la nueva prueba
+«R02 / R09 / L04: canonical lessonId save loads the next challenge and writes
+lessonId only» siembra `lessonId` con `antonimos-001` superado, comprueba que
+la conversación arranca en el segundo reto sin repetir el superado y que,
+tras responder, el guardado solo contiene `lessonId` (sin `sessionId`). La
+siembra legacy `sessionId` se conserva para mantener la cobertura de
+compatibilidad en navegador real.
+
+Rojo de la etiqueta (TDD): la aserción del comentario de cierre esperaba
+«Lección completada» y recibió «Sesión completada» antes de tocar producción;
+tras el cambio, la suite de proyección pasó con 4 pruebas. Sensibilidad de la
+prueba de navegador: al sembrar temporalmente un `lessonId` ajeno
+(«otra-leccion-sensibilidad»), la app descartó el guardado y la prueba falló
+al no aparecer el reto pendiente; restaurada la siembra, pasó en Chromium y
+WebKit. Durante la redacción se corrigió una errata propia del test (coma por
+punto y coma en el feedback esperado) descubierta con la captura de fallo; la
+aplicación se comportó correctamente desde la primera ejecución.
+
+Sobre el aviso diferido de Metro `NO_COLOR`/`FORCE_COLOR`: se comprobó que
+nada en el repositorio, los scripts de npm, la configuración de Playwright ni
+el entorno de shell del usuario define esas variables; el aviso provenía del
+entorno del agente anterior y no aparece en las ejecuciones locales. No hay
+cambio de código asociado.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npx jest --runInBand src/application/message-projector.test.ts` | RED esperado (etiqueta) y luego PASS: 1 suite, 4 pruebas, 0 fallos. |
+| `npm run test:browser` | 12 ejecuciones en Chromium y WebKit: 10 pasan y fallan las 2 R01 preexistentes y documentadas (desviación de ancla, sin cambios). La prueba canónica nueva pasa en ambos motores (~2 s). |
+| `npm test` | PASS: 4 pruebas Node, 71 Jest en 15 suites y 3 de `test:deploy`; 0 fallos. |
+| `npm run typecheck` | PASS, `tsc --noEmit`, salida 0. |
+| `npm run lint` | PASS, `eslint .`, salida 0. |
+| `npm run export:web` | PASS; bundle web y 3 archivos en `dist/`, sin el aviso de color. |
+
+Límites: la etiqueta nueva se verifica en proyección (Jest) y en la suite de
+navegador solo indirectamente (el recorrido canónico no llega al cierre, de 18
+retos). No se hizo comprobación visual manual ni se validaron DuckDuckGo
+Android, Chrome iPhone u otros dispositivos reales. R01 sigue fallando en
+ambos motores por la desviación de posición ya registrada; no se ha omitido
+ni marcado como esperado.

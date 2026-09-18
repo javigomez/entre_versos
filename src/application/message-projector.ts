@@ -31,6 +31,6 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
     if (challengeIndex > progress.completed.length) break;
   }
   if (progress.completed.length === challenges.length)
-    messages.push({ id: 'completion', role: 'master', text: lesson.completion, label: 'Sesión completada' });
+    messages.push({ id: 'completion', role: 'master', text: lesson.completion, label: 'Lección completada' });
   return messages;
 }

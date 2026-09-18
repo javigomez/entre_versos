@@ -40,7 +40,9 @@ test('no expone q2 ni completion antes de sus turnos y los añade una vez al fin
   let p = { ...initialProgress(conversation), started: true };
   p = submitChallengeAnswer(conversation, p, 'a');
   p = submitChallengeAnswer(conversation, p, 'e');
-  const texts = messagesFor(conversation, p).map((m: Message) => m.text);
+  const messages = messagesFor(conversation, p);
+  const texts = messages.map((m: Message) => m.text);
   expect(texts.filter((text: string) => text === 'Fin del entrenamiento.')).toHaveLength(1);
   expect(texts.filter((text: string) => text === 'Una última pregunta.')).toHaveLength(1);
+  expect(messages.find((m: Message) => m.id === 'completion')?.label).toBe('Lección completada');
 });
