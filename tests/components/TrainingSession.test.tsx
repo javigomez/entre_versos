@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { TrainingSession } from '../../src/infrastructure/expo/ui/TrainingSession';
-import { initialProgress } from '../../src/domain/session';
+import { initialProgress, restoreProgress } from '../../src/domain/session';
 import { conversation } from '../fixtures/conversation';
 import { createControlledViewport } from '../helpers/controlledViewport';
 
@@ -87,6 +87,33 @@ test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto
   expect(screen.getByText('Correcto.')).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Suficiente' })).not.toBeOnTheScreen();
   expect(screen.getByText(/Ahora cambia/)).toBeOnTheScreen();
+});
+
+test('P01 / R02 / R09: mejorar q1 no obliga a resolverlo otra vez', async () => {
+  const viewport = createControlledViewport();
+  let saved = initialProgress(conversation);
+  const view = await render(<TrainingSession session={conversation}
+    initialProgress={saved} restored={false}
+    onProgressChange={next => { saved = next; }}
+    viewportController={viewport.controller} />);
+  await reachFirstChallenge(viewport);
+  await act(async () => {
+    await fireEvent.press(screen.getByRole('button', { name: 'Abundante' }));
+  });
+  await finishTransition(viewport);
+  expect(saved.completed).toEqual(['q1']);
+  await view.unmount();
+
+  const updated = { ...conversation, script: conversation.script.map(item =>
+    item.type === 'single-choice' && item.id === 'q1'
+      ? { ...item, correctOptionId: 'b' } : item) };
+  const restored = restoreProgress(updated, JSON.parse(JSON.stringify(saved)));
+  await render(<TrainingSession session={updated} initialProgress={restored}
+    restored={true} onProgressChange={() => {}}
+    viewportController={createControlledViewport().controller} />);
+  expect(restored.completed).toEqual(['q1']);
+  expect(screen.queryByRole('button', { name: 'Abundante' })).not.toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Agitado' })).toBeOnTheScreen();
 });
 
 test('reset durante moving invalida el callback tardío y guarda solo cambios de progreso', async () => {

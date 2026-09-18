@@ -12,14 +12,27 @@ export function answer(session: Session, progress: Progress, optionId: string): 
   };
 }
 export function restoreProgress(session: Session, raw: unknown): Progress {
+  const fresh = initialProgress(session);
   const parsed = progressSchema.safeParse(raw);
-  if (!parsed.success || parsed.data.sessionId !== session.id) return initialProgress(session);
-  let state = { ...initialProgress(session), started: parsed.data.started };
-  for (const entry of parsed.data.history) {
-    if (challengesOf(session)[state.completed.length]?.id !== entry.challengeId) return initialProgress(session);
-    const next = answer(session, state, entry.optionId);
-    if (next === state) return initialProgress(session);
-    state = next;
+  if (!parsed.success || parsed.data.sessionId !== session.id) return fresh;
+  const saved = parsed.data;
+  const challenges = challengesOf(session);
+  if (saved.completed.some((id, i) => challenges[i]?.id !== id)) return fresh;
+  if (!saved.started) return saved.completed.length || saved.history.length ? fresh : saved;
+
+  const baseline: Progress = { ...saved, history: [] };
+  if (!saved.history.length) return baseline;
+  const incompatible = () => saved.completed.length ? baseline : fresh;
+  const firstIndex = challenges.findIndex(c => c.id === saved.history[0].challengeId);
+  if (firstIndex < 0 || firstIndex > saved.completed.length) return incompatible();
+  let replay: Progress = { ...fresh, started: true, completed: saved.completed.slice(0, firstIndex) };
+  for (const entry of saved.history) {
+    if (challenges[replay.completed.length]?.id !== entry.challengeId) return incompatible();
+    const next = answer(session, replay, entry.optionId);
+    if (next === replay) return incompatible();
+    replay = next;
   }
-  return state;
+  if (replay.completed.length !== saved.completed.length ||
+      replay.completed.some((id, i) => saved.completed[i] !== id)) return incompatible();
+  return replay;
 }
