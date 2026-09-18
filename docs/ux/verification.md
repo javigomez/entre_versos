@@ -62,3 +62,55 @@ Para la comprobación real: registrar modelo, versión de sistema y navegador, r
 ## Cambios de esta entrega
 
 Infraestructura Jest, motor con prefijo estable, reducer de conversación, política y driver de scroll, componentes integrados y documentación de comandos. El guion no se ha cambiado. Los cambios previos del usuario permanecen en su sitio y no se ha confirmado el índice de Git.
+
+## Restauración estable tras cambios editoriales · 2026-09-18
+
+Esta entrega protege P01–P07 y P08 sin cambiar el guion, la geometría, los
+controles ni los identificadores. `completed` conserva los logros validados y
+el historial solo se muestra cuando puede reconciliarse con el catálogo
+actual. Las respuestas posteriores a la restauración se evalúan con la
+solución actual, se guardan y se restauran de nuevo.
+
+La reproducción roja de interacción de la tarea de dominio fue
+`npx jest --runInBand tests/components/TrainingSession.test.tsx -t 'mejorar q1'`.
+Falló una prueba (cuatro omitidas): después de mejorar `q1`, se esperaba
+`completed: ['q1']` y se recibió `completed: []`. La reproducción roja de
+dominio con `npx jest --runInBand src/domain/session.test.ts` tuvo seis fallos
+y cinco casos pasados: detectó la revocación del logro al cambiar solución u
+opción, prefijos inválidos y la pérdida del estado finalizado.
+
+La integración posterior cubre P01/P02 con `q1`, `q2` y `q3`: mantiene `q1`,
+presenta `q2` con su texto y solución actuales y deja `q3` pendiente. P03 se
+comprueba al descartar un historial incompatible sin fabricar mensajes de
+respuesta. P04 mantiene el ciclo JSON del progreso y la validación existente
+de guardados. P05 queda limitado a una secuencia estable de IDs. P06 conserva
+la finalización y el reinicio explícito cubiertos por las suites de dominio y
+flujo. P07 guarda un nuevo fallo después del saneamiento, lo restaura y después
+guarda el acierto y una única finalización. P08 comprueba inicio sin guardado,
+continuación con `completed: ['q1']` e historial vacío y la carga única de
+contenido y progreso por montaje.
+
+La comprobación de sensibilidad sustituyó temporalmente la inicialización del
+replay con el prefijo de `completed` por un replay sin ese prefijo. El comando
+dirigido falló en `expect(resumed).toEqual(wrong)`: el intento `q2/f` esperado
+desapareció y se recibió `history: []` (una prueba fallida y cinco pasadas).
+Tras restaurar producción, el mismo comando pasó con dos suites y seis pruebas.
+La mutación no forma parte de la entrega.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npx jest --runInBand tests/integration/content-and-restore.test.ts tests/components/TrainingScreen.test.tsx` | PASS tras restaurar producción: 2 suites, 6 pruebas, 0 fallos, 0,552 s. |
+| `npm test` | PASS: 4 pruebas Node y 60 pruebas Jest en 14 suites; 0 fallos. Node 216,382 ms y Jest 1,264 s. |
+| `npm run typecheck` | PASS, `tsc --noEmit`, salida 0. |
+| `npm run lint` | PASS, `eslint .`, salida 0. |
+| `npm run export:web` | PASS; Metro generó el bundle web y 3 archivos. El aviso repetido sobre `NO_COLOR` y `FORCE_COLOR` no impidió la exportación. |
+
+La continuación y los intentos restaurados ejercitan UX-001.5 y UX-001.11,
+además de R02, R03 y R09. R01, R04–R08 y R10 permanecen protegidos por sus
+suites existentes; esta entrega no cambia geometría, animación ni scroll. No
+se ejecutó la suite de navegador, conforme a la puerta acordada, ni se
+validaron DuckDuckGo Android, Chrome iPhone u otros dispositivos reales.
+
+Añadir, reordenar o retirar retos queda fuera de este alcance porque el cursor
+sigue basado en `completed.length`. Tampoco se conservan versiones históricas
+del contenido ni se autentican los logros almacenados localmente.
