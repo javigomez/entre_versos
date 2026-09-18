@@ -9,6 +9,12 @@ Este documento es la fuente de verdad del comportamiento. El código actual, una
 
 Continuar, selección única, escritura de mensajes, desplazamiento e historial durante una sesión. La recuperación exacta tras recargar, la navegación «Volver» y el diseño general son requisitos separados. No cambiar el guion ni las respuestas correctas para conseguir que las pruebas pasen.
 
+La restauración ante mejoras editoriales se especifica en el plan
+2026-09-18-retos-superados-estables, P01–P07. Un logro persistido no se
+revoca al cambiar la solución. El historial incompatible puede descartarse
+al restaurar, sin inventar respuestas; durante la sesión siguen vigentes
+UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
+
 ## Reglas observables
 
 | ID | Comportamiento obligatorio |

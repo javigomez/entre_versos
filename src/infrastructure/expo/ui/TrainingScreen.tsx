@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { initialProgress, restoreProgress } from '../../../domain/session';
-import type { Progress } from '../../../domain/progress';
+import { initialProgress, restoreProgress } from '../../../domain/lesson';
+import type { LessonProgress } from '../../../domain/lesson-progress';
 import { colors as c } from './theme';
 import { TrainingSession } from './TrainingSession';
 import type { ContentRepository } from '../../../application/content-repository';
@@ -11,8 +11,8 @@ import type { ProgressRepository } from '../../../application/progress-repositor
 export type TrainingScreenProps = { content: ContentRepository; progress: ProgressRepository };
 
 export function TrainingScreen({ content, progress: progressRepository }: TrainingScreenProps) {
-  const session = useMemo(() => content.load(), [content]);
-  const [progress, setProgress] = useState<Progress>(() => initialProgress(session));
+  const lesson = useMemo(() => content.load(), [content]);
+  const [progress, setProgress] = useState<LessonProgress>(() => initialProgress(lesson));
   const [loaded, setLoaded] = useState(false);
   const [restored, setRestored] = useState(false);
   const [notice, setNotice] = useState(false);
@@ -20,18 +20,18 @@ export function TrainingScreen({ content, progress: progressRepository }: Traini
     let active = true;
     progressRepository.load().then(raw => {
       if (!active) return;
-      const value = restoreProgress(session, raw);
+      const value = restoreProgress(lesson, raw);
       setProgress(value);
       setRestored(value.started);
     }).catch(() => { if (active) setNotice(true); }).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
-  }, [session, progressRepository]);
-  const onProgressChange = useCallback((next: Progress) => {
+  }, [lesson, progressRepository]);
+  const onProgressChange = useCallback((next: LessonProgress) => {
     setProgress(next);
     void progressRepository.save(next).catch(() => setNotice(true));
   }, [progressRepository]);
   return <SafeAreaView style={s.safe}>{loaded
-    ? <TrainingSession session={session} initialProgress={progress} restored={restored} onProgressChange={onProgressChange} storageNotice={notice} />
+    ? <TrainingSession lesson={lesson} initialProgress={progress} restored={restored} onProgressChange={onProgressChange} storageNotice={notice} />
     : <View style={s.loading}><ActivityIndicator color={c.accent} /></View>}
   </SafeAreaView>;
 }

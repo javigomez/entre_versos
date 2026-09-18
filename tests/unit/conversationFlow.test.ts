@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
 import { conversation } from '../fixtures/conversation';
-import { initialProgress } from '../../src/domain/session';
+import { initialProgress } from '../../src/domain/lesson';
 import { createFlow, reduceFlow } from '../../src/application/conversation-flow';
 
 test('Continuar espera colocación y no adelanta al siguiente jugador', () => {

@@ -1,6 +1,6 @@
-import type { Progress } from '../domain/progress';
+import type { LessonProgress } from '../domain/lesson-progress';
 
 export interface ProgressRepository {
   load(): Promise<unknown>;
-  save(progress: Progress): Promise<void>;
+  save(progress: LessonProgress): Promise<void>;
 }

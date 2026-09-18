@@ -1,5 +1,5 @@
-import type { Session } from '../domain/schemas';
+import type { Lesson } from '../domain/schemas';
 
 export interface ContentRepository {
-  load(): Session;
+  load(): Lesson;
 }

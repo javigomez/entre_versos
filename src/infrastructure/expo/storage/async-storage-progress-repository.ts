@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Progress } from '../../../domain/progress';
+import type { LessonProgress } from '../../../domain/lesson-progress';
 import type { ProgressRepository } from '../../../application/progress-repository';
 
 const KEY = 'batalla-de-gallos:progress:v1';
@@ -13,7 +13,7 @@ export function createAsyncStorageProgressRepository(): ProgressRepository {
       if (!value) return null;
       try { return JSON.parse(value); } catch { return null; }
     },
-    save(progress: Progress) {
+    save(progress: LessonProgress) {
       pending = pending.catch(() => {}).then(() => AsyncStorage.setItem(KEY, JSON.stringify(progress)));
       return pending;
     },

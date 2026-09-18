@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { TrainingSession } from '../../src/infrastructure/expo/ui/TrainingSession';
-import { initialProgress } from '../../src/domain/session';
+import { initialProgress, restoreProgress } from '../../src/domain/lesson';
 import { conversation } from '../fixtures/conversation';
 import { createControlledViewport } from '../helpers/controlledViewport';
 
@@ -38,7 +38,7 @@ async function reachFirstChallenge(viewport: ReturnType<typeof createControlledV
 
 test('R01: Continuar espera movimiento y colocación antes de escribir', async () => {
   const viewport = createControlledViewport();
-  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
   await completeActiveMessageIfNeeded();
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
   expect(screen.getByRole('button', { name: 'Continuar' })).toBeOnTheScreen();
@@ -57,7 +57,7 @@ test('R01: Continuar espera movimiento y colocación antes de escribir', async (
 
 test('R07: doble pulsación acepta una sola transición', async () => {
   const viewport = createControlledViewport();
-  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
   await completeActiveMessage();
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
   const button = screen.getByRole('button', { name: 'Continuar' });
@@ -68,7 +68,7 @@ test('R07: doble pulsación acepta una sola transición', async () => {
 
 test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto retira la parrilla antigua', async () => {
   const viewport = createControlledViewport();
-  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
   await reachFirstChallenge(viewport);
 
   expect(screen.getAllByRole('button').filter(button => ['Abundante', 'Suficiente', 'Completo', 'Variado'].includes(button.props.accessibilityLabel))).toHaveLength(4);
@@ -89,10 +89,37 @@ test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto
   expect(screen.getByText(/Ahora cambia/)).toBeOnTheScreen();
 });
 
+test('P01 / R02 / R09: mejorar q1 no obliga a resolverlo otra vez', async () => {
+  const viewport = createControlledViewport();
+  let saved = initialProgress(conversation);
+  const view = await render(<TrainingSession lesson={conversation}
+    initialProgress={saved} restored={false}
+    onProgressChange={next => { saved = next; }}
+    viewportController={viewport.controller} />);
+  await reachFirstChallenge(viewport);
+  await act(async () => {
+    await fireEvent.press(screen.getByRole('button', { name: 'Abundante' }));
+  });
+  await finishTransition(viewport);
+  expect(saved.completed).toEqual(['q1']);
+  await view.unmount();
+
+  const updated = { ...conversation, script: conversation.script.map(item =>
+    item.type === 'single-choice' && item.id === 'q1'
+      ? { ...item, correctOptionId: 'b' } : item) };
+  const restored = restoreProgress(updated, JSON.parse(JSON.stringify(saved)));
+  await render(<TrainingSession lesson={updated} initialProgress={restored}
+    restored={true} onProgressChange={() => {}}
+    viewportController={createControlledViewport().controller} />);
+  expect(restored.completed).toEqual(['q1']);
+  expect(screen.queryByRole('button', { name: 'Abundante' })).not.toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Agitado' })).toBeOnTheScreen();
+});
+
 test('reset durante moving invalida el callback tardío y guarda solo cambios de progreso', async () => {
   const viewport = createControlledViewport();
   const onProgressChange = jest.fn();
-  await render(<TrainingSession session={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={onProgressChange} viewportController={viewport.controller} />);
+  await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={onProgressChange} viewportController={viewport.controller} />);
   await completeActiveMessage();
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
   expect(onProgressChange).toHaveBeenCalledTimes(1);
