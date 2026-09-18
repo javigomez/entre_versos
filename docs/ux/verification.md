@@ -114,3 +114,42 @@ validaron DuckDuckGo Android, Chrome iPhone u otros dispositivos reales.
 Añadir, reordenar o retirar retos queda fuera de este alcance porque el cursor
 sigue basado en `completed.length`. Tampoco se conservan versiones históricas
 del contenido ni se autentican los logros almacenados localmente.
+
+## Guardados antiguos tras el renombre a Lesson · 2026-09-18
+
+Esta entrega verifica que el renombre del dominio a `Lesson`/`LessonProgress`
+no rompe los guardados existentes y documenta el diccionario del dominio con
+JSDoc. No cambia `training.yaml`, la clave de AsyncStorage
+`batalla-de-gallos:progress:v1` ni las reglas de restauración: los guardados
+con `sessionId` siguen leyéndose mediante `storedLessonProgressSchema` y las
+escrituras nuevas serializan exclusivamente `lessonId`.
+
+Pruebas legacy añadidas: «L04: restaura legacy y serializa exclusivamente
+lessonId» (integración, con round trip canónico) y «L04 / R02 / R09: carga
+progreso antiguo sin repetir el reto completado» (pantalla, sin opciones
+antiguas del reto superado). La comprobación de sensibilidad sustituyó
+temporalmente en `restoreProgress` la lectura compatible
+`storedLessonProgressSchema.safeParse(raw)` por el esquema canónico
+`lessonProgressSchema.safeParse(raw)`. El comando dirigido
+`npx jest --runInBand tests/integration/content-and-restore.test.ts tests/components/TrainingScreen.test.tsx`
+falló con 4 de 8 pruebas: las dos legacy nuevas y las dos preexistentes que
+cargan `sessionId` volvieron al progreso inicial. En dominio, `restoreProgress`
+devolvió `started: false` sin logros ni intentos; en la pantalla, la conversación
+quedó en el estado inicial, con «Empezar», en lugar de mostrar las opciones del
+reto pendiente. Tras restaurar producción, el mismo comando pasó: 2 suites,
+8 pruebas, 0 fallos, 0,485 s. La mutación no forma parte de la entrega.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npx jest --runInBand tests/integration/content-and-restore.test.ts tests/components/TrainingScreen.test.tsx` | PASS tras restaurar producción: 2 suites, 8 pruebas, 0 fallos, 0,485 s. |
+| `npm test` | PASS: 4 pruebas Node y 71 pruebas Jest en 15 suites; 0 fallos. Node 256 ms y Jest 1,38 s. |
+| `npm run typecheck` | PASS, `tsc --noEmit`, salida 0. |
+| `npm run lint` | PASS, `eslint .`, salida 0. |
+| `npm run export:web` | PASS; Metro generó el bundle web (301 módulos) y 3 archivos en `dist/`. El aviso conocido sobre `NO_COLOR` y `FORCE_COLOR`, ya registrado como menor diferido, no apareció en esta ejecución. |
+
+Límites: no se ejecutó la suite de navegador ni comprobación visual, ni se
+validaron DuckDuckGo Android, Chrome iPhone u otros dispositivos reales. Las
+pruebas de esta entrega son de dominio, integración y componente con reloj y
+geometría controlados; no miden pintura, suavidad ni dispositivos. UX-001 y
+R01–R10 conservan sus expectativas: esta entrega no cambia conversación,
+botones, animación, retos ni scroll.

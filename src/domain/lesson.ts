@@ -1,8 +1,16 @@
 import type { Challenge, Lesson } from './schemas';
 import { type LessonProgress, storedLessonProgressSchema } from './lesson-progress';
 
+/** Obtiene los retos de la lección en el orden en que aparecen en el guion. */
 export const challengesOf = (lesson: Lesson): Challenge[] => lesson.script.filter((item): item is Challenge => item.type === 'single-choice');
+/** Crea el avance de una lección todavía no iniciada, sin logros ni intentos. */
 export const initialProgress = (lesson: Lesson): LessonProgress => ({ lessonId: lesson.id, started: false, completed: [], history: [] });
+/**
+ * Procesa la opción elegida para el reto pendiente.
+ * Un error registra el intento sin avanzar; un acierto también supera el reto.
+ * Antes de empezar, tras finalizar o ante una opción inexistente, conserva
+ * el progreso recibido. No procesa los turnos prefijados del alumno.
+ */
 export function submitChallengeAnswer(lesson: Lesson, progress: LessonProgress, optionId: string): LessonProgress {
   const challenge = challengesOf(lesson)[progress.completed.length];
   if (!progress.started || !challenge || !challenge.options.some(o => o.id === optionId)) return progress;
@@ -11,6 +19,13 @@ export function submitChallengeAnswer(lesson: Lesson, progress: LessonProgress, 
     history: [...progress.history, { challengeId: challenge.id, optionId }],
   };
 }
+/**
+ * Recupera progreso guardado para esta lección a partir de datos desconocidos.
+ * Acepta la identidad antigua sessionId mediante el lector compatible.
+ * No inicia una partida por sí misma ni accede al almacenamiento.
+ * Conserva los logros válidos y utiliza la reproducción del historial solo
+ * para decidir si puede presentarlo.
+ */
 export function restoreProgress(lesson: Lesson, raw: unknown): LessonProgress {
   const fresh = initialProgress(lesson);
   const parsed = storedLessonProgressSchema.safeParse(raw);

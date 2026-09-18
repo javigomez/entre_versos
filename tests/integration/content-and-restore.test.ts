@@ -29,6 +29,21 @@ test('load() y restoreProgress() cierran el ciclo sobre el YAML real', () => {
   expect(JSON.parse(JSON.stringify(restored))).not.toHaveProperty('sessionId');
 });
 
+test('L04: restaura legacy y serializa exclusivamente lessonId', () => {
+  const current = submitChallengeAnswer(conversation,
+    { ...initialProgress(conversation), started: true }, 'a');
+  const { lessonId, ...body } = current;
+  const legacy = { sessionId: lessonId, ...body };
+  const restored = restoreProgress(conversation, JSON.parse(JSON.stringify(legacy)));
+  expect(restored).toEqual(current);
+  const written = JSON.parse(JSON.stringify(restored));
+  expect(written.lessonId).toBe(conversation.id);
+  expect(written).not.toHaveProperty('sessionId');
+  expect(restoreProgress(conversation, written)).toEqual(restored);
+  expect(restoreProgress(conversation, { ...legacy, sessionId: 'another-lesson' }))
+    .toEqual(initialProgress(conversation));
+});
+
 test('P08: sin guardado empieza al inicio; con logros no necesita historial', () => {
   const fresh = restoreProgress(conversation, null);
   expect(fresh).toEqual(initialProgress(conversation));
