@@ -6,6 +6,7 @@ test.each([
   ['?', 'training'],
   ['?training', 'training'],
   ['?campo_semantico', 'campo_semantico'],
+  ['?content=campo_semantico', 'campo_semantico'],
 ])('selecciona %s como %s', (search, expected) => {
   expect(contentKeyFromSearch(search)).toBe(expected);
 });

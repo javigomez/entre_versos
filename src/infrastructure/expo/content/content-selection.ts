@@ -5,7 +5,8 @@ const knownKeys = new Set<ContentKey>(['training', 'campo_semantico']);
 
 export function contentKeyFromSearch(search: string): ContentKey {
   if (search === '' || search === '?') return 'training';
-  const key = search.slice(1);
+  const rawKey = search.slice(1);
+  const key = rawKey.startsWith('content=') ? rawKey.slice('content='.length) : rawKey;
   if (!search.startsWith('?') || !safeKey.test(key) || !knownKeys.has(key as ContentKey)) {
     throw new Error(`Contenido no válido: ${search}`);
   }
