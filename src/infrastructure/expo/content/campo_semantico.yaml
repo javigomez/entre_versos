@@ -1,0 +1,26 @@
+id: campo-semantico
+startAction: Empezar contenido alternativo.
+script:
+- type: master
+  text: Contenido alternativo
+- id: campo-semantico-001
+  type: single-choice
+  master: Elige el elemento que pertenece al campo semántico.
+  prompt: ¿Cuál pertenece al grupo?
+  options:
+  - id: estrofa
+    text: Estrofa
+    emoji: 🎙️
+  - id: estribillo
+    text: Estribillo
+    emoji: 🎶
+  - id: compas
+    text: Compás
+    emoji: 🥁
+  - id: capitulo
+    text: Capítulo
+    emoji: 📖
+  correctOptionId: estrofa
+  success: Respuesta correcta.
+  retry: Inténtalo de nuevo.
+completion: Contenido alternativo completado.
