@@ -4,6 +4,7 @@ import { AccessibilityInfo } from 'react-native';
 import { TrainingSession } from '../../src/infrastructure/expo/ui/TrainingSession';
 import { initialProgress, restoreProgress } from '../../src/domain/lesson';
 import { conversation } from '../fixtures/conversation';
+import { journeyLesson } from '../fixtures/journey';
 import { createControlledViewport } from '../helpers/controlledViewport';
 
 beforeEach(() => { jest.useFakeTimers(); jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false); });
@@ -62,6 +63,18 @@ test('R07: doble pulsación acepta una sola transición', async () => {
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
   const button = screen.getByRole('button', { name: 'Continuar' });
   await act(async () => { await fireEvent.press(button); await fireEvent.press(button); });
+  await act(async () => { jest.advanceTimersByTime(80); });
+  expect(viewport.moves).toHaveLength(1);
+});
+
+test('J01: LEVANTARME permanece montado hasta que su transición pueda medirse', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession lesson={journeyLesson} initialProgress={initialProgress(journeyLesson)} restored={false}
+    onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await completeActiveMessage();
+
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'LEVANTARME' })); });
+  expect(screen.getByRole('button', { name: 'LEVANTARME' })).toBeDisabled();
   await act(async () => { jest.advanceTimersByTime(80); });
   expect(viewport.moves).toHaveLength(1);
 });

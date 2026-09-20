@@ -72,6 +72,7 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
   const placing = state.phase === 'placing';
   const visibleCount = state.revealed + (state.phase === 'writing' || placing ? 1 : 0);
   const pendingControl = state.pending?.controlId;
+  const startTransition = transition && pendingControl === 'start';
   const activeMessage = state.messages[state.revealed];
   const reset = () => { setConfirmReset(false); target.current = null; controller.reset(); dispatch({ type: 'RESET' }); };
   const activateStudent = (control: ControlTarget) => { target.current = control; dispatch({ type: 'ACTIVATE_STUDENT', controlId: control.id }); };
@@ -94,7 +95,9 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
       <ScrollView ref={viewport.scrollRef} style={s.scroll} contentContainerStyle={s.content} showsVerticalScrollIndicator={false} scrollEventThrottle={16} {...viewport.scrollProps}>
         <View {...viewport.bindRealContent}>
           {state.messages.slice(0, visibleCount).map((message, index) => <View key={message.id} {...viewport.bindMessage(message.id)} style={placing && index === state.revealed ? s.hidden : undefined}><View {...viewport.bindCursor(message.id)}><ChatMessage message={message} animate={state.phase === 'writing' && index === state.revealed} reducedMotion={reducedMotion} token={state.token} onDone={(messageId, token) => dispatch({ type: 'MESSAGE_DONE', messageId, token })} /></View></View>)}
-          {state.phase === 'waiting-start' && <Action id="start" label={lesson.startAction} onPress={control => { target.current = control; dispatch({ type: 'START' }); }} />}
+          {(state.phase === 'waiting-start' || startTransition) && <Action id="start" label={lesson.startAction}
+            disabled={startTransition} selected={startTransition}
+            onPress={control => { target.current = control; dispatch({ type: 'START' }); }} />}
           {(state.phase === 'waiting-student' || (transition && activeMessage?.action)) && activeMessage?.action && <Action label={activeMessage.action} disabled={transition} selected={transition && pendingControl === 'continue'} onPress={activateStudent} />}
           {(state.phase === 'waiting-choice' || (transition && challenge)) && challenge && challenge.type !== 'image-journey' && <ChallengeView challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} resolveImage={resolveImage} />}
           {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>Ya hay chispa.</Text><Text style={s.finishText}>{state.progress.completed.length} retos superados. Sigue jugando con tu voz.</Text><Action label="Volver a entrenar" onPress={reset} secondary /></View>}
