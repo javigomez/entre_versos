@@ -15,7 +15,7 @@ test('App selecciona el contenido indicado por la query web', async () => {
   Object.defineProperty(Platform, 'OS', { configurable: true, value: 'web' });
   Object.defineProperty(globalThis, 'location', { configurable: true, value: { search: '?campo_semantico' } });
   await render(<App />);
-  expect(await screen.findByText(/Contenido alternativo/)).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'LEVANTARME' })).toBeTruthy();
 });
 
 test('App muestra el error controlado para una query no registrada', async () => {

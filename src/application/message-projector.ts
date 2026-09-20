@@ -2,6 +2,7 @@ import type { Challenge, Lesson } from '../domain/schemas';
 import type { LessonProgress } from '../domain/lesson-progress';
 import { challengesOf } from '../domain/lesson';
 import type { Message } from './messages';
+import { journeyMessages } from './journey-messages';
 
 export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[] {
   const challenges = challengesOf(lesson);
@@ -9,7 +10,7 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
   let challengeIndex = 0;
   for (const [scriptIndex, item] of lesson.script.entries()) {
     if (item.type === 'master') {
-      messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text, kind: 'verse' });
+      messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text, kind: 'verse', label: item.label });
       continue;
     }
     if (item.type === 'student') {
@@ -19,6 +20,13 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
     }
     if (!progress.started || challengeIndex > progress.completed.length) break;
     const challenge: Challenge = item;
+    if (challenge.type === 'image-journey') {
+      messages.push(...journeyMessages(challenge,
+        progress.history.filter(entry => entry.challengeId === challenge.id).map(entry => entry.optionId)));
+      challengeIndex += 1;
+      if (challengeIndex > progress.completed.length) break;
+      continue;
+    }
     messages.push({ id: `${challenge.id}-master`, role: 'master', text: challenge.master });
     progress.history.forEach((entry, index) => {
       if (entry.challengeId !== challenge.id) return;

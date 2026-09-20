@@ -10,8 +10,8 @@ const repo = createYamlContentRepository();
 
 test('carga training por defecto y permite el YAML alternativo registrado', () => {
   expect(createYamlContentRepository().load().id).toBe('primera-batalla-v1');
-  expect(createYamlContentRepository('campo_semantico').load().id).toBe('campo-semantico');
-  expect(createYamlContentRepository('campo_semantico').load().script[0]).toMatchObject({ text: 'Contenido alternativo' });
+  expect(createYamlContentRepository('campo_semantico').load().id).toBe('campo-semantico-viaje-v1');
+  expect(createYamlContentRepository('campo_semantico').load().script[0]).toMatchObject({ text: /Ya se ha marchado/ });
 });
 
 test('no permite una clave que no pertenece al registro', () => {
@@ -67,6 +67,7 @@ test('P08: sin guardado empieza al inicio; con logros no necesita historial', ()
 
 test('P01/P02: tres retos, q1 superado y q2 con la solución actual', () => {
   const q2 = challengesOf(conversation)[1];
+  if (q2.type !== 'single-choice') throw new Error('La fixture necesita retos lineales');
   const original: Lesson = {
     ...conversation,
     script: [...conversation.script, { ...q2, id: 'q3', prompt: 'Tercer reto' }],
@@ -92,6 +93,7 @@ test('P01/P02: tres retos, q1 superado y q2 con la solución actual', () => {
   const resumed = restoreProgress(current, JSON.parse(JSON.stringify(saved)));
   expect(resumed.completed).toEqual(['q1']);
   const pending = challengesOf(current)[resumed.completed.length];
+  if (pending.type !== 'single-choice') throw new Error('El reto pendiente debe ser lineal');
   expect(pending.id).toBe('q2');
   expect(pending.options.find(option => option.id === 'f')?.text).toBe('Respuesta actualizada');
   const wrong = submitChallengeAnswer(current, resumed, 'e');

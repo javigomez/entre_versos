@@ -1,5 +1,6 @@
 import { isChallenge, type Challenge, type Lesson } from './schemas';
 import { evaluateChallengeAnswer } from './challenge';
+import { replayJourney } from './image-journey';
 import { type LessonProgress, storedLessonProgressSchema } from './lesson-progress';
 
 /** Obtiene los retos de la lección en el orden en que aparecen en el guion. */
@@ -15,6 +16,18 @@ export const initialProgress = (lesson: Lesson): LessonProgress => ({ lessonId: 
 export function submitChallengeAnswer(lesson: Lesson, progress: LessonProgress, optionId: string): LessonProgress {
   const challenge = challengesOf(lesson)[progress.completed.length];
   if (!progress.started || !challenge) return progress;
+  if (challenge.type === 'image-journey') {
+    const optionIds = progress.history
+      .filter(entry => entry.challengeId === challenge.id)
+      .map(entry => entry.optionId);
+    const replay = replayJourney(challenge, [...optionIds, optionId]);
+    if (!replay) return progress;
+    return {
+      ...progress,
+      completed: replay.ending ? [...progress.completed, challenge.id] : progress.completed,
+      history: [...progress.history, { challengeId: challenge.id, optionId }],
+    };
+  }
   const result = evaluateChallengeAnswer(challenge, optionId);
   if (result === 'invalid') return progress;
   return { ...progress,
@@ -35,6 +48,16 @@ export function restoreProgress(lesson: Lesson, raw: unknown): LessonProgress {
   if (!parsed.success || parsed.data.lessonId !== lesson.id) return fresh;
   const saved = parsed.data;
   const challenges = challengesOf(lesson);
+  const journey = challenges.find(challenge => challenge.type === 'image-journey');
+  if (journey?.type === 'image-journey') {
+    if (!saved.started) return saved.completed.length || saved.history.length ? fresh : saved;
+    if (saved.history.some(entry => entry.challengeId !== journey.id)) return fresh;
+    const replay = replayJourney(journey, saved.history.map(entry => entry.optionId));
+    if (!replay) return fresh;
+    const expected = replay.ending ? [journey.id] : [];
+    if (saved.completed.length !== expected.length || saved.completed.some((id, index) => id !== expected[index])) return fresh;
+    return saved;
+  }
   if (saved.completed.some((id, i) => challenges[i]?.id !== id)) return fresh;
   if (!saved.started) return saved.completed.length || saved.history.length ? fresh : saved;
 

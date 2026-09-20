@@ -1,7 +1,8 @@
 // src/domain/image-journey.test.ts
 import { expect, test } from '@jest/globals';
-import { journey } from '../../tests/fixtures/journey';
+import { journey, journeyLesson } from '../../tests/fixtures/journey';
 import { imageJourneySchema, replayJourney, journeyOptions } from './image-journey';
+import { lessonSchema } from './schemas';
 
 test('J02/J04: seis elecciones, nunca cinco ni siete', () => {
   expect(imageJourneySchema.safeParse(journey).success).toBe(true);
@@ -34,8 +35,6 @@ test('rechaza destino roto, opciones duplicadas y terminal adelantado', () => {
   expect(imageJourneySchema.safeParse(short).success).toBe(false);
 });
 
-import { journeyLesson } from '../../tests/fixtures/journey';
-import { lessonSchema } from './schemas';
 test('J01: lección con viaje único, etiquetas y respuesta inicial', () => {
   expect(lessonSchema.parse(journeyLesson)).toEqual(journeyLesson);
   expect(lessonSchema.safeParse({ ...journeyLesson, script: [...journeyLesson.script, { type: 'master', text: 'Más' }] }).success).toBe(false);

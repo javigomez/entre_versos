@@ -73,6 +73,23 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 | I03 | Foto lenta o fallida | Se conserva el marco, aparece «Imagen no disponible» y el botón sigue activo. |
 | I04 | Restaurar una elección libre | El reto completado no reaparece; el historial conserva una sola entrada optionId. |
 
+## Excepción acordada: viaje de imágenes
+
+`image-journey` es un tramo inmersivo y a pantalla completa autorizado para el
+contenido `campo_semantico`. Durante sus seis elecciones no se muestran el
+historial ni los controles del chat: cada pantalla presenta exactamente dos
+fotografías verticales y una palabra por tarjeta. Un toque bloquea ambas
+tarjetas, registra una sola elección y funde a la siguiente capa. Al terminar,
+la conversación vuelve con la revelación, la ruta de palabras y la enseñanza.
+El gesto no modifica las reglas UX-001.1–.12 fuera del viaje.
+
+| Caso | Preparación y acción | Resultado |
+| --- | --- | --- |
+| J01 | Iniciar `campo_semantico` y completar una ruta de seis decisiones | Dos fotos por capa, sin burbujas parciales; solo al final reaparece el chat con la revelación y la explicación. |
+| J02 | Tocar una tarjeta dos veces durante la transición | Se registra una sola palabra y no salta ninguna capa. |
+| J03 | Restaurar después de 1–5 elecciones | Se reabre exactamente la siguiente pareja de imágenes; un historial imposible se descarta. |
+| J04 | Activar reducir movimiento | Se mantiene el orden y el bloqueo; el fundido se sustituye por el cambio inmediato. |
+
 ## Plataformas y evidencia
 
 Usar pruebas unitarias y de componentes como protección habitual, con medidas y reloj controlados. Conservar Chromium/WebKit como diagnóstico opcional. Las pruebas sin navegador no verifican layout, pintura ni suavidad reales. Comprobar esos aspectos visualmente y, para los fallos específicos, en DuckDuckGo Android y Chrome iPhone, registrando dispositivo, sistema, versión de navegador, revisión del código y vídeo del flujo. Los dos fallos comunicados por el usuario siguen pendientes de reproducción específica hasta disponer de esa evidencia.

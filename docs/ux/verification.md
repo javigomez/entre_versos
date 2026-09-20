@@ -213,3 +213,23 @@ Implementación automatizada del primer incremento visual: unión discriminada `
 | `npm run export:web` | PASS; bundle web y ambos JPG exportados (179 KiB y 214 KiB). |
 
 Assets verificados como JPEG RGB, 941×1672, con `require` estático. V01–V06 no ejecutados visualmente; tampoco se validó DuckDuckGo Android ni Chrome iPhone. La suite de navegador sigue siendo opcional y los límites históricos R01 permanecen documentados.
+
+## Viaje de palabras · 2026-09-20
+
+Se añadió el recorrido inmersivo de `campo_semantico`: prólogo tras perder la
+batalla, seis elecciones visuales que forman una ruta de palabras y cierre que
+explica el campo semántico. El progreso se guarda por contenido para impedir
+que una ruta de este viaje altere otra lección. La excepción y J01–J04 están
+registradas en UX-001.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 105 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
+| `npm run lint` | PASS: `eslint .`, salida 0. |
+| `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. |
+
+Límites: no se ha hecho comprobación visual manual ni validación en DuckDuckGo
+Android o Chrome iPhone. La exportación emite el aviso conocido de entorno
+`NO_COLOR`/`FORCE_COLOR`; no bloquea el bundle. J01–J04 están protegidos por
+dominio e integración, no por una prueba visual de dispositivo.

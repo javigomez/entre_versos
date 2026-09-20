@@ -2,6 +2,7 @@ import { expect, test } from '@jest/globals';
 import { conversation } from '../../tests/fixtures/conversation';
 import { lessonSchema } from './schemas';
 import { submitChallengeAnswer, challengesOf, initialProgress, restoreProgress } from './lesson';
+import { journeyLesson } from '../../tests/fixtures/journey';
 
 test('challengesOf devuelve solo los retos single-choice en orden', () => {
   const challenges = challengesOf(conversation);
@@ -75,4 +76,23 @@ test('P06: conserva sesión finalizada y el reinicio sigue limpio', () => {
   expect(restoreProgress(updated, saved).completed).toEqual(['q1', 'q2']);
   expect(initialProgress(updated).completed).toEqual([]);
   expect(restoreProgress(updated, { ...saved, started: false })).toEqual(initialProgress(updated));
+});
+
+test('J06: restaura cada profundidad y completa únicamente el sexto tap', () => {
+  let progress = { ...initialProgress(journeyLesson), started: true };
+  for (let depth = 0; depth <= 6; depth++) {
+    expect(restoreProgress(journeyLesson, JSON.parse(JSON.stringify(progress)))).toEqual(progress);
+    expect(progress.completed).toEqual(depth === 6 ? ['viaje-palabras'] : []);
+    expect(progress.history).toHaveLength(depth);
+    if (depth < 6) progress = submitChallengeAnswer(journeyLesson, progress, `n${depth + 1}-a`);
+  }
+  expect(submitChallengeAnswer(journeyLesson, progress, 'n6-b')).toBe(progress);
+});
+
+test('J06: rechaza guardados contradictorios del viaje', () => {
+  const fresh = initialProgress(journeyLesson);
+  expect(restoreProgress(journeyLesson, { ...fresh, started: true, completed: ['viaje-palabras'] })).toEqual(fresh);
+  expect(restoreProgress(journeyLesson, {
+    ...fresh, started: true, history: [{ challengeId: 'viaje-palabras', optionId: 'n3-a' }],
+  })).toEqual(fresh);
 });
