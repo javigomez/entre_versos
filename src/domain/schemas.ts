@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { imageJourneySchema, type ImageJourneyChallenge } from './image-journey';
 
 const nonempty = z.string().trim().min(1);
 /** Alternativa de un reto, formada por texto y emoji obligatorios; su ID permite referenciarla dentro del reto. */
@@ -29,14 +30,15 @@ export const imageChoiceChallengeSchema = z.object({
   if (new Set(challenge.options.map(o => o.id)).size !== challenge.options.length) ctx.addIssue({ code: 'custom', message: 'Las opciones deben tener IDs únicos', path: ['options'] });
 });
 const scriptItemSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('master'), text: nonempty }),
+  z.object({ type: z.literal('master'), text: nonempty, label: nonempty.optional() }),
   z.object({ type: z.literal('student'), action: nonempty, text: nonempty }),
-  challengeSchema, imageChoiceChallengeSchema,
+  challengeSchema, imageChoiceChallengeSchema, imageJourneySchema,
 ]);
 /** Valida el contenido de una lección: guion no vacío, al menos un reto e IDs de reto únicos. */
 export const lessonSchema = z.object({
   id: nonempty,
   startAction: nonempty,
+  startWithStudent: z.boolean().optional(),
   script: z.array(scriptItemSchema).min(1),
   completion: nonempty,
 }).superRefine((lesson, ctx) => {
@@ -44,10 +46,20 @@ export const lessonSchema = z.object({
   if (challenges.length === 0) ctx.addIssue({ code: 'custom', message: 'El guion debe tener al menos un reto', path: ['script'] });
   if (new Set(challenges.map(c => c.id)).size !== challenges.length)
     ctx.addIssue({ code: 'custom', message: 'Los retos deben tener IDs únicos', path: ['script'] });
+  const journeys = lesson.script.filter(item => item.type === 'image-journey');
+  if (journeys.length && (journeys.length !== 1 || challenges.length !== 1 || lesson.script.at(-1)?.type !== 'image-journey'))
+    ctx.addIssue({ code: 'custom', message: 'El viaje debe ser el único reto y cerrar el guion', path: ['script'] });
+  if (lesson.startWithStudent) {
+    const firstReply = lesson.script[1];
+    if (lesson.script[0]?.type !== 'master' || firstReply?.type !== 'student' || firstReply.action !== lesson.startAction)
+      ctx.addIssue({ code: 'custom', message: 'startWithStudent requiere respuesta inicial coincidente', path: ['startWithStudent'] });
+  }
 });
 export type SingleChoiceChallenge = z.infer<typeof challengeSchema>;
 export type ImageChoiceChallenge = z.infer<typeof imageChoiceChallengeSchema>;
-export function isChallenge(step: LessonStep): step is Challenge { return step.type === 'single-choice' || step.type === 'image-choice'; }
+export function isChallenge(step: LessonStep): step is Challenge {
+  return step.type === 'single-choice' || step.type === 'image-choice' || step.type === 'image-journey';
+}
 /**
  * Elemento del guion: intervención del maestro, turno prefijado del alumno
  * que requiere confirmación o reto completo. Un reto puede generar varios
@@ -59,7 +71,7 @@ export type LessonStep = z.infer<typeof lessonSchema>['script'][number];
  * Su ID lo identifica dentro de la lección aunque se edite su contenido.
  * Contiene el enunciado y el feedback; no contiene las respuestas del jugador.
  */
-export type Challenge = SingleChoiceChallenge | ImageChoiceChallenge;
+export type Challenge = SingleChoiceChallenge | ImageChoiceChallenge | ImageJourneyChallenge;
 /**
  * Unidad de aprendizaje presentada mediante un guion ordenado de
  * intervenciones y retos. Su identidad se conserva al mejorar su contenido.
