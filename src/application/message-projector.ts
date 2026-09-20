@@ -23,9 +23,11 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
     progress.history.forEach((entry, index) => {
       if (entry.challengeId !== challenge.id) return;
       const option = challenge.options.find(o => o.id === entry.optionId)!;
-      const correct = option.id === challenge.correctOptionId;
       messages.push({ id: `answer-${index}`, role: 'player', text: option.text });
-      messages.push({ id: `feedback-${index}`, role: 'master', text: correct ? challenge.success : challenge.retry, kind: correct ? 'success' : undefined });
+      if (challenge.type === 'single-choice') {
+        const correct = option.id === challenge.correctOptionId;
+        messages.push({ id: `feedback-${index}`, role: 'master', text: correct ? challenge.success : challenge.retry, kind: correct ? 'success' : undefined });
+      }
     });
     challengeIndex += 1;
     if (challengeIndex > progress.completed.length) break;

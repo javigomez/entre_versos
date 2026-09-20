@@ -7,10 +7,11 @@ import { colors as c } from './theme';
 import { TrainingSession } from './TrainingSession';
 import type { ContentRepository } from '../../../application/content-repository';
 import type { ProgressRepository } from '../../../application/progress-repository';
+import { createChallengeImageResolver, type ChallengeImageResolver } from '../content/content-images';
 
-export type TrainingScreenProps = { content: ContentRepository; progress: ProgressRepository };
+export type TrainingScreenProps = { content: ContentRepository; progress: ProgressRepository; resolveImage?: ChallengeImageResolver };
 
-export function TrainingScreen({ content, progress: progressRepository }: TrainingScreenProps) {
+export function TrainingScreen({ content, progress: progressRepository, resolveImage = createChallengeImageResolver() }: TrainingScreenProps) {
   const lesson = useMemo(() => content.load(), [content]);
   const [progress, setProgress] = useState<LessonProgress>(() => initialProgress(lesson));
   const [loaded, setLoaded] = useState(false);
@@ -31,7 +32,7 @@ export function TrainingScreen({ content, progress: progressRepository }: Traini
     void progressRepository.save(next).catch(() => setNotice(true));
   }, [progressRepository]);
   return <SafeAreaView style={s.safe}>{loaded
-    ? <TrainingSession lesson={lesson} initialProgress={progress} restored={restored} onProgressChange={onProgressChange} storageNotice={notice} />
+    ? <TrainingSession lesson={lesson} initialProgress={progress} restored={restored} onProgressChange={onProgressChange} storageNotice={notice} resolveImage={resolveImage} />
     : <View style={s.loading}><ActivityIndicator color={c.accent} /></View>}
   </SafeAreaView>;
 }

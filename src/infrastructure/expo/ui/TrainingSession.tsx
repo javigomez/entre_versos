@@ -6,15 +6,16 @@ import type { LessonProgress } from '../../../domain/lesson-progress';
 import { challengesOf } from '../../../domain/lesson';
 import { Action } from './Action';
 import { ChatMessage } from './ChatMessage';
-import { SingleChoiceChallenge } from './SingleChoiceChallenge';
+import { ChallengeView } from './ChallengeView';
+import { createChallengeImageResolver, type ChallengeImageResolver } from '../content/content-images';
 import { colors as c } from './theme';
 import { createFlow, reduceFlow } from '../../../application/conversation-flow';
 import { useConversationViewport } from './viewport/useConversationViewport';
 import type { ControlTarget, ViewportController } from './viewport/useConversationViewport';
 
-export type TrainingSessionProps = { lesson: Lesson; initialProgress: LessonProgress; restored: boolean; onProgressChange: (progress: LessonProgress) => void; storageNotice?: boolean; viewportController?: ViewportController };
+export type TrainingSessionProps = { lesson: Lesson; initialProgress: LessonProgress; restored: boolean; onProgressChange: (progress: LessonProgress) => void; storageNotice?: boolean; viewportController?: ViewportController; resolveImage?: ChallengeImageResolver };
 
-export function TrainingSession({ lesson, initialProgress, restored, onProgressChange, storageNotice = false, viewportController }: TrainingSessionProps) {
+export function TrainingSession({ lesson, initialProgress, restored, onProgressChange, storageNotice = false, viewportController, resolveImage = createChallengeImageResolver() }: TrainingSessionProps) {
   const [state, dispatch] = useReducer((current: ReturnType<typeof createFlow>, event: Parameters<typeof reduceFlow>[2]) => reduceFlow(lesson, current, event), createFlow(lesson, initialProgress, restored));
   const [reducedMotion, setReducedMotion] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -73,7 +74,7 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
           {state.messages.slice(0, visibleCount).map((message, index) => <View key={message.id} {...viewport.bindMessage(message.id)} style={placing && index === state.revealed ? s.hidden : undefined}><View {...viewport.bindCursor(message.id)}><ChatMessage message={message} animate={state.phase === 'writing' && index === state.revealed} reducedMotion={reducedMotion} token={state.token} onDone={(messageId, token) => dispatch({ type: 'MESSAGE_DONE', messageId, token })} /></View></View>)}
           {state.phase === 'waiting-start' && <Action id="start" label={lesson.startAction} onPress={() => dispatch({ type: 'START' })} />}
           {(state.phase === 'waiting-student' || (transition && activeMessage?.action)) && activeMessage?.action && <Action label={activeMessage.action} disabled={transition} selected={transition && pendingControl === 'continue'} onPress={activateStudent} />}
-          {(state.phase === 'waiting-choice' || (transition && challenge)) && challenge && <SingleChoiceChallenge challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} />}
+          {(state.phase === 'waiting-choice' || (transition && challenge)) && challenge && <ChallengeView challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} resolveImage={resolveImage} />}
           {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>Ya hay chispa.</Text><Text style={s.finishText}>{state.progress.completed.length} retos superados. Sigue jugando con tu voz.</Text><Action label="Volver a entrenar" onPress={reset} secondary /></View>}
           {storageNotice && <Text style={s.notice}>Guardado no disponible · puedes seguir jugando</Text>}
         </View>

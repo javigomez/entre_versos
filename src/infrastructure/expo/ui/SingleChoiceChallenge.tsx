@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import type { Challenge } from '../../../domain/schemas';
+import type { SingleChoiceChallenge as SingleChoiceContent } from '../../../domain/schemas';
 import { colors as c } from './theme';
 import type { ControlTarget } from './viewport/useConversationViewport';
 
-type ChoiceProps = { challenge: Challenge; onAnswer: (id: string, target: ControlTarget) => void; disabled?: boolean; selectedOptionId?: string };
+type ChoiceProps = { challenge: SingleChoiceContent; onAnswer: (id: string, target: ControlTarget) => void; disabled?: boolean; selectedOptionId?: string };
 export function SingleChoiceChallenge({ challenge, onAnswer, disabled = false, selectedOptionId }: ChoiceProps) {
   return <View style={s.container}>
     <Text style={s.prompt}>{challenge.prompt}</Text>
@@ -13,7 +13,7 @@ export function SingleChoiceChallenge({ challenge, onAnswer, disabled = false, s
     <Text style={s.note}>Sin prisa. Cada intento te enseña algo.</Text>
   </View>;
 }
-function ChoiceOption({ option, disabled, selected, onAnswer }: { option: Challenge['options'][number]; disabled: boolean; selected: boolean; onAnswer: ChoiceProps['onAnswer'] }) {
+function ChoiceOption({ option, disabled, selected, onAnswer }: { option: SingleChoiceContent['options'][number]; disabled: boolean; selected: boolean; onAnswer: ChoiceProps['onAnswer'] }) {
   const ref = useRef<View | null>(null);
   const preview = () => <View style={[s.option, selected && s.selected]}><Text style={s.emoji}>{option.emoji}</Text><Text style={s.text}>{option.text}</Text></View>;
   const target: ControlTarget = { id: option.id, ref, renderPreview: preview };

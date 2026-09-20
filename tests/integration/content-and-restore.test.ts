@@ -3,12 +3,12 @@ import { createFlow } from '../../src/application/conversation-flow';
 import { messagesFor } from '../../src/application/message-projector';
 import { challengesOf, initialProgress, restoreProgress, submitChallengeAnswer } from '../../src/domain/lesson';
 import { createYamlContentRepository } from '../../src/infrastructure/expo/content/yaml-content-repository';
-import type { Lesson, Challenge, LessonStep } from '../../src/domain/schemas';
+import type { Lesson, SingleChoiceChallenge, LessonStep } from '../../src/domain/schemas';
 import { conversation } from '../fixtures/conversation';
 
 const repo = createYamlContentRepository();
 
-function isChallenge(item: LessonStep): item is Challenge {
+function isChallenge(item: LessonStep): item is SingleChoiceChallenge {
   return item.type === 'single-choice';
 }
 
@@ -22,10 +22,10 @@ test('el repositorio YAML carga el guion editorial con retos válidos', () => {
 test('load() y restoreProgress() cierran el ciclo sobre el YAML real', () => {
   const lesson = repo.load();
   const challenges = lesson.script.filter(isChallenge);
-  const history = challenges.map((c: Challenge) => ({ challengeId: c.id, optionId: c.correctOptionId }));
-  const legacyProgress = { sessionId: lesson.id, started: true, completed: challenges.map((c: Challenge) => c.id), history };
+  const history = challenges.map((c: SingleChoiceChallenge) => ({ challengeId: c.id, optionId: c.correctOptionId }));
+  const legacyProgress = { sessionId: lesson.id, started: true, completed: challenges.map((c: SingleChoiceChallenge) => c.id), history };
   const restored = restoreProgress(lesson, JSON.parse(JSON.stringify(legacyProgress)));
-  expect(restored).toEqual({ lessonId: lesson.id, started: true, completed: challenges.map((c: Challenge) => c.id), history });
+  expect(restored).toEqual({ lessonId: lesson.id, started: true, completed: challenges.map((c: SingleChoiceChallenge) => c.id), history });
   expect(JSON.parse(JSON.stringify(restored))).not.toHaveProperty('sessionId');
 });
 

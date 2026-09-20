@@ -1,8 +1,9 @@
-import type { Challenge, Lesson } from './schemas';
+import { isChallenge, type Challenge, type Lesson } from './schemas';
+import { evaluateChallengeAnswer } from './challenge';
 import { type LessonProgress, storedLessonProgressSchema } from './lesson-progress';
 
 /** Obtiene los retos de la lección en el orden en que aparecen en el guion. */
-export const challengesOf = (lesson: Lesson): Challenge[] => lesson.script.filter((item): item is Challenge => item.type === 'single-choice');
+export const challengesOf = (lesson: Lesson): Challenge[] => lesson.script.filter(isChallenge);
 /** Crea el avance de una lección todavía no iniciada, sin logros ni intentos. */
 export const initialProgress = (lesson: Lesson): LessonProgress => ({ lessonId: lesson.id, started: false, completed: [], history: [] });
 /**
@@ -13,9 +14,11 @@ export const initialProgress = (lesson: Lesson): LessonProgress => ({ lessonId: 
  */
 export function submitChallengeAnswer(lesson: Lesson, progress: LessonProgress, optionId: string): LessonProgress {
   const challenge = challengesOf(lesson)[progress.completed.length];
-  if (!progress.started || !challenge || !challenge.options.some(o => o.id === optionId)) return progress;
+  if (!progress.started || !challenge) return progress;
+  const result = evaluateChallengeAnswer(challenge, optionId);
+  if (result === 'invalid') return progress;
   return { ...progress,
-    completed: optionId === challenge.correctOptionId ? [...progress.completed, challenge.id] : progress.completed,
+    completed: result === 'completed' ? [...progress.completed, challenge.id] : progress.completed,
     history: [...progress.history, { challengeId: challenge.id, optionId }],
   };
 }
