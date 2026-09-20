@@ -10,7 +10,7 @@ test.each([
   expect(contentKeyFromSearch(search)).toBe(expected);
 });
 
-test.each(['?training.yaml', '?../training', '?campo%20semantico', '?training=otro', '?training&campo_semantico', '?desconocido'])
+test.each(['?training.yaml', '?../training', '?campo%20semantico', '?training=', '?training=otro', '?training&campo_semantico', '?desconocido'])
   ('rechaza la query no segura %s', search => {
     expect(() => contentKeyFromSearch(search)).toThrow(/contenido/i);
   });
