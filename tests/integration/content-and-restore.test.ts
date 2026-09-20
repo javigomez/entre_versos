@@ -8,6 +8,16 @@ import { conversation } from '../fixtures/conversation';
 
 const repo = createYamlContentRepository();
 
+test('carga training por defecto y permite el YAML alternativo registrado', () => {
+  expect(createYamlContentRepository().load().id).toBe('primera-batalla-v1');
+  expect(createYamlContentRepository('campo_semantico').load().id).toBe('campo-semantico');
+  expect(createYamlContentRepository('campo_semantico').load().script[0]).toMatchObject({ text: 'Contenido alternativo' });
+});
+
+test('no permite una clave que no pertenece al registro', () => {
+  expect(() => createYamlContentRepository('no-registrado' as never)).toThrow();
+});
+
 function isChallenge(item: LessonStep): item is Challenge {
   return item.type === 'single-choice';
 }
