@@ -1,0 +1,21 @@
+id: image-choice-demo-v1
+startAction: Empezar el viaje
+script:
+  - type: master
+    text: Dos caminos aparecen delante de ti.
+  - type: image-choice
+    id: viaje-inicial
+    master: Elige la escena que te llama.
+    prompt: ¿Por dónde seguimos?
+    options:
+      - id: nieve
+        text: NIEVE
+        image:
+          file: nieve.jpg
+          description: Sendero nevado hacia un refugio lejano
+      - id: playa
+        text: PLAYA
+        image:
+          file: playa.jpg
+          description: Camino de dunas frente al mar
+completion: El viaje acaba de empezar.

@@ -19,3 +19,12 @@ test('rechaza respuesta inexistente, IDs repetidos y opciones incompletas', () =
   const duplicateResult = lessonSchema.safeParse({ ...conversation, script: [...script, first] as typeof conversation.script });
   expect(duplicateResult.success).toBe(false);
 });
+
+test('acepta exactamente dos opciones image-choice y rechaza campos de evaluación', () => {
+  const challenge = { type: 'image-choice', id: 'viaje-inicial', master: 'Elige', prompt: '¿Por dónde?', options: [
+    { id: 'nieve', text: 'NIEVE', image: { file: 'nieve.jpg', description: 'Sendero nevado' } },
+    { id: 'playa', text: 'PLAYA', image: { file: 'playa.jpg', description: 'Camino al mar' } },
+  ] };
+  expect(lessonSchema.safeParse({ ...conversation, script: [...script, challenge] }).success).toBe(true);
+  expect(lessonSchema.safeParse({ ...conversation, script: [...script, { ...challenge, correctOptionId: 'nieve' }] }).success).toBe(false);
+});

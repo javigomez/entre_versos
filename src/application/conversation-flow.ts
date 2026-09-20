@@ -1,5 +1,5 @@
 import type { Lesson } from '../domain/schemas';
-import { initialProgress, submitChallengeAnswer } from '../domain/lesson';
+import { challengesOf, initialProgress, submitChallengeAnswer } from '../domain/lesson';
 import type { LessonProgress } from '../domain/lesson-progress';
 import { messagesFor } from './message-projector';
 import type { Message } from './messages';
@@ -21,7 +21,7 @@ function phaseFor(lesson: Lesson, state: Pick<FlowState, 'progress' | 'messages'
   if (state.revealed < state.messages.length)
     return state.messages[state.revealed].role === 'player' && state.messages[state.revealed].action ? 'waiting-student' : 'writing';
   if (!state.progress.started) return 'waiting-start';
-  if (state.progress.completed.length === lesson.script.filter(item => item.type === 'single-choice').length) return 'finished';
+  if (state.progress.completed.length === challengesOf(lesson).length) return 'finished';
   return 'waiting-choice';
 }
 

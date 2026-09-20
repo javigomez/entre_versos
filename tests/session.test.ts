@@ -16,6 +16,7 @@ test('rechaza respuesta inexistente, IDs repetidos y opciones incompletas', () =
 test('fallar permite reintentar sin perder progreso; aciertos terminan la sesión', () => {
   const challenges = challengesOf(lesson);
   const first = challenges[0];
+  assert.equal(first.type, 'single-choice');
   const firstWrong = first.options.find(option => option.id !== first.correctOptionId)!;
   let p = { ...initialProgress(lesson), started: true };
   p = submitChallengeAnswer(lesson, p, firstWrong.id);
@@ -24,6 +25,7 @@ test('fallar permite reintentar sin perder progreso; aciertos terminan la sesió
   p = submitChallengeAnswer(lesson, p, first.correctOptionId);
   assert.equal(p.completed.length, 1);
   for (const challenge of challenges.slice(1)) {
+    assert.equal(challenge.type, 'single-choice');
     p = submitChallengeAnswer(lesson, p, challenge.correctOptionId);
   }
   assert.equal(p.completed.length, challenges.length);

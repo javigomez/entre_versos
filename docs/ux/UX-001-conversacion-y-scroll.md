@@ -23,7 +23,7 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 | UX-001.2 | El control pulsado, cualquiera que sea su posición vertical, asciende suavemente hasta el inicio del área de conversación, debajo de la cabecera y del margen superior. No se oculta bajo la botonera. |
 | UX-001.3 | Después del desplazamiento, el control se transforma en una burbuja del jugador en esa posición. Continuar utiliza el texto del turno del jugador; selección única utiliza el texto de la opción elegida. La respuesta aparece sin recargar. |
 | UX-001.4 | El maestro comienza a escribir debajo después de completarse la respuesta del jugador. No adelantar turnos del jugador que requieren Continuar. |
-| UX-001.5 | En un acierto se presenta el feedback y después el siguiente turno según el guion. En un error se conserva el intento, se escribe el feedback y al terminar se muestran otra vez las cuatro opciones del mismo reto, sin penalización. No añadir un paso extra de confirmación para reintentar. |
+| UX-001.5 | `single-choice` conserva cuatro opciones, acierto/error y reintento. `image-choice` ofrece dos opciones libres: cualquier selección completa el reto y continúa el guion sin feedback de acierto/error ni reintento. |
 | UX-001.6 | El ancla de toda la interacción es el inicio de la burbuja del jugador. El scroll automático nunca la sobrepasa durante los mensajes siguientes del maestro. Una nueva acción del jugador establece una nueva ancla. |
 | UX-001.7 | Sin respuesta previa del jugador, el ancla es el inicio del mensaje del maestro. El scroll acompaña la escritura solo cuando esta necesita espacio y solo hasta alcanzar el ancla. |
 | UX-001.8 | El contenido que no cabe se recorta en el borde inferior del área de conversación. No reducir tipografía, comprimir mensajes, truncar con puntos suspensivos ni forzar el scroll para mostrar el siguiente botón. El contenido íntegro y los controles se alcanzan mediante scroll manual. |
@@ -63,6 +63,15 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 | R08 | Mostrar completo durante la escritura, repetir con movimiento reducido | Sin duplicados ni saltos de turnos, ancla preservada; .12 |
 | R09 | Recorrer el historial tras varios intentos | Solo mensajes históricos; última parrilla activa como máximo; .11 |
 | R10 | Mensaje inicial del maestro sin respuesta previa | Seguimiento limitado al inicio de ese mensaje; .7–.9 |
+
+## Variantes image-choice
+
+| Caso | Preparación y acción | Resultado |
+| --- | --- | --- |
+| I01 | Reto visual y selección izquierda o derecha | La opción elegida se transforma en una burbuja y el guion continúa. |
+| I02 | Viewport estrecho o texto ampliado | Dos tarjetas conservan igual ancho y alto; la foto usa recorte centrado y scroll manual. |
+| I03 | Foto lenta o fallida | Se conserva el marco, aparece «Imagen no disponible» y el botón sigue activo. |
+| I04 | Restaurar una elección libre | El reto completado no reaparece; el historial conserva una sola entrada optionId. |
 
 ## Plataformas y evidencia
 

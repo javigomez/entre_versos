@@ -200,3 +200,16 @@ retos). No se hizo comprobación visual manual ni se validaron DuckDuckGo
 Android, Chrome iPhone u otros dispositivos reales. R01 sigue fallando en
 ambos motores por la desviación de posición ya registrada; no se ha omitido
 ni marcado como esperado.
+
+## Image-choice · 2026-09-20
+
+Implementación automatizada del primer incremento visual: unión discriminada `single-choice | image-choice`, elección libre de dos opciones, resolver estático de imágenes, demo YAML aislada y `ImageChoiceChallenge` integrado en la sesión existente.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npm test` | PASS: 18 suites Jest, 75 pruebas; 4 pruebas Node y 3 de deploy, 0 fallos. |
+| `npm run typecheck` | PASS. |
+| `npx eslint src tests` | PASS: 0 errores, 0 warnings. |
+| `npm run export:web` | PASS; bundle web y ambos JPG exportados (179 KiB y 214 KiB). |
+
+Assets verificados como JPEG RGB, 941×1672, con `require` estático. V01–V06 no ejecutados visualmente; tampoco se validó DuckDuckGo Android ni Chrome iPhone. La suite de navegador sigue siendo opcional y los límites históricos R01 permanecen documentados.
