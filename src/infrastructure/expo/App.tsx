@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TrainingScreen } from './ui/TrainingScreen';
 import { colors as c } from './ui/theme';
 import { createYamlContentRepository } from './content/yaml-content-repository';
+import { contentKeyFromSearch } from './content/content-selection';
 import { createAsyncStorageProgressRepository } from './storage/async-storage-progress-repository';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -13,11 +14,16 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean
   render() { return this.state.failed ? <View style={styles.error}><Text style={{ color: c.text }}>No se ha podido abrir el entrenamiento. Revisa el contenido y recarga la app.</Text></View> : this.props.children; }
 }
 
-const content = createYamlContentRepository();
 const progress = createAsyncStorageProgressRepository();
 
+function ContentApp() {
+  const search = Platform.OS === 'web' ? globalThis.location?.search ?? '' : '';
+  const content = createYamlContentRepository(contentKeyFromSearch(search));
+  return <TrainingScreen content={content} progress={progress} />;
+}
+
 export default function App() {
-  return <SafeAreaProvider><View style={styles.stage}><View style={styles.phone}><StatusBar style="light" /><ErrorBoundary><TrainingScreen content={content} progress={progress} /></ErrorBoundary></View></View></SafeAreaProvider>;
+  return <SafeAreaProvider><View style={styles.stage}><View style={styles.phone}><StatusBar style="light" /><ErrorBoundary><ContentApp /></ErrorBoundary></View></View></SafeAreaProvider>;
 }
 const styles = StyleSheet.create({
   stage: { flex: 1, backgroundColor: c.outside, alignItems: 'center', justifyContent: 'center' },
