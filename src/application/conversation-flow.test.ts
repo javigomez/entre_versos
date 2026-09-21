@@ -86,8 +86,36 @@ test('J01: una imagen elegida recorre la transición normal y desbloquea la sigu
   state = reduceFlow(lesson, state, { type: 'PRESS_DONE', token });
   state = reduceFlow(lesson, state, { type: 'MOVE_DONE', token });
   state = reduceFlow(lesson, state, { type: 'PLACED', token });
-  expect(state.messages[state.revealed]).toMatchObject({ role: 'player', text: 'PASO1A' });
+  expect(state.messages[state.revealed]).toMatchObject({ role: 'player', text: 'Paso1a' });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token, messageId: state.messages[state.revealed].id });
   expect(state.phase).toBe('waiting-choice');
   expect(state.progress.history).toEqual([{ challengeId: 'viaje-palabras', optionId: 'n1-a' }]);
+});
+
+test('J07: el recorrido final espera la respuesta explícita del jugador', () => {
+  const lesson = { ...journeyLesson, startWithStudent: undefined };
+  const history = ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a'].map(optionId => ({ challengeId: 'viaje-palabras', optionId }));
+  let state = createFlow(lesson, { ...initialProgress(lesson), started: true, history }, true);
+  expect(state.phase).toBe('waiting-choice');
+
+  state = reduceFlow(lesson, state, { type: 'ANSWER', controlId: 'n6-a', optionId: 'n6-a' });
+  const answerToken = state.token;
+  state = reduceFlow(lesson, state, { type: 'PRESS_DONE', token: answerToken });
+  state = reduceFlow(lesson, state, { type: 'MOVE_DONE', token: answerToken });
+  state = reduceFlow(lesson, state, { type: 'PLACED', token: answerToken });
+  expect(state.messages[state.revealed]).toMatchObject({ text: 'Nadar' });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: answerToken, messageId: state.messages[state.revealed].id });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
+  expect(state.messages[state.revealed]).toMatchObject({ text: '¿Quieres ver el recorrido que has trazado?' });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
+  expect(state.phase).toBe('waiting-student');
+  expect(state.messages[state.revealed]).toMatchObject({ action: 'VER MI RECORRIDO', text: 'Quiero ver el recorrido que he hecho.' });
+
+  state = reduceFlow(lesson, state, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
+  const routeToken = state.token;
+  state = reduceFlow(lesson, state, { type: 'PRESS_DONE', token: routeToken });
+  state = reduceFlow(lesson, state, { type: 'MOVE_DONE', token: routeToken });
+  state = reduceFlow(lesson, state, { type: 'PLACED', token: routeToken });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: routeToken, messageId: state.messages[state.revealed].id });
+  expect(state.messages[state.revealed]).toMatchObject({ role: 'master', label: 'Tu recorrido', text: 'Viaje → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → Nadar' });
 });

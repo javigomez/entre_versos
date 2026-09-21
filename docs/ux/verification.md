@@ -231,6 +231,12 @@ J06 protege la variante visual experimental: cada tarjeta del viaje muestra
 solo la fotografía. La palabra sigue siendo su etiqueta accesible y aparece en
 la burbuja de conversación después de seleccionarla.
 
+J07 protege el cierre en pregunta–respuesta: tras revelar el final del viaje,
+el maestro pregunta si el jugador quiere ver su recorrido y aparece la acción
+«VER MI RECORRIDO». Esta crea una burbuja del jugador antes de que el maestro
+muestre el recorrido y la enseñanza. La proyección normaliza también las
+palabras mostradas como `Nieve`, `Río` o `Huellas`.
+
 R11 protege el reinicio sin recarga y R12 exige que el texto del jugador se
 escriba tras ocupar el ancla, en vez de aparecer completo al terminar el
 desplazamiento.
@@ -245,9 +251,10 @@ valor anterior de 24 ms.
 | --- | --- |
 | `npx jest --runInBand tests/components/ChatMessage.test.tsx` | PASS: 1 suite, 5 pruebas. Cubre R08, R13 y R14: finalización única, reserva de burbuja y cadencia compartida. |
 | `npx jest --runInBand tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 2 suites, 13 pruebas. Cubre J01/J02/J05/J06 y confirma que la palabra elegida llega a la burbuja. |
-| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 116 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npx jest --runInBand src/application/conversation-flow.test.ts src/application/journey-messages.test.ts tests/components/TrainingSession.test.tsx` | PASS: 3 suites, 22 pruebas. Cubre J07: acción explícita, burbuja de respuesta y recorrido posterior. |
+| `npm test` | BLOQUEADO en el árbol compartido: 4 pruebas Node y 24 de 25 suites Jest pasan; falla una aserción de tipografía de versos en cambios sin confirmar de `ChatMessage.tsx`, ajenos a J07. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
-| `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |
+| `npm run lint` | BLOQUEADO por esos mismos cambios sin confirmar de `ChatMessage.tsx`: una regla de Hooks y un warning de dependencias. |
 | `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. El aviso conocido sobre `NO_COLOR` y `FORCE_COLOR` no impidió la exportación. |
 
 Comprobación manual: exportación local en Chrome de escritorio, ruta

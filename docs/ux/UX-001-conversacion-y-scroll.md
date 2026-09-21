@@ -34,6 +34,7 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 | UX-001.13 | Reiniciar vuelve al primer mensaje sin recargar la aplicación. Cuando termina de escribirse, reaparece la acción inicial correspondiente. |
 | UX-001.14 | Después de colocarse en el ancla, la burbuja del jugador escribe su texto de forma progresiva, con cursor y Mostrar completo, igual que un mensaje del maestro. No mostrar el texto completo de forma abrupta. |
 | UX-001.15 | Antes del primer carácter de una respuesta del jugador, su burbuja abre con el tamaño del texto completo. La escritura avanza de izquierda a derecha sin que el borde derecho se desplace. |
+| UX-001.16 | Cuando el maestro plantee una pregunta o invitación que requiera respuesta, debe aparecer una acción explícita del jugador. No mostrar automáticamente la respuesta del jugador ni el mensaje que depende de ella. |
 
 ## Secuencia de referencia
 
@@ -87,8 +88,11 @@ Cada pareja contiene exactamente dos fotografías verticales, sin texto visible
 en las tarjetas. Al tocar una tarjeta, ambas se bloquean y el control elegido
 asciende hasta el ancla; se convierte en una burbuja del jugador con su palabra.
 Tras esa transición aparece debajo la siguiente pareja de la ruta. Al terminar
-la sexta elección, el maestro muestra la revelación, el recorrido y la enseñanza.
-El gesto cumple UX-001.1–.15, incluidos el ancla, el scroll manual y reducir
+la sexta elección, el maestro muestra la revelación y pregunta si el jugador
+quiere ver su recorrido. El recorrido y la enseñanza aparecen solo después de
+la acción de respuesta. Las palabras de las burbujas y del recorrido usan una
+mayúscula inicial y el resto en minúsculas.
+El gesto cumple UX-001.1–.16, incluidos el ancla, el scroll manual y reducir
 movimiento.
 
 | Caso | Preparación y acción | Resultado |
@@ -99,6 +103,7 @@ movimiento.
 | J04 | Activar reducir movimiento | Se mantiene el orden, el bloqueo, la burbuja y el ancla; la transición se posiciona de inmediato. |
 | J05 | Pulsar o seleccionar una tarjeta del viaje | La tarjeta muestra un único borde amarillo, igual que una opción de reto emoji+texto; no aparece un segundo borde exterior. |
 | J06 | Mostrar una pareja del viaje antes de elegir | Las tarjetas muestran únicamente las fotografías; la palabra elegida se revela después en la burbuja del jugador. Las etiquetas accesibles conservan el nombre de cada imagen. |
+| J07 | Completar la sexta elección | Tras la revelación, el maestro pregunta «¿Quieres ver el recorrido que has trazado?» y aparece «VER MI RECORRIDO». El botón se convierte en una burbuja de respuesta del jugador; después el maestro muestra el recorrido y continúa la enseñanza. No adelantar esos turnos; .2–.4, .16. |
 
 ## Plataformas y evidencia
 

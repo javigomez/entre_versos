@@ -124,7 +124,7 @@ test('J01/J02: la imagen elegida se convierte en palabra y muestra el siguiente 
   await act(async () => { viewport.finishMove(); });
   await act(async () => { viewport.finishPlacement(); });
   await completeActiveMessageIfNeeded();
-  expect(screen.getByText('PASO1A')).toBeOnTheScreen();
+  expect(screen.getByText('Paso1a')).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
   expect(screen.queryByTestId('image-journey')).not.toBeOnTheScreen();
@@ -143,7 +143,7 @@ test('J04: reducir movimiento conserva la palabra y el siguiente reto', async ()
   expect(viewport.moves).toHaveLength(1);
   await act(async () => { viewport.finishMove(); });
   await act(async () => { viewport.finishPlacement(); });
-  expect(screen.getByText('PASO1A')).toBeOnTheScreen();
+  expect(screen.getByText('Paso1a')).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
 });
