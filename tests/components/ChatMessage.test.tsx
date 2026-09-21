@@ -49,3 +49,53 @@ test('R14: la escritura espera la cadencia general antes del primer tramo', asyn
   await act(async () => { jest.advanceTimersByTime(1); });
   expect(screen.getByText(/Tex/)).toBeOnTheScreen();
 });
+
+test('verso usa escalado del sistema y peso regular', async () => {
+  await render(<ChatMessage
+    message={{ id: 'verse-1', role: 'master', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto\notra línea\núltima línea' }}
+    animate={false}
+    reducedMotion={false}
+    token={1}
+    onDone={jest.fn()}
+  />);
+
+  const text = screen.getByTestId('verse-text');
+  expect(text.props.allowFontScaling).toBe(true);
+  expect(text.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
+});
+
+test('verso reduce el tamaño solo hasta que caben sus líneas explícitas', async () => {
+  await render(<ChatMessage
+    message={{ id: 'verse-2', role: 'master', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto' }}
+    animate={false}
+    reducedMotion={false}
+    token={1}
+    onDone={jest.fn()}
+  />);
+
+  const container = screen.getByTestId('verse-container');
+  const text = screen.getByTestId('verse-text');
+  await act(async () => { fireEvent(container, 'layout', { nativeEvent: { layout: { width: 200 } } }); });
+  await act(async () => { fireEvent(screen.getByTestId('verse-text'), 'textLayout', { nativeEvent: { lines: [
+    { text: 'línea corta', width: 120 },
+    { text: 'la línea más', width: 195 },
+    { text: 'larga del cuarteto', width: 170 },
+  ] } }); });
+
+  expect(text.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontSize: 16 })]));
+});
+
+test('reserva y contenido del jugador comparten la tipografía del verso', async () => {
+  await render(<ChatMessage
+    message={{ id: 'verse-3', role: 'player', kind: 'verse', text: 'siete sílabas aquí\ny otra línea más larga' }}
+    animate
+    reducedMotion={false}
+    token={2}
+    onDone={jest.fn()}
+  />);
+
+  const reserve = screen.getByTestId('typing-reserve');
+  const content = screen.getByTestId('typing-content');
+  expect(reserve.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
+  expect(content.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
+});
