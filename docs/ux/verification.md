@@ -223,10 +223,14 @@ una burbuja del jugador y deja la siguiente pareja debajo. El progreso sigue
 guardándose por contenido, por lo que una ruta no altera otra lección. UX-001
 J01–J04 describe este comportamiento.
 
+J05 protege la tarjeta seleccionada: el control táctil exterior no tiene borde
+y la tarjeta interior conserva el único borde amarillo, como en el reto de
+emoji y texto.
+
 | Comando | Resultado observado |
 | --- | --- |
-| `npx jest --runInBand src/application/journey-messages.test.ts src/application/conversation-flow.test.ts tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 4 suites, 21 pruebas. Cubre J01/J02/J04: palabra, bloqueo, siguiente pareja y reducir movimiento mediante la transición normal. |
-| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 111 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npx jest --runInBand src/application/journey-messages.test.ts src/application/conversation-flow.test.ts tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 4 suites, 21 pruebas. Cubre J01/J02/J04/J05: palabra, bloqueo, siguiente pareja, reducir movimiento y borde único. |
+| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 112 pruebas y 3 pruebas de despliegue; 0 fallos. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
 | `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |
 | `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. |

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { ImageJourney } from '../../src/infrastructure/expo/ui/ImageJourney';
 
 const node = {
@@ -30,4 +31,12 @@ test('J02: bloquea el doble toque mientras la respuesta asciende', async () => {
   expect(nieve.props.accessibilityState).toMatchObject({ disabled: true, selected: true });
   fireEvent.press(nieve);
   expect(onAnswer).not.toHaveBeenCalled();
+});
+
+test('J05: la tarjeta seleccionada usa un único borde visual', async () => {
+  await render(<ImageJourney challengeId="viaje-palabras" options={node.options} selectedOptionId="l1-viaje-nieve"
+    resolveImage={() => 1 as never} onAnswer={() => {}} />);
+
+  const outerControl = screen.getByRole('button', { name: 'NIEVE' });
+  expect(StyleSheet.flatten(outerControl.props.style)).not.toMatchObject({ borderWidth: 1 });
 });

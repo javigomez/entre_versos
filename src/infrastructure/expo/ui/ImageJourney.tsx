@@ -19,7 +19,7 @@ function JourneyCard({ option, challengeId, resolveImage, disabled, selected, on
   option: JourneyOption; challengeId: string; resolveImage: ChallengeImageResolver; disabled: boolean; selected: boolean; onAnswer: Props['onAnswer'];
 }) {
   const ref = useRef<View | null>(null); const [failed, setFailed] = useState(false);
-  const visual = (preview = false) => <View style={[s.card, preview && s.preview, selected && s.selected]}>
+  const visual = (preview = false, highlighted = selected) => <View style={[s.card, preview && s.preview, highlighted && s.selected]}>
     <View style={s.photo}>{failed ? <Text style={s.fallback}>Imagen no disponible</Text>
       : <Image testID={`journey-photo-${option.id}`} source={resolveImage(challengeId, option.image.file)}
           resizeMode="cover" style={s.image} accessible={false} onError={() => setFailed(true)} />}</View>
@@ -28,11 +28,11 @@ function JourneyCard({ option, challengeId, resolveImage, disabled, selected, on
   const target: ControlTarget = { id: option.id, ref, renderPreview: () => visual(true) };
   return <Pressable accessibilityRole="button" accessibilityLabel={option.text} accessibilityHint={option.image.description}
     ref={ref} accessibilityState={{ disabled, selected }} disabled={disabled} onPress={() => { if (!disabled) onAnswer(option.id, target); }}
-    style={({ pressed }) => [s.card, (pressed || selected) && s.selected]}>{visual()}</Pressable>;
+    style={s.touch}>{({ pressed }) => visual(false, pressed || selected)}</Pressable>;
 }
 
 const s = StyleSheet.create({ container: { marginBottom: 14 }, hint: { color: c.muted, fontSize: 14, marginTop: 8, marginBottom: 18 },
-  row: { flexDirection: 'row', alignItems: 'stretch', gap: 12 }, card: { flex: 1, minWidth: 0, borderWidth: 1, borderColor: c.border, borderRadius: 22, padding: 10, backgroundColor: '#303133' }, preview: { width: '100%', height: '100%' },
+  row: { flexDirection: 'row', alignItems: 'stretch', gap: 12 }, touch: { flex: 1, minWidth: 0 }, card: { flex: 1, borderWidth: 1, borderColor: c.border, borderRadius: 22, padding: 10, backgroundColor: '#303133' }, preview: { width: '100%', height: '100%' },
   selected: { borderColor: c.accent }, photo: { width: '100%', aspectRatio: 9 / 16, overflow: 'hidden', borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: c.bg },
   image: { width: '100%', height: '100%' }, fallback: { color: c.muted, fontSize: 14, textAlign: 'center', padding: 8 }, word: { color: c.text, fontSize: 19, fontWeight: '700', textAlign: 'center', marginVertical: 10 },
 });

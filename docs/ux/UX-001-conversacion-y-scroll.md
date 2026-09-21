@@ -90,6 +90,7 @@ movimiento.
 | J02 | Tocar una tarjeta dos veces durante la transición | Se registra una sola palabra, se crea una sola burbuja y no salta ninguna capa. |
 | J03 | Restaurar después de 1–5 elecciones | El historial muestra las palabras elegidas y se reabre exactamente la siguiente pareja; un historial imposible se descarta. |
 | J04 | Activar reducir movimiento | Se mantiene el orden, el bloqueo, la burbuja y el ancla; la transición se posiciona de inmediato. |
+| J05 | Pulsar o seleccionar una tarjeta del viaje | La tarjeta muestra un único borde amarillo, igual que una opción de reto emoji+texto; no aparece un segundo borde exterior. |
 
 ## Plataformas y evidencia
 
