@@ -107,6 +107,12 @@ movimiento.
 
 ## Plataformas y evidencia
 
+La adaptación catalana autorizada el 21 de septiembre de 2026, `camp-semantic`,
+mantiene J01–J07 y R01–R10. En J07 usa «Vols veure el camí que has fet?» y
+«VEURE EL MEU RECORREGUT», seguidos de la respuesta del jugador antes del
+recorrido. Los textos se declaran en el contenido; el orden, los controles,
+el ancla y el scroll conservan el contrato anterior.
+
 Usar pruebas unitarias y de componentes como protección habitual, con medidas y reloj controlados. Conservar Chromium/WebKit como diagnóstico opcional. Las pruebas sin navegador no verifican layout, pintura ni suavidad reales. Comprobar esos aspectos visualmente y, para los fallos específicos, en DuckDuckGo Android y Chrome iPhone, registrando dispositivo, sistema, versión de navegador, revisión del código y vídeo del flujo. Los dos fallos comunicados por el usuario siguen pendientes de reproducción específica hasta disponer de esa evidencia.
 
 Una prueba pendiente no es una prueba pasada. Un test de una función identidad no protege el scroll real. No sustituir las aserciones geométricas ni de interacción por búsquedas de texto en el código fuente.

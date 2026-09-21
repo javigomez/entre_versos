@@ -3,11 +3,13 @@ import { createChallengeImageResolver, validateContentImages, type ChallengeImag
 import type { ContentRepository } from '../../../application/content-repository';
 import { campoSemanticoJourney } from './campo-semantico-journey';
 import trainingRaw from './training.yaml';
+import campSemanticRaw from './camp-semantic.yaml';
 import type { ContentKey } from './content-selection';
 
 const rawByKey = {
   training: trainingRaw,
   campo_semantico: campoSemanticoJourney,
+  'camp-semantic': campSemanticRaw,
 } as const;
 
 /** Carga contenido editorial desde su fuente registrada, YAML o TypeScript. */

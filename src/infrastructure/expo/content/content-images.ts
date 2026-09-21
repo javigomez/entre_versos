@@ -109,7 +109,8 @@ export function createContentImageResolver(registry: ContentImageRegistry) {
 export const resolveContentImage = createContentImageResolver(contentImageRegistry);
 
 export function createChallengeImageResolver(contentKey = 'training'): ChallengeImageResolver {
-  return (challengeId, file) => resolveContentImage(contentKey, challengeId, file);
+  const imageKey = contentKey === 'camp-semantic' ? 'campo_semantico' : contentKey;
+  return (challengeId, file) => resolveContentImage(imageKey, challengeId, file);
 }
 
 export function validateContentImages(lesson: Lesson, resolveImage: ChallengeImageResolver): void {

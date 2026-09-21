@@ -12,31 +12,37 @@ export function journeyMessages(challenge: ImageJourneyChallenge, optionIds: rea
     text: presentationWord(text),
   }));
   if (!replay.ending) return answers;
+  const presentation = challenge.presentation ?? {
+    masterLabel: 'Maestro', routeQuestion: '¿Quieres ver el recorrido que has trazado?',
+    routeAction: 'VER MI RECORRIDO', routeAnswer: 'Quiero ver el recorrido que he hecho.',
+    routeLabel: 'Tu recorrido', routeStart: 'Viaje',
+  };
   return [...answers,
     {
       id: `${challenge.id}-revelation`,
       role: 'master',
       kind: 'verse',
-      label: 'Maestro',
+      label: presentation.masterLabel,
       text: challenge.revelation.replace('{VERBO}', replay.ending),
     },
     {
       id: `${challenge.id}-route-question`,
       role: 'master',
-      text: '¿Quieres ver el recorrido que has trazado?',
+      label: presentation.masterLabel,
+      text: presentation.routeQuestion,
     },
     {
       id: `${challenge.id}-route-action`,
       role: 'player',
-      action: 'VER MI RECORRIDO',
-      text: 'Quiero ver el recorrido que he hecho.',
+      action: presentation.routeAction,
+      text: presentation.routeAnswer,
     },
     {
       id: `${challenge.id}-route`,
       role: 'master',
-      label: 'Tu recorrido',
-      text: ['Viaje', ...replay.words.map(presentationWord)].join(' → '),
+      label: presentation.routeLabel,
+      text: [presentation.routeStart, ...replay.words.map(presentationWord)].join(' → '),
     },
-    { id: `${challenge.id}-teaching`, role: 'master', label: 'Maestro', text: challenge.teaching },
+    { id: `${challenge.id}-teaching`, role: 'master', label: presentation.masterLabel, text: challenge.teaching },
   ];
 }

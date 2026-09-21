@@ -1,0 +1,657 @@
+# Adaptació catalana del viatge. Els IDs i les imatges conserven les referències originals.
+# Versos validats amb heptasilabs; vegeu docs/ux/camp-semantic-metrica.md.
+id: camp-semantic-viatge-v1
+startAction: AIXECAR-ME
+startWithStudent: true
+script:
+  - type: master
+    label: Veu
+    text: |-
+      Ja se n'ha anat la gent,
+      sona l'eco del rival;
+      t'aixeques ben lentament:
+      el silenci és el final.
+  - type: student
+    action: AIXECAR-ME
+    text: No m'han donat cap cop. M'he quedat sense paraules davant de tothom.
+  - type: master
+    label: Veu
+    text: |-
+      Ja no queda aquí la gent,
+      ni qui t'ha deixat vençut;
+      veus un full que mou el vent,
+      d'un mestre desconegut.
+  - type: student
+    action: LLEGIR LA NOTA
+    text: "Recullo el paper i llegeixo: «Si vols saber per què has perdut, troba'm»."
+  - type: master
+    label: Nota
+    text: No busquis cap resposta correcta. Tria allò que et suggereixi cada imatge i segueix el viatge.
+  - type: student
+    action: COMENÇAR EL VIATGE
+    text: Tanco els ulls. Aquest cop deixaré que una paraula em porti a una altra.
+  - type: image-journey
+    id: viaje-palabras
+    startNodeId: l1-viaje
+    revelation: |-
+      El viatge t'ha guiat,
+      cada mot et fa avançar;
+      un nou món s'ha despertat,
+      fins que has après a {VERBO}.
+    teaching: >-
+      Això és un camp semàntic: paraules connectades pel seu significat. Una paraula te'n suggereix una altra,
+      encara que canviïs de paisatge. No cal que rimin.
+
+
+      A la batalla t'has quedat en blanc. No t'aferris a la paraula que et donen: fes-la servir per trobar la
+      següent.
+    nodes:
+      - id: l1-viaje
+        layer: 1
+        options:
+          - id: l1-viaje-nieve
+            text: NEU
+            image:
+              file: l1-viaje-nieve.jpg
+              description: "Un camí cap a: neu"
+            next: l2-nieve
+          - id: l1-viaje-playa
+            text: PLATJA
+            image:
+              file: l1-viaje-playa.jpg
+              description: "Un camí cap a: platja"
+            next: l2-playa
+      - id: l2-nieve
+        layer: 2
+        options:
+          - id: l2-nieve-refugio
+            text: REFUGI
+            image:
+              file: l2-nieve-refugio.jpg
+              description: "Un camí cap a: refugi"
+            next: l3-refugio
+          - id: l2-nieve-hielo
+            text: GEL
+            image:
+              file: l2-nieve-hielo.jpg
+              description: "Un camí cap a: gel"
+            next: l3-hielo
+      - id: l2-playa
+        layer: 2
+        options:
+          - id: l2-playa-mar
+            text: MAR
+            image:
+              file: l2-playa-mar.jpg
+              description: "Un camí cap a: mar"
+            next: l3-mar
+          - id: l2-playa-arena
+            text: SORRA
+            image:
+              file: l2-playa-arena.jpg
+              description: "Un camí cap a: sorra"
+            next: l3-arena
+      - id: l3-refugio
+        layer: 3
+        options:
+          - id: l3-refugio-ventana
+            text: FINESTRA
+            image:
+              file: l3-refugio-ventana.jpg
+              description: "Un camí cap a: finestra"
+            next: l4-ventana
+          - id: l3-refugio-fuego
+            text: FOC
+            image:
+              file: l3-refugio-fuego.jpg
+              description: "Un camí cap a: foc"
+            next: l4-fuego
+      - id: l3-hielo
+        layer: 3
+        options:
+          - id: l3-hielo-lago
+            text: LLAC
+            image:
+              file: l3-hielo-lago.jpg
+              description: "Un camí cap a: llac"
+            next: l4-lago
+          - id: l3-hielo-cumbre
+            text: CIM
+            image:
+              file: l3-hielo-cumbre.jpg
+              description: "Un camí cap a: cim"
+            next: l4-cumbre
+      - id: l3-mar
+        layer: 3
+        options:
+          - id: l3-mar-barca
+            text: BARCA
+            image:
+              file: l3-mar-barca.jpg
+              description: "Un camí cap a: barca"
+            next: l4-barca
+          - id: l3-mar-oleaje
+            text: ONATGE
+            image:
+              file: l3-mar-oleaje.jpg
+              description: "Un camí cap a: onatge"
+            next: l4-oleaje
+      - id: l3-arena
+        layer: 3
+        options:
+          - id: l3-arena-dunas
+            text: DUNES
+            image:
+              file: l3-arena-dunas.jpg
+              description: "Un camí cap a: dunes"
+            next: l4-dunas
+          - id: l3-arena-acantilado
+            text: PENYA-SEGAT
+            image:
+              file: l3-arena-acantilado.jpg
+              description: "Un camí cap a: penya-segat"
+            next: l4-acantilado
+      - id: l4-ventana
+        layer: 4
+        options:
+          - id: l4-ventana-huellas
+            text: PETJADES
+            image:
+              file: l4-ventana-huellas.jpg
+              description: "Un camí cap a: petjades"
+            next: l5-huellas
+          - id: l4-ventana-bosque
+            text: BOSC
+            image:
+              file: l4-ventana-bosque.jpg
+              description: "Un camí cap a: bosc"
+            next: l5-bosque
+      - id: l4-fuego
+        layer: 4
+        options:
+          - id: l4-fuego-humo
+            text: FUM
+            image:
+              file: l4-fuego-humo.jpg
+              description: "Un camí cap a: fum"
+            next: l5-humo
+          - id: l4-fuego-chispas
+            text: ESPURNES
+            image:
+              file: l4-fuego-chispas.jpg
+              description: "Un camí cap a: espurnes"
+            next: l5-chispas
+      - id: l4-lago
+        layer: 4
+        options:
+          - id: l4-lago-orilla
+            text: RIBA
+            image:
+              file: l4-lago-orilla.jpg
+              description: "Un camí cap a: riba"
+            next: l5-orilla
+          - id: l4-lago-isla
+            text: ILLA
+            image:
+              file: l4-lago-isla.jpg
+              description: "Un camí cap a: illa"
+            next: l5-isla
+      - id: l4-cumbre
+        layer: 4
+        options:
+          - id: l4-cumbre-cielo
+            text: CEL
+            image:
+              file: l4-cumbre-cielo.jpg
+              description: "Un camí cap a: cel"
+            next: l5-cielo
+          - id: l4-cumbre-roca
+            text: ROCA
+            image:
+              file: l4-cumbre-roca.jpg
+              description: "Un camí cap a: roca"
+            next: l5-roca
+      - id: l4-barca
+        layer: 4
+        options:
+          - id: l4-barca-remos
+            text: REMS
+            image:
+              file: l4-barca-remos.jpg
+              description: "Un camí cap a: rems"
+            next: l5-remos
+          - id: l4-barca-horizonte
+            text: HORITZÓ
+            image:
+              file: l4-barca-horizonte.jpg
+              description: "Un camí cap a: horitzó"
+            next: l5-horizonte
+      - id: l4-oleaje
+        layer: 4
+        options:
+          - id: l4-oleaje-espuma
+            text: ESCUMA
+            image:
+              file: l4-oleaje-espuma.jpg
+              description: "Un camí cap a: escuma"
+            next: l5-espuma
+          - id: l4-oleaje-corriente
+            text: CORRENT
+            image:
+              file: l4-oleaje-corriente.jpg
+              description: "Un camí cap a: corrent"
+            next: l5-corriente
+      - id: l4-dunas
+        layer: 4
+        options:
+          - id: l4-dunas-viento
+            text: VENT
+            image:
+              file: l4-dunas-viento.jpg
+              description: "Un camí cap a: vent"
+            next: l5-viento
+          - id: l4-dunas-altura
+            text: ALÇADA
+            image:
+              file: l4-dunas-altura.jpg
+              description: "Un camí cap a: alçada"
+            next: l5-altura
+      - id: l4-acantilado
+        layer: 4
+        options:
+          - id: l4-acantilado-vacio
+            text: BUIT
+            image:
+              file: l4-acantilado-vacio.jpg
+              description: "Un camí cap a: buit"
+            next: l5-vacio
+          - id: l4-acantilado-pared
+            text: PARET
+            image:
+              file: l4-acantilado-pared.jpg
+              description: "Un camí cap a: paret"
+            next: l5-pared
+      - id: l5-huellas
+        layer: 5
+        options:
+          - id: l5-huellas-rio
+            text: RIU
+            image:
+              file: l5-huellas-rio.jpg
+              description: "Un camí cap a: riu"
+            next: l6-rio
+          - id: l5-huellas-montana
+            text: MUNTANYA
+            image:
+              file: l5-huellas-montana.jpg
+              description: "Un camí cap a: muntanya"
+            next: l6-montana
+      - id: l5-bosque
+        layer: 5
+        options:
+          - id: l5-bosque-rio
+            text: RIU
+            image:
+              file: l5-bosque-rio.jpg
+              description: "Un camí cap a: riu"
+            next: l6-rio
+          - id: l5-bosque-montana
+            text: MUNTANYA
+            image:
+              file: l5-bosque-montana.jpg
+              description: "Un camí cap a: muntanya"
+            next: l6-montana
+      - id: l5-humo
+        layer: 5
+        options:
+          - id: l5-humo-cielo
+            text: CEL
+            image:
+              file: l5-humo-cielo.jpg
+              description: "Un camí cap a: cel"
+            next: l6-cielo
+          - id: l5-humo-montana
+            text: MUNTANYA
+            image:
+              file: l5-humo-montana.jpg
+              description: "Un camí cap a: muntanya"
+            next: l6-montana
+      - id: l5-chispas
+        layer: 5
+        options:
+          - id: l5-chispas-cielo
+            text: CEL
+            image:
+              file: l5-chispas-cielo.jpg
+              description: "Un camí cap a: cel"
+            next: l6-cielo
+          - id: l5-chispas-montana
+            text: MUNTANYA
+            image:
+              file: l5-chispas-montana.jpg
+              description: "Un camí cap a: muntanya"
+            next: l6-montana
+      - id: l5-orilla
+        layer: 5
+        options:
+          - id: l5-orilla-agua
+            text: AIGUA
+            image:
+              file: l5-orilla-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+          - id: l5-orilla-barca
+            text: BARCA
+            image:
+              file: l5-orilla-barca.jpg
+              description: "Un camí cap a: barca"
+            next: l6-barca
+      - id: l5-isla
+        layer: 5
+        options:
+          - id: l5-isla-agua
+            text: AIGUA
+            image:
+              file: l5-isla-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+          - id: l5-isla-roca
+            text: ROCA
+            image:
+              file: l5-isla-roca.jpg
+              description: "Un camí cap a: roca"
+            next: l6-roca
+      - id: l5-cielo
+        layer: 5
+        options:
+          - id: l5-cielo-aire
+            text: AIRE
+            image:
+              file: l5-cielo-aire.jpg
+              description: "Un camí cap a: aire"
+            next: l6-aire
+          - id: l5-cielo-roca
+            text: ROCA
+            image:
+              file: l5-cielo-roca.jpg
+              description: "Un camí cap a: roca"
+            next: l6-roca
+      - id: l5-roca
+        layer: 5
+        options:
+          - id: l5-roca-altura
+            text: ALÇADA
+            image:
+              file: l5-roca-altura.jpg
+              description: "Un camí cap a: alçada"
+            next: l6-altura
+          - id: l5-roca-pared
+            text: PARET
+            image:
+              file: l5-roca-pared.jpg
+              description: "Un camí cap a: paret"
+            next: l6-pared
+      - id: l5-remos
+        layer: 5
+        options:
+          - id: l5-remos-barca
+            text: BARCA
+            image:
+              file: l5-remos-barca.jpg
+              description: "Un camí cap a: barca"
+            next: l6-barca
+          - id: l5-remos-agua
+            text: AIGUA
+            image:
+              file: l5-remos-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+      - id: l5-horizonte
+        layer: 5
+        options:
+          - id: l5-horizonte-aire
+            text: AIRE
+            image:
+              file: l5-horizonte-aire.jpg
+              description: "Un camí cap a: aire"
+            next: l6-aire
+          - id: l5-horizonte-agua
+            text: AIGUA
+            image:
+              file: l5-horizonte-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+      - id: l5-espuma
+        layer: 5
+        options:
+          - id: l5-espuma-agua
+            text: AIGUA
+            image:
+              file: l5-espuma-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+          - id: l5-espuma-barca
+            text: BARCA
+            image:
+              file: l5-espuma-barca.jpg
+              description: "Un camí cap a: barca"
+            next: l6-barca
+      - id: l5-corriente
+        layer: 5
+        options:
+          - id: l5-corriente-agua
+            text: AIGUA
+            image:
+              file: l5-corriente-agua.jpg
+              description: "Un camí cap a: aigua"
+            next: l6-agua
+          - id: l5-corriente-barca
+            text: BARCA
+            image:
+              file: l5-corriente-barca.jpg
+              description: "Un camí cap a: barca"
+            next: l6-barca
+      - id: l5-viento
+        layer: 5
+        options:
+          - id: l5-viento-aire
+            text: AIRE
+            image:
+              file: l5-viento-aire.jpg
+              description: "Un camí cap a: aire"
+            next: l6-aire
+          - id: l5-viento-altura
+            text: ALÇADA
+            image:
+              file: l5-viento-altura.jpg
+              description: "Un camí cap a: alçada"
+            next: l6-altura
+      - id: l5-altura
+        layer: 5
+        options:
+          - id: l5-altura-aire
+            text: AIRE
+            image:
+              file: l5-altura-aire.jpg
+              description: "Un camí cap a: aire"
+            next: l6-aire
+          - id: l5-altura-pared
+            text: PARET
+            image:
+              file: l5-altura-pared.jpg
+              description: "Un camí cap a: paret"
+            next: l6-pared
+      - id: l5-vacio
+        layer: 5
+        options:
+          - id: l5-vacio-aire
+            text: AIRE
+            image:
+              file: l5-vacio-aire.jpg
+              description: "Un camí cap a: aire"
+            next: l6-aire
+          - id: l5-vacio-pared
+            text: PARET
+            image:
+              file: l5-vacio-pared.jpg
+              description: "Un camí cap a: paret"
+            next: l6-pared
+      - id: l5-pared
+        layer: 5
+        options:
+          - id: l5-pared-altura
+            text: ALÇADA
+            image:
+              file: l5-pared-altura.jpg
+              description: "Un camí cap a: alçada"
+            next: l6-altura
+          - id: l5-pared-roca
+            text: ROCA
+            image:
+              file: l5-pared-roca.jpg
+              description: "Un camí cap a: roca"
+            next: l6-roca
+      - id: l6-rio
+        layer: 6
+        options:
+          - id: l6-rio-nadar
+            text: NADAR
+            image:
+              file: l6-rio-nadar.jpg
+              description: "Un camí cap a: nadar"
+            ending: nadar
+          - id: l6-rio-remar
+            text: REMAR
+            image:
+              file: l6-rio-remar.jpg
+              description: "Un camí cap a: remar"
+            ending: remar
+      - id: l6-montana
+        layer: 6
+        options:
+          - id: l6-montana-trepar
+            text: GRIMPAR
+            image:
+              file: l6-montana-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+          - id: l6-montana-volar
+            text: VOLAR
+            image:
+              file: l6-montana-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+      - id: l6-cielo
+        layer: 6
+        options:
+          - id: l6-cielo-volar
+            text: VOLAR
+            image:
+              file: l6-cielo-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+          - id: l6-cielo-trepar
+            text: GRIMPAR
+            image:
+              file: l6-cielo-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+      - id: l6-agua
+        layer: 6
+        options:
+          - id: l6-agua-nadar
+            text: NADAR
+            image:
+              file: l6-agua-nadar.jpg
+              description: "Un camí cap a: nadar"
+            ending: nadar
+          - id: l6-agua-remar
+            text: REMAR
+            image:
+              file: l6-agua-remar.jpg
+              description: "Un camí cap a: remar"
+            ending: remar
+      - id: l6-barca
+        layer: 6
+        options:
+          - id: l6-barca-remar
+            text: REMAR
+            image:
+              file: l6-barca-remar.jpg
+              description: "Un camí cap a: remar"
+            ending: remar
+          - id: l6-barca-nadar
+            text: NADAR
+            image:
+              file: l6-barca-nadar.jpg
+              description: "Un camí cap a: nadar"
+            ending: nadar
+      - id: l6-aire
+        layer: 6
+        options:
+          - id: l6-aire-volar
+            text: VOLAR
+            image:
+              file: l6-aire-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+          - id: l6-aire-trepar
+            text: GRIMPAR
+            image:
+              file: l6-aire-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+      - id: l6-altura
+        layer: 6
+        options:
+          - id: l6-altura-volar
+            text: VOLAR
+            image:
+              file: l6-altura-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+          - id: l6-altura-trepar
+            text: GRIMPAR
+            image:
+              file: l6-altura-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+      - id: l6-pared
+        layer: 6
+        options:
+          - id: l6-pared-trepar
+            text: GRIMPAR
+            image:
+              file: l6-pared-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+          - id: l6-pared-volar
+            text: VOLAR
+            image:
+              file: l6-pared-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+      - id: l6-roca
+        layer: 6
+        options:
+          - id: l6-roca-trepar
+            text: GRIMPAR
+            image:
+              file: l6-roca-trepar.jpg
+              description: "Un camí cap a: grimpar"
+            ending: grimpar
+          - id: l6-roca-volar
+            text: VOLAR
+            image:
+              file: l6-roca-volar.jpg
+              description: "Un camí cap a: volar"
+            ending: volar
+    presentation:
+      masterLabel: Mestre
+      routeQuestion: Vols veure el camí que has fet?
+      routeAction: VEURE EL MEU RECORREGUT
+      routeAnswer: Vull veure el camí que he fet.
+      routeLabel: El teu recorregut
+      routeStart: Viatge
+completion: Ja has trobat el camí. Soc qui t'ha deixat la nota. Si vols tornar al combat, et puc ensenyar a
+  trobar més paraules.

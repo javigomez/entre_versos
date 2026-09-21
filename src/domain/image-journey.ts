@@ -1,7 +1,7 @@
 import { z } from 'zod';
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const word = z.string().trim().min(1).refine(value => !/\s/.test(value), 'Una sola palabra');
-const endingSchema = z.enum(['nadar', 'remar', 'volar', 'trepar']);
+const endingSchema = z.enum(['nadar', 'remar', 'volar', 'trepar', 'grimpar']);
 const optionSchema = z.object({
   id: slug, text: word,
   image: z.object({
@@ -18,6 +18,14 @@ export const imageJourneySchema = z.object({
   type: z.literal('image-journey'), id: slug, startNodeId: slug,
   nodes: z.array(nodeSchema).min(6),
   revelation: z.string().trim().min(1), teaching: z.string().trim().min(1),
+  presentation: z.object({
+    masterLabel: z.string().trim().min(1),
+    routeQuestion: z.string().trim().min(1),
+    routeAction: z.string().trim().min(1),
+    routeAnswer: z.string().trim().min(1),
+    routeLabel: z.string().trim().min(1),
+    routeStart: z.string().trim().min(1),
+  }).strict().optional(),
 }).strict().superRefine((journey, ctx) => {
   const fail = (message: string) => ctx.addIssue({ code: 'custom', message });
   const nodes = new Map(journey.nodes.map(node => [node.id, node]));

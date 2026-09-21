@@ -292,3 +292,30 @@ No se han validado dispositivos reales en esta sesión. Queda pendiente
 comprobar iPhone Safari/instalada con varios valores de `aA Text Size` y
 Android Chrome o DuckDuckGo con distintas escalas del sistema; la exportación
 web y Jest no sustituyen esa comprobación de pintura y accesibilidad nativa.
+
+## Adaptació catalana del camp semàntic · 2026-09-21
+
+`camp-semantic.yaml` adapta el viatge complet, amb diàlegs i paraules en català,
+80 referències a imatges existents, 64 rutes i progrés propi. El tancament
+editorial és configurable; la versió castellana conserva els textos anteriors.
+UX-001 i R01–R10 mantenen el comportament acordat. La interacció nova cobreix
+R02/R09/J07: després de la sisena imatge, la pregunta catalana espera la resposta
+explícita i només després mostra el recorregut.
+
+Reproducció prèvia a la implementació: les tres suites dirigides van donar
+4 fallades i 22 proves passades. La query catalana no estava registrada i el
+component mostrava la pregunta i el botó en castellà. Després de la implementació,
+les quatre suites dirigides (inclosa la projecció castellana) passen: 31 proves.
+
+| Comanda | Resultat observat |
+| --- | --- |
+| `node scripts/validate-camp-semantic.mjs /Users/javigomez/Documents/projects/heptasilabs` | PASS: 15/15 versos diferents amb recompte 7 i `VALID`, inclosos els quatre finals. |
+| `npm test` | PASS: 4 proves Node, 128 proves Jest en 26 suites i 3 proves de desplegament. Jest: 3,497 s. Log esperat de l'ErrorBoundary per `?no-existe`. |
+| `npm run typecheck` | PASS després de corregir la captura del tipus de nodes dins la funció recursiva de la prova nova. |
+| `npm run lint` | PASS: cap error ni avís. |
+| `npm run export:web` | PASS: 421 mòduls, 82 assets i 3 fitxers exportats. Avís conegut de `NO_COLOR`/`FORCE_COLOR`. |
+| `npx jest --runInBand tests/integration/camp-semantic.test.ts` | PASS després de la correcció de tipus: recorre les 64 rutes, comprova sis decisions i els quatre finals catalans. |
+
+Recompte detallat a `docs/ux/camp-semantic-metrica.md`. No s'ha executat la suite
+de navegador ni s'han validat dispositius reals; les proves de component no
+mesuren pintura, suavitat ni disposició visual en mòbil.

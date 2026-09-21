@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { TrainingSession } from '../../src/infrastructure/expo/ui/TrainingSession';
-import { initialProgress, restoreProgress } from '../../src/domain/lesson';
+import { initialProgress, restoreProgress, submitChallengeAnswer } from '../../src/domain/lesson';
 import { conversation } from '../fixtures/conversation';
 import { journeyLesson } from '../fixtures/journey';
 import { createControlledViewport } from '../helpers/controlledViewport';
@@ -146,6 +146,31 @@ test('J04: reducir movimiento conserva la palabra y el siguiente reto', async ()
   expect(screen.getByText('Paso1a')).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
+});
+
+test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera la respuesta', async () => {
+  const viewport = createControlledViewport();
+  const lesson = { ...journeyLesson, startWithStudent: undefined, script: journeyLesson.script.map(step =>
+    step.type === 'image-journey' ? { ...step, presentation: {
+      masterLabel: 'Mestre', routeQuestion: 'Vols veure el camí que has fet?',
+      routeAction: 'VEURE EL MEU RECORREGUT', routeAnswer: 'Vull veure el camí que he fet.',
+      routeLabel: 'El teu recorregut', routeStart: 'Viatge',
+    } } : step) };
+  let progress = { ...initialProgress(lesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a']) progress = submitChallengeAnswer(lesson, progress, id);
+  await render(<TrainingSession lesson={lesson} initialProgress={progress} restored
+    onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'NADAR' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByText('Vols veure el camí que has fet?')).toBeOnTheScreen();
+  expect(screen.queryByText('El teu recorregut')).not.toBeOnTheScreen();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'VEURE EL MEU RECORREGUT' })); });
+  await finishTransition(viewport);
+  expect(screen.getByText('Vull veure el camí que he fet.')).toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByText('Viatge → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → Nadar')).toBeOnTheScreen();
 });
 
 test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto retira la parrilla antigua', async () => {
