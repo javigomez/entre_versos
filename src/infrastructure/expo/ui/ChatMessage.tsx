@@ -72,9 +72,9 @@ export function ChatMessage({ message, animate, reducedMotion, token, onDone }: 
     {message.label && <Text style={s.label}>{message.label.toUpperCase()}</Text>}
     <View testID={verse ? 'verse-container' : undefined} onLayout={verse ? handleVerseLayout : undefined} style={[player && s.bubble, verse && s.verse]}>
       {writingPlayerMessage ? <View style={s.typingLayer}>
-        <Text testID="typing-reserve" accessible={false} allowFontScaling={verse ? true : undefined} style={[s.text, verse && s.verseText, verseStyle, s.typingReserve]}>{completeText}</Text>
-        <Text testID="typing-content" allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle, s.typingText]}>{visibleText}</Text>
-      </View> : <Text testID={verse ? 'verse-text' : undefined} allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle]}>{visibleText}</Text>}
+        <Text testID="typing-reserve" accessible={false} allowFontScaling={verse ? true : undefined} style={[s.text, player && s.playerText, verse && s.verseText, verseStyle, s.typingReserve]}>{completeText}</Text>
+        <Text testID="typing-content" allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, player && s.playerText, verse && s.verseText, verseStyle, s.typingText]}>{visibleText}</Text>
+      </View> : <Text testID={verse ? 'verse-text' : undefined} allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, player && s.playerText, verse && s.verseText, verseStyle]}>{visibleText}</Text>}
     </View>
     {animate && count < message.text.length && <Pressable accessibilityRole="button" accessibilityLabel="Mostrar mensaje completo" onPress={() => setCount(message.text.length)} style={s.skip}><Text style={s.skipText}>Mostrar completo</Text></Pressable>}
   </View>;
@@ -83,6 +83,7 @@ const s = StyleSheet.create({
   row: { marginBottom: 30 }, playerRow: { alignItems: 'flex-end', marginBottom: 28 },
   label: { color: c.accent, fontSize: 10, fontWeight: '700', letterSpacing: 1.8, marginTop: 8, marginBottom: 22 },
   text: { color: c.text, fontSize: 25, lineHeight: 35, fontWeight: '600', letterSpacing: -0.4, textAlign: 'left' },
+  playerText: { fontWeight: '400' },
   bubble: { backgroundColor: c.player, borderRadius: 20, borderBottomRightRadius: 5, paddingHorizontal: 18, paddingVertical: 12, maxWidth: '90%' },
   verse: { paddingVertical: 4 },
   verseText: { fontSize: 25, lineHeight: 35, fontWeight: '400' },

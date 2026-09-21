@@ -37,6 +37,7 @@ test('R13: la burbuja del jugador reserva su tamaño antes de escribir', async (
 
   expect(screen.getByTestId('typing-reserve')).toHaveTextContent('Respuesta larga para comprobar el tamaño.');
   expect(screen.getByText('▍')).toBeOnTheScreen();
+  expect(screen.getByTestId('typing-content').props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
 });
 
 test('R14: la escritura espera la cadencia general antes del primer tramo', async () => {
