@@ -30,3 +30,22 @@ test('desmontar cancela el temporizador', async () => {
   await act(async () => { jest.advanceTimersByTime(1000); });
   expect(onDone).not.toHaveBeenCalled();
 });
+
+test('R13: la burbuja del jugador reserva su tamaño antes de escribir', async () => {
+  const onDone = jest.fn();
+  await render(<ChatMessage message={{ id: 'm4', role: 'player', text: 'Respuesta larga para comprobar el tamaño.' }} animate reducedMotion={false} token={4} onDone={onDone} />);
+
+  expect(screen.getByTestId('typing-reserve')).toHaveTextContent('Respuesta larga para comprobar el tamaño.');
+  expect(screen.getByText('▍')).toBeOnTheScreen();
+});
+
+test('R14: la escritura espera la cadencia general antes del primer tramo', async () => {
+  const onDone = jest.fn();
+  await render(<ChatMessage message={{ id: 'm5', role: 'master', text: 'Texto largo.' }} animate reducedMotion={false} token={5} onDone={onDone} />);
+
+  await act(async () => { jest.advanceTimersByTime(29); });
+  expect(screen.queryByText(/Tex/)).not.toBeOnTheScreen();
+
+  await act(async () => { jest.advanceTimersByTime(1); });
+  expect(screen.getByText(/Tex/)).toBeOnTheScreen();
+});

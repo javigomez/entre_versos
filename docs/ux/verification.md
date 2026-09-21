@@ -231,13 +231,19 @@ R11 protege el reinicio sin recarga y R12 exige que el texto del jugador se
 escriba tras ocupar el ancla, en vez de aparecer completo al terminar el
 desplazamiento.
 
+R13 protege que una burbuja de jugador reserve el tamaño de su respuesta antes
+de revelar el primer carácter, evitando el crecimiento visual desde la derecha.
+R14 comprueba que maestro y jugador comparten `TYPEWRITER_TICK_MS`, ajustado en
+esta entrega a 30 ms por tramo (tres caracteres), un 20 % más lento que el
+valor anterior de 24 ms.
+
 | Comando | Resultado observado |
 | --- | --- |
-| `npx jest --runInBand src/application/journey-messages.test.ts src/application/conversation-flow.test.ts tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 4 suites, 21 pruebas. Cubre J01/J02/J04/J05: palabra, bloqueo, siguiente pareja, reducir movimiento y borde único. |
-| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 114 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npx jest --runInBand tests/components/ChatMessage.test.tsx` | PASS: 1 suite, 5 pruebas. Cubre R08, R13 y R14: finalización única, reserva de burbuja y cadencia compartida. |
+| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 116 pruebas y 3 pruebas de despliegue; 0 fallos. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
 | `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |
-| `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. |
+| `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. El aviso conocido sobre `NO_COLOR` y `FORCE_COLOR` no impidió la exportación. |
 
 Comprobación manual: exportación local en Chrome de escritorio, ruta
 NIEVE → REFUGIO → VENTANA → HUELLAS → RÍO → NADAR. Cada palabra se añadió al

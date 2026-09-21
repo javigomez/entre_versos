@@ -33,6 +33,7 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 | UX-001.12 | Mostrar completo finaliza únicamente el mensaje activo, exactamente una vez. Reducir movimiento mantiene el mismo orden, contenido y ancla, omitiendo desplazamientos y escritura animados. |
 | UX-001.13 | Reiniciar vuelve al primer mensaje sin recargar la aplicación. Cuando termina de escribirse, reaparece la acción inicial correspondiente. |
 | UX-001.14 | Después de colocarse en el ancla, la burbuja del jugador escribe su texto de forma progresiva, con cursor y Mostrar completo, igual que un mensaje del maestro. No mostrar el texto completo de forma abrupta. |
+| UX-001.15 | Antes del primer carácter de una respuesta del jugador, su burbuja abre con el tamaño del texto completo. La escritura avanza de izquierda a derecha sin que el borde derecho se desplace. |
 
 ## Secuencia de referencia
 
@@ -47,7 +48,7 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 
 La referencia geométrica es el borde superior del área desplazable más su margen interior superior, no el borde físico de la pantalla. Tolerancia de posición en comprobación visual: 3 píxeles CSS. Las pruebas unitarias verifican cálculos con medidas conocidas y las de componentes verifican órdenes y secuencia. Al comprobar visualmente, observar antes, durante y después de la escritura; una captura final no demuestra ausencia de saltos.
 
-La transición normal debe tener desplazamiento intermedio observable cuando la distancia lo permite. Las duraciones concretas son detalles de implementación: no congelarlas como requisitos de producto. Con movimiento reducido se permite posicionamiento inmediato. Un gesto manual interrumpe el movimiento automático.
+La transición normal debe tener desplazamiento intermedio observable cuando la distancia lo permite. La cadencia general de escritura se ajusta en `TYPEWRITER_TICK_MS`; no fijar su valor concreto como requisito de producto. Con movimiento reducido se permite posicionamiento inmediato. Un gesto manual interrumpe el movimiento automático.
 
 Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe en el área visible. Si por texto ampliado no cabe, conservar su inicio y permitir lectura manual; no reducir la letra.
 
@@ -67,6 +68,8 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 | R10 | Mensaje inicial del maestro sin respuesta previa | Seguimiento limitado al inicio de ese mensaje; .7–.9 |
 | R11 | Reiniciar desde cualquier punto de una sesión | El primer mensaje vuelve a escribirse y, al terminar, aparece la acción inicial sin refrescar; .13 |
 | R12 | Pulsar Continuar o una opción y completar su desplazamiento | La burbuja del jugador se escribe con cursor tras ocupar el ancla; Mostrar completo la finaliza una vez; .2–.4, .12, .14 |
+| R13 | Pulsar Continuar con una respuesta larga | La burbuja del jugador abre con su anchura final y el texto aparece desde el borde izquierdo hacia la derecha, sin crecer visualmente desde la derecha; .14–.15 |
+| R14 | Iniciar un mensaje animado de maestro o jugador | Ambos respetan la misma cadencia configurable de escritura; .12 |
 
 ## Variantes image-choice
 
@@ -85,7 +88,7 @@ tarjeta. Al tocar una tarjeta, ambas se bloquean y el control elegido asciende
 hasta el ancla; se convierte en una burbuja del jugador con su palabra. Tras
 esa transición aparece debajo la siguiente pareja de la ruta. Al terminar la
 sexta elección, el maestro muestra la revelación, el recorrido y la enseñanza.
-El gesto cumple UX-001.1–.12, incluidos el ancla, el scroll manual y reducir
+El gesto cumple UX-001.1–.15, incluidos el ancla, el scroll manual y reducir
 movimiento.
 
 | Caso | Preparación y acción | Resultado |

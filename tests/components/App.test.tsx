@@ -1,5 +1,5 @@
 import { expect, test, afterEach } from '@jest/globals';
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import App from '../../src/infrastructure/expo/App';
 
@@ -15,6 +15,7 @@ test('App selecciona el contenido indicado por la query web', async () => {
   Object.defineProperty(Platform, 'OS', { configurable: true, value: 'web' });
   Object.defineProperty(globalThis, 'location', { configurable: true, value: { search: '?campo_semantico' } });
   await render(<App />);
+  await fireEvent.press(await screen.findByRole('button', { name: 'Mostrar mensaje completo' }));
   expect(await screen.findByRole('button', { name: 'LEVANTARME' })).toBeTruthy();
 });
 

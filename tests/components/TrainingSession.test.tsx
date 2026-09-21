@@ -107,7 +107,7 @@ test('R01: la respuesta del jugador empieza a escribirse tras ocupar el ancla', 
   await act(async () => { viewport.finishPlacement(); });
 
   expect(screen.getByText(/▍/)).toBeOnTheScreen();
-  expect(screen.queryByText('Quiero practicar.')).not.toBeOnTheScreen();
+  expect(screen.getByTestId('typing-content')).not.toHaveTextContent('Quiero practicar.');
 });
 
 test('J01/J02: la imagen elegida se convierte en palabra y muestra el siguiente reto en el chat', async () => {
