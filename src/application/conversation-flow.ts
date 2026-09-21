@@ -1,19 +1,16 @@
 import type { Lesson } from '../domain/schemas';
 import { challengesOf, initialProgress, submitChallengeAnswer } from '../domain/lesson';
-import { replayJourney } from '../domain/image-journey';
 import type { LessonProgress } from '../domain/lesson-progress';
 import { messagesFor } from './message-projector';
 import type { Message } from './messages';
 
-export type Phase = 'writing' | 'waiting-start' | 'waiting-student' | 'waiting-choice' | 'waiting-journey' | 'journey-transition' | 'pressing' | 'moving' | 'placing' | 'finished';
+export type Phase = 'writing' | 'waiting-start' | 'waiting-student' | 'waiting-choice' | 'pressing' | 'moving' | 'placing' | 'finished';
 export type PendingReply = { nextProgress: LessonProgress; nextMessages: Message[]; messageId: string; controlId: string };
 export type FlowState = { progress: LessonProgress; messages: Message[]; revealed: number; phase: Phase; token: number; anchorId: string | null; pending: PendingReply | null };
 export type FlowEvent =
   | { type: 'START' }
   | { type: 'ACTIVATE_STUDENT'; controlId: string }
   | { type: 'ANSWER'; controlId: string; optionId: string }
-  | { type: 'JOURNEY_ANSWER'; optionId: string; nodeId: string; token: number }
-  | { type: 'JOURNEY_SETTLED'; token: number }
   | { type: 'PRESS_DONE'; token: number }
   | { type: 'MOVE_DONE'; token: number }
   | { type: 'PLACED'; token: number }
@@ -25,8 +22,7 @@ function phaseFor(lesson: Lesson, state: Pick<FlowState, 'progress' | 'messages'
     return state.messages[state.revealed].role === 'player' && state.messages[state.revealed].action ? 'waiting-student' : 'writing';
   if (!state.progress.started) return 'waiting-start';
   if (state.progress.completed.length === challengesOf(lesson).length) return 'finished';
-  return challengesOf(lesson)[state.progress.completed.length]?.type === 'image-journey'
-    ? 'waiting-journey' : 'waiting-choice';
+  return 'waiting-choice';
 }
 
 export function createFlow(lesson: Lesson, progress: LessonProgress, restored: boolean): FlowState {
@@ -73,21 +69,6 @@ export function reduceFlow(lesson: Lesson, state: FlowState, event: FlowEvent): 
       const message = nextMessages[state.revealed];
       if (!message || message.role !== 'player' || message.action) return state;
       return { ...state, phase: 'pressing', token: state.token + 1, pending: { nextProgress, nextMessages, messageId: message.id, controlId: event.controlId } };
-    }
-    case 'JOURNEY_ANSWER': {
-      if (state.phase !== 'waiting-journey' || event.token !== state.token) return state;
-      const challenge = challengesOf(lesson)[state.progress.completed.length];
-      if (challenge?.type !== 'image-journey') return state;
-      const ids = state.progress.history.filter(entry => entry.challengeId === challenge.id).map(entry => entry.optionId);
-      if (replayJourney(challenge, ids)?.nodeId !== event.nodeId) return state;
-      const progress = submitChallengeAnswer(lesson, state.progress, event.optionId);
-      if (progress === state.progress) return state;
-      return { ...state, progress, messages: messagesFor(lesson, progress), phase: 'journey-transition', token: state.token + 1, pending: null };
-    }
-    case 'JOURNEY_SETTLED': {
-      if (state.phase !== 'journey-transition' || event.token !== state.token) return state;
-      const next = { ...state, token: state.token + 1 };
-      return { ...next, phase: phaseFor(lesson, next), anchorId: next.messages[next.revealed]?.id ?? state.anchorId };
     }
     case 'PRESS_DONE':
       return state.phase === 'pressing' && event.token === state.token ? { ...state, phase: 'moving' } : state;

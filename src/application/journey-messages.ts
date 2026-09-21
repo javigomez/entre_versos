@@ -3,8 +3,14 @@ import type { Message } from './messages';
 
 export function journeyMessages(challenge: ImageJourneyChallenge, optionIds: readonly string[]): Message[] {
   const replay = replayJourney(challenge, optionIds);
-  if (!replay?.ending) return [];
-  return [
+  if (!replay) return [];
+  const answers = replay.words.map((text, index) => ({
+    id: `${challenge.id}-answer-${index}`,
+    role: 'player' as const,
+    text,
+  }));
+  if (!replay.ending) return answers;
+  return [...answers,
     {
       id: `${challenge.id}-revelation`,
       role: 'master',

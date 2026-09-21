@@ -1,5 +1,6 @@
 import { expect, test } from '@jest/globals';
 import { conversation } from '../../tests/fixtures/conversation';
+import { journeyLesson } from '../../tests/fixtures/journey';
 import { initialProgress } from '../domain/lesson';
 import { createFlow, reduceFlow } from './conversation-flow';
 import type { Message } from './messages';
@@ -72,4 +73,21 @@ test('sesión restaurada completa termina sin añadir otro completion', () => {
   const state = createFlow(conversation, progress, true);
   expect(state.phase).toBe('finished');
   expect(state.messages.filter((message: Message) => message.id === 'completion')).toHaveLength(1);
+});
+
+test('J01: una imagen elegida recorre la transición normal y desbloquea la siguiente pareja', () => {
+  const lesson = { ...journeyLesson, startWithStudent: undefined };
+  let state = createFlow(lesson, { ...initialProgress(lesson), started: true }, true);
+  expect(state.phase).toBe('waiting-choice');
+
+  state = reduceFlow(lesson, state, { type: 'ANSWER', controlId: 'n1-a', optionId: 'n1-a' });
+  const token = state.token;
+  expect(state.phase).toBe('pressing');
+  state = reduceFlow(lesson, state, { type: 'PRESS_DONE', token });
+  state = reduceFlow(lesson, state, { type: 'MOVE_DONE', token });
+  state = reduceFlow(lesson, state, { type: 'PLACED', token });
+  expect(state.messages[state.revealed]).toMatchObject({ role: 'player', text: 'PASO1A' });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token, messageId: state.messages[state.revealed].id });
+  expect(state.phase).toBe('waiting-choice');
+  expect(state.progress.history).toEqual([{ challengeId: 'viaje-palabras', optionId: 'n1-a' }]);
 });

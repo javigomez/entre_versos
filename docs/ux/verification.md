@@ -214,22 +214,26 @@ Implementación automatizada del primer incremento visual: unión discriminada `
 
 Assets verificados como JPEG RGB, 941×1672, con `require` estático. V01–V06 no ejecutados visualmente; tampoco se validó DuckDuckGo Android ni Chrome iPhone. La suite de navegador sigue siendo opcional y los límites históricos R01 permanecen documentados.
 
-## Viaje de palabras · 2026-09-20
+## Viaje de palabras en el chat · 2026-09-21
 
-Se añadió el recorrido inmersivo de `campo_semantico`: prólogo tras perder la
-batalla, seis elecciones visuales que forman una ruta de palabras y cierre que
-explica el campo semántico. El progreso se guarda por contenido para impedir
-que una ruta de este viaje altere otra lección. La excepción y J01–J04 están
-registradas en UX-001.
+El recorrido de `campo_semantico` conserva el prólogo tras perder la batalla,
+las seis elecciones visuales y el cierre sobre el campo semántico. Cada imagen
+seleccionada ahora usa la transición normal: asciende, queda como palabra en
+una burbuja del jugador y deja la siguiente pareja debajo. El progreso sigue
+guardándose por contenido, por lo que una ruta no altera otra lección. UX-001
+J01–J04 describe este comportamiento.
 
 | Comando | Resultado observado |
 | --- | --- |
-| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 105 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npx jest --runInBand src/application/journey-messages.test.ts src/application/conversation-flow.test.ts tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 4 suites, 21 pruebas. Cubre J01/J02/J04: palabra, bloqueo, siguiente pareja y reducir movimiento mediante la transición normal. |
+| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 111 pruebas y 3 pruebas de despliegue; 0 fallos. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
-| `npm run lint` | PASS: `eslint .`, salida 0. |
+| `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |
 | `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. |
 
-Límites: no se ha hecho comprobación visual manual ni validación en DuckDuckGo
-Android o Chrome iPhone. La exportación emite el aviso conocido de entorno
-`NO_COLOR`/`FORCE_COLOR`; no bloquea el bundle. J01–J04 están protegidos por
-dominio e integración, no por una prueba visual de dispositivo.
+Comprobación manual: exportación local en Chrome de escritorio, ruta
+NIEVE → REFUGIO → VENTANA → HUELLAS → RÍO → NADAR. Cada palabra se añadió al
+historial, abrió la siguiente pareja y llegó a revelación, recorrido, enseñanza
+y finalización. Sigue pendiente la validación en DuckDuckGo Android o Chrome
+iPhone; la comprobación de escritorio no demuestra pintura, suavidad ni layout
+de un dispositivo real.

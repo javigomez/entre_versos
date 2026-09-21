@@ -1,57 +1,38 @@
-import { useEffect, useState } from 'react';
-import { Animated, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { JourneyNode, JourneyOption } from '../../../domain/image-journey';
+import { useRef, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import type { JourneyOption } from '../../../domain/image-journey';
 import type { ChallengeImageResolver } from '../content/content-images';
 import { colors as c } from './theme';
+import type { ControlTarget } from './viewport/useConversationViewport';
 
-type Props = {
-  challengeId: string; node: JourneyNode; locked: boolean; selectedOptionId?: string;
-  token: number; reducedMotion: boolean; resolveImage: ChallengeImageResolver;
-  onAnswer: (optionId: string, nodeId: string, token: number) => void;
-  onSettled: (token: number) => void;
-};
+type Props = { challengeId: string; options: readonly JourneyOption[]; selectedOptionId?: string; disabled?: boolean; resolveImage: ChallengeImageResolver; onAnswer: (optionId: string, target: ControlTarget) => void };
 
-export function ImageJourney({ challengeId, node, locked, selectedOptionId, token, reducedMotion, resolveImage, onAnswer, onSettled }: Props) {
-  const [opacity] = useState(() => new Animated.Value(1));
-  useEffect(() => {
-    opacity.setValue(1);
-    if (!locked) return;
-    if (reducedMotion) {
-      const timer = setTimeout(() => onSettled(token), 0);
-      return () => clearTimeout(timer);
-    }
-    const animation = Animated.timing(opacity, { toValue: 0, duration: 220, useNativeDriver: true });
-    animation.start(({ finished }) => { if (finished) onSettled(token); });
-    return () => animation.stop();
-  }, [locked, onSettled, opacity, reducedMotion, token]);
-  return <View testID="image-journey" style={s.stage}>
-    <Animated.View style={[s.body, { opacity }]}>
-      <ScrollView contentContainerStyle={s.scroll}>
-        <View style={s.row}>{node.options.map(option => <JourneyCard key={option.id}
-          option={option} challengeId={challengeId} resolveImage={resolveImage} locked={locked}
-          selected={selectedOptionId === option.id} onPress={() => onAnswer(option.id, node.id, token)} />)}</View>
-      </ScrollView>
-    </Animated.View>
+export function ImageJourney({ challengeId, options, disabled = false, selectedOptionId, resolveImage, onAnswer }: Props) {
+  return <View style={s.container}>
+    <Text style={s.hint}>Elige una imagen para continuar el viaje</Text>
+    <View style={s.row}>{options.map(option => <JourneyCard key={option.id} option={option} challengeId={challengeId}
+      resolveImage={resolveImage} disabled={disabled} selected={selectedOptionId === option.id} onAnswer={onAnswer} />)}</View>
   </View>;
 }
 
-function JourneyCard({ option, challengeId, resolveImage, locked, selected, onPress }: {
-  option: JourneyOption; challengeId: string; resolveImage: ChallengeImageResolver; locked: boolean; selected: boolean; onPress: () => void;
+function JourneyCard({ option, challengeId, resolveImage, disabled, selected, onAnswer }: {
+  option: JourneyOption; challengeId: string; resolveImage: ChallengeImageResolver; disabled: boolean; selected: boolean; onAnswer: Props['onAnswer'];
 }) {
-  const [failed, setFailed] = useState(false);
-  return <Pressable accessibilityRole="button" accessibilityLabel={option.text} accessibilityHint={option.image.description}
-    accessibilityState={{ disabled: locked, selected }} disabled={locked} onPress={onPress}
-    style={({ pressed }) => [s.card, (pressed || selected) && s.selected]}>
+  const ref = useRef<View | null>(null); const [failed, setFailed] = useState(false);
+  const visual = (preview = false) => <View style={[s.card, preview && s.preview, selected && s.selected]}>
     <View style={s.photo}>{failed ? <Text style={s.fallback}>Imagen no disponible</Text>
       : <Image testID={`journey-photo-${option.id}`} source={resolveImage(challengeId, option.image.file)}
           resizeMode="cover" style={s.image} accessible={false} onError={() => setFailed(true)} />}</View>
     <Text style={s.word}>{option.text}</Text>
-  </Pressable>;
+  </View>;
+  const target: ControlTarget = { id: option.id, ref, renderPreview: () => visual(true) };
+  return <Pressable accessibilityRole="button" accessibilityLabel={option.text} accessibilityHint={option.image.description}
+    ref={ref} accessibilityState={{ disabled, selected }} disabled={disabled} onPress={() => { if (!disabled) onAnswer(option.id, target); }}
+    style={({ pressed }) => [s.card, (pressed || selected) && s.selected]}>{visual()}</Pressable>;
 }
 
-const s = StyleSheet.create({
-  stage: { flex: 1, backgroundColor: '#000' }, body: { flex: 1 }, scroll: { flexGrow: 1, padding: 12, justifyContent: 'center' },
-  row: { flexDirection: 'row', alignItems: 'stretch', gap: 10 }, card: { flex: 1, minWidth: 0, borderWidth: 2, borderColor: c.border, borderRadius: 16, padding: 6, backgroundColor: c.panel },
+const s = StyleSheet.create({ container: { marginBottom: 14 }, hint: { color: c.muted, fontSize: 14, marginTop: 8, marginBottom: 18 },
+  row: { flexDirection: 'row', alignItems: 'stretch', gap: 12 }, card: { flex: 1, minWidth: 0, borderWidth: 1, borderColor: c.border, borderRadius: 22, padding: 10, backgroundColor: '#303133' }, preview: { width: '100%', height: '100%' },
   selected: { borderColor: c.accent }, photo: { width: '100%', aspectRatio: 9 / 16, overflow: 'hidden', borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: c.bg },
   image: { width: '100%', height: '100%' }, fallback: { color: c.muted, fontSize: 14, textAlign: 'center', padding: 8 }, word: { color: c.text, fontSize: 19, fontWeight: '700', textAlign: 'center', marginVertical: 10 },
 });

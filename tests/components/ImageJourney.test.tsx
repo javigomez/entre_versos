@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { ImageJourney } from '../../src/infrastructure/expo/ui/ImageJourney';
 
 const node = {
@@ -8,33 +8,26 @@ const node = {
   ],
 };
 
-test('presenta las dos fotografías en orden y bloquea la elección durante la transición', async () => {
+test('presenta las dos fotografías en el chat y entrega un control para la transición normal', async () => {
   const onAnswer = jest.fn();
-  const onSettled = jest.fn();
   const resolveImage = jest.fn(() => 1 as never);
-  await render(<ImageJourney challengeId="viaje-palabras" node={node} locked={false} selectedOptionId="l1-viaje-playa" token={4}
-    reducedMotion={false} resolveImage={resolveImage} onAnswer={onAnswer} onSettled={onSettled} />);
+  await render(<ImageJourney challengeId="viaje-palabras" options={node.options} disabled={false} selectedOptionId="l1-viaje-playa"
+    resolveImage={resolveImage} onAnswer={onAnswer} />);
 
   expect(screen.getAllByRole('button').map(button => button.props.accessibilityLabel)).toEqual(['NIEVE', 'PLAYA']);
   fireEvent.press(screen.getByRole('button', { name: 'PLAYA' }));
-  expect(onAnswer).toHaveBeenCalledWith('l1-viaje-playa', 'l1-viaje', 4);
+  expect(onAnswer).toHaveBeenCalledWith('l1-viaje-playa', expect.objectContaining({ id: 'l1-viaje-playa' }));
 
   expect(screen.getByRole('button', { name: 'PLAYA' }).props.accessibilityState).toMatchObject({ disabled: false, selected: true });
 });
 
-test('J02/J04: bloquea el doble toque y resuelve sin fundido con movimiento reducido', async () => {
-  jest.useFakeTimers();
+test('J02: bloquea el doble toque mientras la respuesta asciende', async () => {
   const onAnswer = jest.fn();
-  const onSettled = jest.fn();
-  await render(<ImageJourney challengeId="viaje-palabras" node={node} locked selectedOptionId="l1-viaje-nieve" token={7}
-    reducedMotion resolveImage={() => 1 as never} onAnswer={onAnswer} onSettled={onSettled} />);
+  await render(<ImageJourney challengeId="viaje-palabras" options={node.options} disabled selectedOptionId="l1-viaje-nieve"
+    resolveImage={() => 1 as never} onAnswer={onAnswer} />);
 
   const nieve = screen.getByRole('button', { name: 'NIEVE' });
   expect(nieve.props.accessibilityState).toMatchObject({ disabled: true, selected: true });
   fireEvent.press(nieve);
   expect(onAnswer).not.toHaveBeenCalled();
-  await act(async () => { jest.runAllTimers(); });
-  expect(onSettled).toHaveBeenCalledTimes(1);
-  expect(onSettled).toHaveBeenCalledWith(7);
-  jest.useRealTimers();
 });

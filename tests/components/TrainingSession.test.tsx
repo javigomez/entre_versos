@@ -79,6 +79,43 @@ test('J01: LEVANTARME permanece montado hasta que su transición pueda medirse',
   expect(viewport.moves).toHaveLength(1);
 });
 
+test('J01/J02: la imagen elegida se convierte en palabra y muestra el siguiente reto en el chat', async () => {
+  const viewport = createControlledViewport();
+  const lesson = { ...journeyLesson, startWithStudent: undefined };
+  await render(<TrainingSession lesson={lesson} initialProgress={{ ...initialProgress(lesson), started: true }} restored
+    onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+
+  const firstImage = screen.getByRole('button', { name: 'PASO1A' });
+  await act(async () => { await fireEvent.press(firstImage); await fireEvent.press(firstImage); });
+  expect(screen.getByRole('button', { name: 'PASO1A' })).toBeDisabled();
+  await act(async () => { jest.advanceTimersByTime(80); });
+  expect(viewport.moves).toHaveLength(1);
+  await act(async () => { viewport.finishMove(); });
+  await act(async () => { viewport.finishPlacement(); });
+  expect(screen.getByText('PASO1A')).toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
+  expect(screen.queryByTestId('image-journey')).not.toBeOnTheScreen();
+});
+
+test('J04: reducir movimiento conserva la palabra y el siguiente reto', async () => {
+  jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
+  const viewport = createControlledViewport();
+  const lesson = { ...journeyLesson, startWithStudent: undefined };
+  await render(<TrainingSession lesson={lesson} initialProgress={{ ...initialProgress(lesson), started: true }} restored
+    onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+  await act(async () => {});
+
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'PASO1A' })); });
+  await act(async () => { jest.runOnlyPendingTimers(); });
+  expect(viewport.moves).toHaveLength(1);
+  await act(async () => { viewport.finishMove(); });
+  await act(async () => { viewport.finishPlacement(); });
+  expect(screen.getByText('PASO1A')).toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
+});
+
 test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto retira la parrilla antigua', async () => {
   const viewport = createControlledViewport();
   await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false} onProgressChange={() => {}} viewportController={viewport.controller} />);
