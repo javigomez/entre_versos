@@ -30,6 +30,22 @@ test('R01 / UX-001.2–6: Continuar becomes a reply anchored below the header', 
   await expect(await continueButton(page)).toHaveCount(1);
 });
 
+test('R05 / R10: the longest verse keeps its explicit four lines at mobile width', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Maestro, estoy listo/ }).tap();
+  await (await continueButton(page)).tap();
+  const verse = page.getByText('«No empezarás peleando,\nprimero aprende el oficio;\nyo te seguiré entrenando,\nverso a verso, ejercicio.»', { exact: true });
+  await expect(verse).toBeVisible();
+  const metrics = await verse.evaluate(element => {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const tops = [...range.getClientRects()].map(rect => Math.round(rect.top));
+    return { lineCount: new Set(tops).size, fontWeight: getComputedStyle(element).fontWeight };
+  });
+  expect(metrics.lineCount).toBe(4);
+  expect(metrics.fontWeight).toBe('400');
+});
+
 async function firstChallenge(page: Page) {
   await page.addInitScript(() => {
     localStorage.setItem('batalla-de-gallos:progress:v1', JSON.stringify({

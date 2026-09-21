@@ -264,3 +264,31 @@ y finalización. En la misma exportación, Reiniciar volvió a mostrar
 LEVANTARME sin recarga. Sigue pendiente la validación en DuckDuckGo Android o
 Chrome iPhone; la comprobación de escritorio no demuestra pintura, suavidad ni
 layout de un dispositivo real.
+
+## Tipografía de versos adaptada al sistema · 2026-09-21
+
+`ChatMessage` conserva `allowFontScaling` para que iOS/Android apliquen el
+tamaño accesible del sistema. Para los mensajes `verse`, el peso pasa a 400 y
+el componente mide el layout real: reduce desde 25 puntos solo si las líneas
+explícitas se envuelven, usando como límite la línea más ancha. La reserva
+invisible y el texto visible de la escritura comparten el mismo estilo, por lo
+que R13/R14 no cambian de geometría durante el typewriter.
+
+La cobertura automatizada nueva es `tests/unit/verseTypography.test.ts` (R05:
+línea más ancha y mínimo) y las pruebas adicionales de
+`tests/components/ChatMessage.test.tsx` (R05, R10, R13, R14). La regresión web
+de cuatro líneas explícitas está en `tests/ux/conversation.spec.ts`.
+
+| Comando | Resultado observado |
+| --- | --- |
+| `npx jest --runInBand tests/components/ChatMessage.test.tsx tests/unit/verseTypography.test.ts` | PASS: 2 suites, 11 pruebas. |
+| `npm test` | PASS: 4 pruebas Node, 25 suites Jest con 123 pruebas y 3 pruebas de deploy; 0 fallos. La suite emitió el log esperado del ErrorBoundary para `?no-existe`. |
+| `npm run typecheck` | PASS: `tsc --noEmit`. |
+| `npm run lint` | PASS: sin errores ni warnings. |
+| `npm run export:web` | PASS: bundle web generado con Expo SDK 57; 82 assets, 3 archivos exportados. |
+| `npx playwright test tests/ux/conversation.spec.ts -g 'longest verse'` | No llegó a ejecutar casos: el servidor Expo de Playwright terminó en estado fallido en el entorno offline, sin tests fallidos reportados. |
+
+No se han validado dispositivos reales en esta sesión. Queda pendiente
+comprobar iPhone Safari/instalada con varios valores de `aA Text Size` y
+Android Chrome o DuckDuckGo con distintas escalas del sistema; la exportación
+web y Jest no sustituyen esa comprobación de pintura y accesibilidad nativa.
