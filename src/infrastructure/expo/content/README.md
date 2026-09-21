@@ -8,3 +8,9 @@ La versió catalana del viatge és `camp-semantic.yaml`, accessible amb
 del recorregut es defineixen a `presentation`; si s'omet, es conserva el
 tancament castellà. La mètrica es pot comprovar amb
 `node scripts/validate-camp-semantic.mjs /ruta/heptasilabs`.
+
+Les alternatives `camp-semantic-v2.yaml` i `camp-semantic-v3.yaml` s'obren amb
+`?camp-semantic-v2` i `?camp-semantic-v3`. Comparteixen fotografies, però tenen
+progrés independent. `presentation.choiceHint` defineix la indicació sobre les
+imatges. Per validar una alternativa, passa el seu nom de fitxer com a segon
+argument de `validate-camp-semantic.mjs`.

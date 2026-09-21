@@ -3,12 +3,13 @@ import { journeyMessages } from '../../src/application/journey-messages';
 import { createContentRepository } from '../../src/infrastructure/expo/content/content-repository';
 import { contentKeyFromSearch } from '../../src/infrastructure/expo/content/content-selection';
 
-test('camp-semantic: 64 recorreguts catalans completen sis decisions amb les imatges registrades', () => {
-  const lesson = createContentRepository(contentKeyFromSearch('?camp-semantic')).load();
+test.each(['camp-semantic', 'camp-semantic-v2', 'camp-semantic-v3'])('%s: 64 recorreguts catalans completen sis decisions amb les imatges registrades', key => {
+  const lesson = createContentRepository(contentKeyFromSearch(`?${key}`)).load();
   const spanish = createContentRepository('campo_semantico').load();
   expect(lesson.id).not.toBe(spanish.id);
   const journey = challengesOf(lesson)[0];
   if (journey.type !== 'image-journey') throw new Error('Cal un viatge');
+  expect(journey.presentation?.choiceHint).toBe('Tria una imatge per continuar el viatge');
   const nodes = journey.nodes;
   const paths: string[][] = [];
   function visit(nodeId: string, path: string[]) {

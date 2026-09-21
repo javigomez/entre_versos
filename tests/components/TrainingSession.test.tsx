@@ -155,11 +155,14 @@ test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera l
       masterLabel: 'Mestre', routeQuestion: 'Vols veure el camí que has fet?',
       routeAction: 'VEURE EL MEU RECORREGUT', routeAnswer: 'Vull veure el camí que he fet.',
       routeLabel: 'El teu recorregut', routeStart: 'Viatge',
+      choiceHint: 'Tria una imatge per continuar el viatge',
     } } : step) };
   let progress = { ...initialProgress(lesson), started: true };
   for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a']) progress = submitChallengeAnswer(lesson, progress, id);
   await render(<TrainingSession lesson={lesson} initialProgress={progress} restored
     onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+  expect(screen.getByText('Tria una imatge per continuar el viatge')).toBeOnTheScreen();
+  expect(screen.queryByText('Elige una imagen para continuar el viaje')).not.toBeOnTheScreen();
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'NADAR' })); });
   await finishTransition(viewport);
   await completeActiveMessageIfNeeded();

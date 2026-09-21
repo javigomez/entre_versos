@@ -5,11 +5,11 @@ import type { ChallengeImageResolver } from '../content/content-images';
 import { colors as c } from './theme';
 import type { ControlTarget } from './viewport/useConversationViewport';
 
-type Props = { challengeId: string; options: readonly JourneyOption[]; selectedOptionId?: string; disabled?: boolean; resolveImage: ChallengeImageResolver; onAnswer: (optionId: string, target: ControlTarget) => void };
+type Props = { challengeId: string; choiceHint?: string; options: readonly JourneyOption[]; selectedOptionId?: string; disabled?: boolean; resolveImage: ChallengeImageResolver; onAnswer: (optionId: string, target: ControlTarget) => void };
 
-export function ImageJourney({ challengeId, options, disabled = false, selectedOptionId, resolveImage, onAnswer }: Props) {
+export function ImageJourney({ challengeId, choiceHint = 'Elige una imagen para continuar el viaje', options, disabled = false, selectedOptionId, resolveImage, onAnswer }: Props) {
   return <View style={s.container}>
-    <Text style={s.hint}>Elige una imagen para continuar el viaje</Text>
+    <Text style={s.hint}>{choiceHint}</Text>
     <View style={s.row}>{options.map(option => <JourneyCard key={option.id} option={option} challengeId={challengeId}
       resolveImage={resolveImage} disabled={disabled} selected={selectedOptionId === option.id} onAnswer={onAnswer} />)}</View>
   </View>;

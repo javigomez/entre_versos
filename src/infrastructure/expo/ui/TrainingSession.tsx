@@ -88,7 +88,7 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
           {(state.phase === 'waiting-student' || (transition && activeMessage?.action)) && activeMessage?.action && <Action label={activeMessage.action} disabled={transition} selected={transition && pendingControl === 'continue'} onPress={activateStudent} />}
           {(state.phase === 'waiting-choice' || answerTransition) && challenge &&
             (challenge.type === 'image-journey'
-              ? <ImageJourney challengeId={challenge.id} options={journeyOptions(challenge, journeyOptionIds)} disabled={transition} selectedOptionId={pendingControl} resolveImage={resolveImage} onAnswer={answer} />
+              ? <ImageJourney challengeId={challenge.id} choiceHint={challenge.presentation?.choiceHint} options={journeyOptions(challenge, journeyOptionIds)} disabled={transition} selectedOptionId={pendingControl} resolveImage={resolveImage} onAnswer={answer} />
               : <ChallengeView challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} resolveImage={resolveImage} />)}
           {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>Ya hay chispa.</Text><Text style={s.finishText}>{state.progress.completed.length} retos superados. Sigue jugando con tu voz.</Text><Action label="Volver a entrenar" onPress={reset} secondary /></View>}
           {storageNotice && <Text style={s.notice}>Guardado no disponible · puedes seguir jugando</Text>}

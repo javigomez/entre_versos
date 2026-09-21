@@ -7,7 +7,9 @@ import { parse } from 'yaml';
 const validatorRoot = process.argv[2];
 if (!validatorRoot) throw new Error('Ús: node scripts/validate-camp-semantic.mjs /ruta/heptasilabs');
 const { analitzarVers } = await import(pathToFileURL(resolve(validatorRoot, 'src/index.js')).href);
-const lesson = parse(readFileSync(new URL('../src/infrastructure/expo/content/camp-semantic.yaml', import.meta.url), 'utf8'));
+const contentFile = process.argv[3] ?? 'camp-semantic.yaml';
+const lesson = parse(readFileSync(new URL(`../src/infrastructure/expo/content/${contentFile}`, import.meta.url), 'utf8'));
+console.log(contentFile);
 const journey = lesson.script.find(step => step.type === 'image-journey');
 const endings = new Set(journey.nodes.flatMap(node => node.options).flatMap(option => option.ending ? [option.ending] : []));
 const verses = new Set([

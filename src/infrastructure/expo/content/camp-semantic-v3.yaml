@@ -1,50 +1,51 @@
-# Adaptació catalana del viatge. Els IDs i les imatges conserven les referències originals.
-# Versos validats amb heptasilabs; vegeu docs/ux/camp-semantic-metrica.md.
-id: camp-semantic-viatge-v1
+# Adaptació alternativa 3. Mateixes imatges i decisions; progrés independent.
+id: camp-semantic-viatge-v3
 startAction: AIXECAR-ME
 startWithStudent: true
 script:
   - type: master
     label: Veu
     text: |-
-      Ja se n'ha anat la gent,
-      sona l'eco del rival;
-      t'aixeques ben lentament:
-      el silenci és el final.
+      Avui no t'ha sortit res.
+      El rival no s'aturava.
+      No sabies dir res més.
+      Tot el públic se'l mirava.
   - type: student
     action: AIXECAR-ME
-    text: No m'han donat cap cop. M'he quedat sense paraules davant de tothom.
+    text: Tenia coses al cap, però no em sortien. Com més hi pensava, més em costava dir res.
   - type: master
     label: Veu
     text: |-
-      Ja no queda aquí la gent,
-      ni qui t'ha deixat vençut;
-      veus un full que mou el vent,
-      d'un mestre desconegut.
+      Veus la nota al teu costat.
+      No saps qui te l'ha deixada.
+      Algú te l'ha preparat
+      mentre el públic ja marxava.
   - type: student
     action: LLEGIR LA NOTA
-    text: "Recullo el paper i llegeixo: «Si vols saber per què has perdut, troba'm»."
+    text: "Agafo la nota: «Si vols entendre què t'ha passat, vine a trobar-me»."
   - type: master
     label: Nota
-    text: No busquis cap resposta correcta. Tria allò que et suggereixi cada imatge i segueix el viatge.
+    text: Pren-t'ho amb calma. Mira les imatges i queda't amb la que et suggereixi alguna cosa. No has d'encertar
+      res.
   - type: student
     action: COMENÇAR EL VIATGE
-    text: Tanco els ulls. Aquest cop deixaré que una paraula em porti a una altra.
+    text: Va, ho provo. A veure on em porta la primera paraula.
   - type: image-journey
     id: viaje-palabras
     startNodeId: l1-viaje
     revelation: |-
-      El viatge t'ha guiat,
-      cada mot et fa avançar;
-      un nou món s'ha despertat,
-      fins que has après a {VERBO}.
+      No sabies què triar,
+      i has anat trobant sortides;
+      ara et ve de gust {VERBO},
+      les paraules van seguides.
     teaching: >-
-      Això és un camp semàntic: paraules connectades pel seu significat. Una paraula te'n suggereix una altra,
-      encara que canviïs de paisatge. No cal que rimin.
+      Has començat amb una imatge i has anat trobant un camí. Les paraules tenen relacions de significat:
+      platja, sorra i mar, per exemple, et fan pensar en un mateix entorn. D'això en diem un camp semàntic. I
+      una paraula et pot fer passar a un altre entorn, com has fet durant el viatge.
 
 
-      A la batalla t'has quedat en blanc. No t'aferris a la paraula que et donen: fes-la servir per trobar la
-      següent.
+      No cal tenir tota la resposta abans de començar. Quan et quedis en blanc, pensa què et suggereix la
+      paraula que tens. Comença per aquí i busca la següent. Ja trobaràs la rima després.
     nodes:
       - id: l1-viaje
         layer: 1
@@ -654,5 +655,5 @@ script:
       routeAnswer: Vull veure el camí que he fet.
       routeLabel: El teu recorregut
       routeStart: Viatge
-completion: Ja has trobat el camí. Soc qui t'ha deixat la nota. Si vols tornar al combat, et puc ensenyar a
-  trobar més paraules.
+completion: Soc jo, qui t'ha deixat la nota. Avui t'has quedat en blanc, però això es pot treballar. Si et ve
+  de gust, preparem la pròxima batalla.

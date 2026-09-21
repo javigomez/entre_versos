@@ -19,6 +19,7 @@ export const imageJourneySchema = z.object({
   nodes: z.array(nodeSchema).min(6),
   revelation: z.string().trim().min(1), teaching: z.string().trim().min(1),
   presentation: z.object({
+    choiceHint: z.string().trim().min(1).optional(),
     masterLabel: z.string().trim().min(1),
     routeQuestion: z.string().trim().min(1),
     routeAction: z.string().trim().min(1),

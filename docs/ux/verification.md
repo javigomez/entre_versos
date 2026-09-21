@@ -319,3 +319,27 @@ les quatre suites dirigides (inclosa la projecció castellana) passen: 31 proves
 Recompte detallat a `docs/ux/camp-semantic-metrica.md`. No s'ha executat la suite
 de navegador ni s'han validat dispositius reals; les proves de component no
 mesuren pintura, suavitat ni disposició visual en mòbil.
+
+## Indicació traduïble i variants catalanes · 2026-09-22
+
+La indicació de selecció passa de text fix del component a
+`presentation.choiceHint`, amb el castellà com a valor per defecte per al
+contingut anterior. Les tres versions catalanes declaren «Tria una imatge per
+continuar el viatge». La v2 i la v3 adapten estrofes, diàlegs i ensenyament
+sense modificar les imatges, els camins ni les regles UX-001/R01–R10.
+
+Reproducció abans del canvi: 3 fallades i 11 proves passades en les dues suites
+dirigides. La prova de component R02/R09/J07 mostrava la indicació castellana
+en lloc de l'editorial catalana; les dues rutes noves encara no es reconeixien.
+Després, la prova verifica la indicació catalana i recorre la interacció final.
+La integració recorre les 64 rutes de cadascuna de les tres variants i valida
+les imatges i la indicació després de carregar el YAML real.
+
+- Mètrica: 15/15 versos vàlids per alternativa, inclosos els quatre finals,
+  amb el motor local `heptasilabs`; lectures a `camp-semantic-metrica.md`.
+- `npm test`: PASS, 4 proves Node, 130 Jest en 26 suites (4,454 s) i 3 de deploy.
+- `npm run typecheck` i `npm run lint`: PASS.
+- `npm run export:web`: PASS, bundle i assets generats.
+
+No s'han executat proves de navegador ni de dispositius reals. Es conserva el
+fitxer de pla aliè que ja era present al directori de treball.

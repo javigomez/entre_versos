@@ -1,7 +1,7 @@
-export type ContentKey = 'training' | 'campo_semantico' | 'camp-semantic';
+export type ContentKey = 'training' | 'campo_semantico' | 'camp-semantic' | 'camp-semantic-v2' | 'camp-semantic-v3';
 
 const safeKey = /^[a-z0-9_-]+$/;
-const knownKeys = new Set<ContentKey>(['training', 'campo_semantico', 'camp-semantic']);
+const knownKeys = new Set<ContentKey>(['training', 'campo_semantico', 'camp-semantic', 'camp-semantic-v2', 'camp-semantic-v3']);
 
 export function contentKeyFromSearch(search: string): ContentKey {
   if (search === '' || search === '?') return 'training';
