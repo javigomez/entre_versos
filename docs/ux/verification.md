@@ -227,10 +227,14 @@ J05 protege la tarjeta seleccionada: el control táctil exterior no tiene borde
 y la tarjeta interior conserva el único borde amarillo, como en el reto de
 emoji y texto.
 
+R11 protege el reinicio sin recarga y R12 exige que el texto del jugador se
+escriba tras ocupar el ancla, en vez de aparecer completo al terminar el
+desplazamiento.
+
 | Comando | Resultado observado |
 | --- | --- |
 | `npx jest --runInBand src/application/journey-messages.test.ts src/application/conversation-flow.test.ts tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 4 suites, 21 pruebas. Cubre J01/J02/J04/J05: palabra, bloqueo, siguiente pareja, reducir movimiento y borde único. |
-| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 112 pruebas y 3 pruebas de despliegue; 0 fallos. |
+| `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 114 pruebas y 3 pruebas de despliegue; 0 fallos. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
 | `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |
 | `npm run export:web` | PASS: Metro exportó 82 assets, incluidas las 80 fotografías del viaje. |
@@ -238,6 +242,7 @@ emoji y texto.
 Comprobación manual: exportación local en Chrome de escritorio, ruta
 NIEVE → REFUGIO → VENTANA → HUELLAS → RÍO → NADAR. Cada palabra se añadió al
 historial, abrió la siguiente pareja y llegó a revelación, recorrido, enseñanza
-y finalización. Sigue pendiente la validación en DuckDuckGo Android o Chrome
-iPhone; la comprobación de escritorio no demuestra pintura, suavidad ni layout
-de un dispositivo real.
+y finalización. En la misma exportación, Reiniciar volvió a mostrar
+LEVANTARME sin recarga. Sigue pendiente la validación en DuckDuckGo Android o
+Chrome iPhone; la comprobación de escritorio no demuestra pintura, suavidad ni
+layout de un dispositivo real.

@@ -50,6 +50,8 @@ test('R01: Continuar espera movimiento y colocación antes de escribir', async (
   await act(async () => { viewport.finishMove(); });
   expect(viewport.placements).toHaveLength(1);
   await act(async () => { viewport.finishPlacement(); });
+  expect(screen.getByText(/▍/)).toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
   expect(screen.getByText(/Quiero/)).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByText(/Verso 1/)).toBeOnTheScreen();
@@ -79,6 +81,35 @@ test('J01: LEVANTARME permanece montado hasta que su transición pueda medirse',
   expect(viewport.moves).toHaveLength(1);
 });
 
+test('R01: tras reiniciar, el primer mensaje termina y vuelve a mostrar LEVANTARME', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession lesson={journeyLesson} initialProgress={initialProgress(journeyLesson)} restored={false}
+    onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await completeActiveMessage();
+  expect(screen.getByRole('button', { name: 'LEVANTARME' })).toBeOnTheScreen();
+
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenamiento' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar' })); });
+  await completeActiveMessageIfNeeded();
+
+  expect(screen.getByRole('button', { name: 'LEVANTARME' })).toBeOnTheScreen();
+});
+
+test('R01: la respuesta del jugador empieza a escribirse tras ocupar el ancla', async () => {
+  const viewport = createControlledViewport();
+  await render(<TrainingSession lesson={conversation} initialProgress={initialProgress(conversation)} restored={false}
+    onProgressChange={() => {}} viewportController={viewport.controller} />);
+  await completeActiveMessage();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Empezar' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
+  await act(async () => { jest.advanceTimersByTime(80); });
+  await act(async () => { viewport.finishMove(); });
+  await act(async () => { viewport.finishPlacement(); });
+
+  expect(screen.getByText(/▍/)).toBeOnTheScreen();
+  expect(screen.queryByText('Quiero practicar.')).not.toBeOnTheScreen();
+});
+
 test('J01/J02: la imagen elegida se convierte en palabra y muestra el siguiente reto en el chat', async () => {
   const viewport = createControlledViewport();
   const lesson = { ...journeyLesson, startWithStudent: undefined };
@@ -92,6 +123,7 @@ test('J01/J02: la imagen elegida se convierte en palabra y muestra el siguiente 
   expect(viewport.moves).toHaveLength(1);
   await act(async () => { viewport.finishMove(); });
   await act(async () => { viewport.finishPlacement(); });
+  await completeActiveMessageIfNeeded();
   expect(screen.getByText('PASO1A')).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
@@ -136,6 +168,7 @@ test('R03/R09: un error conserva el intento, repone cuatro opciones y el acierto
   expect(screen.getByText('Abundante')).toBeOnTheScreen();
   expect(screen.getByText('Correcto.')).toBeOnTheScreen();
   expect(screen.queryByRole('button', { name: 'Suficiente' })).not.toBeOnTheScreen();
+  await completeActiveMessageIfNeeded();
   expect(screen.getByText(/Ahora cambia/)).toBeOnTheScreen();
 });
 

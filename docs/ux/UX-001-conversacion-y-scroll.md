@@ -31,12 +31,14 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 | UX-001.10 | El desplazamiento manual toma el control: la escritura no recupera la posición ni persigue el final. La siguiente acción explícita del jugador puede iniciar una nueva transición. |
 | UX-001.11 | El historial conserva mensajes e intentos en orden. No conserva botones Continuar antiguos ni parrillas antiguas de opciones. Las opciones actuales solo se muestran al final del turno correspondiente. |
 | UX-001.12 | Mostrar completo finaliza únicamente el mensaje activo, exactamente una vez. Reducir movimiento mantiene el mismo orden, contenido y ancla, omitiendo desplazamientos y escritura animados. |
+| UX-001.13 | Reiniciar vuelve al primer mensaje sin recargar la aplicación. Cuando termina de escribirse, reaparece la acción inicial correspondiente. |
+| UX-001.14 | Después de colocarse en el ancla, la burbuja del jugador escribe su texto de forma progresiva, con cursor y Mostrar completo, igual que un mensaje del maestro. No mostrar el texto completo de forma abrupta. |
 
 ## Secuencia de referencia
 
 1. El jugador pulsa Continuar.
 2. El botón acusa la pulsación y asciende debajo de la cabecera.
-3. Se convierte en «Si vas a hacerme entrenar, / empieza: quiero probar.»
+3. Se convierte en una burbuja que escribe «Si vas a hacerme entrenar, / empieza: quiero probar.» de forma progresiva.
 4. Debajo se escribe «No empezarás peleando, / primero aprende el oficio; / yo te seguiré entrenando, / verso a verso, ejercicio.»
 5. Aparece el siguiente Continuar. Si no cabe, queda por debajo del borde y hay que bajar manualmente.
 6. Durante los pasos 3–5, el scroll automático no oculta el comienzo de la respuesta del jugador.
@@ -63,6 +65,8 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 | R08 | Mostrar completo durante la escritura, repetir con movimiento reducido | Sin duplicados ni saltos de turnos, ancla preservada; .12 |
 | R09 | Recorrer el historial tras varios intentos | Solo mensajes históricos; última parrilla activa como máximo; .11 |
 | R10 | Mensaje inicial del maestro sin respuesta previa | Seguimiento limitado al inicio de ese mensaje; .7–.9 |
+| R11 | Reiniciar desde cualquier punto de una sesión | El primer mensaje vuelve a escribirse y, al terminar, aparece la acción inicial sin refrescar; .13 |
+| R12 | Pulsar Continuar o una opción y completar su desplazamiento | La burbuja del jugador se escribe con cursor tras ocupar el ancla; Mostrar completo la finaliza una vez; .2–.4, .12, .14 |
 
 ## Variantes image-choice
 
