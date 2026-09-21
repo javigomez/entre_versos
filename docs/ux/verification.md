@@ -221,11 +221,15 @@ las seis elecciones visuales y el cierre sobre el campo semántico. Cada imagen
 seleccionada ahora usa la transición normal: asciende, queda como palabra en
 una burbuja del jugador y deja la siguiente pareja debajo. El progreso sigue
 guardándose por contenido, por lo que una ruta no altera otra lección. UX-001
-J01–J04 describe este comportamiento.
+J01–J06 describe este comportamiento.
 
 J05 protege la tarjeta seleccionada: el control táctil exterior no tiene borde
 y la tarjeta interior conserva el único borde amarillo, como en el reto de
 emoji y texto.
+
+J06 protege la variante visual experimental: cada tarjeta del viaje muestra
+solo la fotografía. La palabra sigue siendo su etiqueta accesible y aparece en
+la burbuja de conversación después de seleccionarla.
 
 R11 protege el reinicio sin recarga y R12 exige que el texto del jugador se
 escriba tras ocupar el ancla, en vez de aparecer completo al terminar el
@@ -240,6 +244,7 @@ valor anterior de 24 ms.
 | Comando | Resultado observado |
 | --- | --- |
 | `npx jest --runInBand tests/components/ChatMessage.test.tsx` | PASS: 1 suite, 5 pruebas. Cubre R08, R13 y R14: finalización única, reserva de burbuja y cadencia compartida. |
+| `npx jest --runInBand tests/components/ImageJourney.test.tsx tests/components/TrainingSession.test.tsx` | PASS: 2 suites, 13 pruebas. Cubre J01/J02/J05/J06 y confirma que la palabra elegida llega a la burbuja. |
 | `npm test` | PASS: 4 pruebas Node, 24 suites Jest con 116 pruebas y 3 pruebas de despliegue; 0 fallos. |
 | `npm run typecheck` | PASS: `tsc --noEmit`, salida 0. |
 | `npm run lint` | PASS: `eslint .`, salida 0 y sin warnings. |

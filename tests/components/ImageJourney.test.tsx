@@ -16,6 +16,8 @@ test('presenta las dos fotografías en el chat y entrega un control para la tran
     resolveImage={resolveImage} onAnswer={onAnswer} />);
 
   expect(screen.getAllByRole('button').map(button => button.props.accessibilityLabel)).toEqual(['NIEVE', 'PLAYA']);
+  expect(screen.queryByText('NIEVE')).not.toBeOnTheScreen();
+  expect(screen.queryByText('PLAYA')).not.toBeOnTheScreen();
   fireEvent.press(screen.getByRole('button', { name: 'PLAYA' }));
   expect(onAnswer).toHaveBeenCalledWith('l1-viaje-playa', expect.objectContaining({ id: 'l1-viaje-playa' }));
 

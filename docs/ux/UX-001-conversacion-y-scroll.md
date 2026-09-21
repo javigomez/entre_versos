@@ -83,11 +83,11 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 ## Viaje de imágenes dentro del chat
 
 `image-journey` usa la misma conversación y transición que el resto de retos.
-Cada pareja contiene exactamente dos fotografías verticales y una palabra por
-tarjeta. Al tocar una tarjeta, ambas se bloquean y el control elegido asciende
-hasta el ancla; se convierte en una burbuja del jugador con su palabra. Tras
-esa transición aparece debajo la siguiente pareja de la ruta. Al terminar la
-sexta elección, el maestro muestra la revelación, el recorrido y la enseñanza.
+Cada pareja contiene exactamente dos fotografías verticales, sin texto visible
+en las tarjetas. Al tocar una tarjeta, ambas se bloquean y el control elegido
+asciende hasta el ancla; se convierte en una burbuja del jugador con su palabra.
+Tras esa transición aparece debajo la siguiente pareja de la ruta. Al terminar
+la sexta elección, el maestro muestra la revelación, el recorrido y la enseñanza.
 El gesto cumple UX-001.1–.15, incluidos el ancla, el scroll manual y reducir
 movimiento.
 
@@ -98,6 +98,7 @@ movimiento.
 | J03 | Restaurar después de 1–5 elecciones | El historial muestra las palabras elegidas y se reabre exactamente la siguiente pareja; un historial imposible se descarta. |
 | J04 | Activar reducir movimiento | Se mantiene el orden, el bloqueo, la burbuja y el ancla; la transición se posiciona de inmediato. |
 | J05 | Pulsar o seleccionar una tarjeta del viaje | La tarjeta muestra un único borde amarillo, igual que una opción de reto emoji+texto; no aparece un segundo borde exterior. |
+| J06 | Mostrar una pareja del viaje antes de elegir | Las tarjetas muestran únicamente las fotografías; la palabra elegida se revela después en la burbuja del jugador. Las etiquetas accesibles conservan el nombre de cada imagen. |
 
 ## Plataformas y evidencia
 
