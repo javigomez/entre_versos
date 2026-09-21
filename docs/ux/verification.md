@@ -281,7 +281,7 @@ de cuatro líneas explícitas está en `tests/ux/conversation.spec.ts`.
 
 | Comando | Resultado observado |
 | --- | --- |
-| `npx jest --runInBand tests/components/ChatMessage.test.tsx tests/unit/verseTypography.test.ts` | PASS: 2 suites, 11 pruebas. |
+| `npx jest --runInBand tests/components/ChatMessage.test.tsx tests/unit/verseTypography.test.ts` | PASS: 2 suites, 12 pruebas. |
 | `npm test` | PASS: 4 pruebas Node, 25 suites Jest con 123 pruebas y 3 pruebas de deploy; 0 fallos. La suite emitió el log esperado del ErrorBoundary para `?no-existe`. |
 | `npm run typecheck` | PASS: `tsc --noEmit`. |
 | `npm run lint` | PASS: sin errores ni warnings. |

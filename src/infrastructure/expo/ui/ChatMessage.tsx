@@ -72,9 +72,9 @@ export function ChatMessage({ message, animate, reducedMotion, token, onDone }: 
     {message.label && <Text style={s.label}>{message.label.toUpperCase()}</Text>}
     <View testID={verse ? 'verse-container' : undefined} onLayout={verse ? handleVerseLayout : undefined} style={[player && s.bubble, verse && s.verse]}>
       {writingPlayerMessage ? <View style={s.typingLayer}>
-        <Text testID="typing-reserve" accessible={false} allowFontScaling={verse} style={[s.text, verse && s.verseText, verseStyle, s.typingReserve]}>{completeText}</Text>
-        <Text testID="typing-content" allowFontScaling={verse} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle, s.typingText]}>{visibleText}</Text>
-      </View> : <Text testID={verse ? 'verse-text' : undefined} allowFontScaling={verse} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle]}>{visibleText}</Text>}
+        <Text testID="typing-reserve" accessible={false} allowFontScaling={verse ? true : undefined} style={[s.text, verse && s.verseText, verseStyle, s.typingReserve]}>{completeText}</Text>
+        <Text testID="typing-content" allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle, s.typingText]}>{visibleText}</Text>
+      </View> : <Text testID={verse ? 'verse-text' : undefined} allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, verse && s.verseText, verseStyle]}>{visibleText}</Text>}
     </View>
     {animate && count < message.text.length && <Pressable accessibilityRole="button" accessibilityLabel="Mostrar mensaje completo" onPress={() => setCount(message.text.length)} style={s.skip}><Text style={s.skipText}>Mostrar completo</Text></Pressable>}
   </View>;

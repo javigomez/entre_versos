@@ -99,3 +99,15 @@ test('reserva y contenido del jugador comparten la tipografía del verso', async
   expect(reserve.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
   expect(content.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ fontWeight: '400' })]));
 });
+
+test('mensajes que no son versos no desactivan el escalado del sistema', async () => {
+  await render(<ChatMessage
+    message={{ id: 'plain-1', role: 'master', text: 'Texto normal.' }}
+    animate={false}
+    reducedMotion={false}
+    token={1}
+    onDone={jest.fn()}
+  />);
+
+  expect(screen.getByText('Texto normal.').props.allowFontScaling).toBeUndefined();
+});
