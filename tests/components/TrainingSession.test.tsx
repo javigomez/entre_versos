@@ -6,6 +6,7 @@ import { initialProgress, restoreProgress, submitChallengeAnswer } from '../../s
 import { conversation } from '../fixtures/conversation';
 import { journeyLesson } from '../fixtures/journey';
 import { createControlledViewport } from '../helpers/controlledViewport';
+import { mixedJourneyLesson } from '../fixtures/mixedJourney';
 
 beforeEach(() => { jest.useFakeTimers(); jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false); });
 afterEach(async () => { await cleanup(); jest.restoreAllMocks(); jest.clearAllTimers(); jest.useRealTimers(); });
@@ -146,6 +147,27 @@ test('J04: reducir movimiento conserva la palabra y el siguiente reto', async ()
   expect(screen.getByText('Paso1a')).toBeOnTheScreen();
   await completeActiveMessageIfNeeded();
   expect(screen.getByRole('button', { name: 'PASO2A' })).toBeOnTheScreen();
+});
+
+test('R17: el viatge mostra EXPLICA-M\'HO abans de les opcions textuals', async () => {
+  const viewport = createControlledViewport();
+  const lesson = { ...mixedJourneyLesson, startWithStudent: undefined };
+  const history = ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a']
+    .map(optionId => ({ challengeId: 'viaje-palabras', optionId }));
+  await render(<TrainingSession lesson={lesson}
+    initialProgress={{ ...initialProgress(lesson), started: true, history }} restored
+    onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'NADAR' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  await completeActiveMessageIfNeeded();
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'VER MI RECORRIDO' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  await completeActiveMessageIfNeeded();
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByRole('button', { name: "EXPLICA-M'HO" })).toBeOnTheScreen();
+  expect(screen.queryByRole('button', { name: 'CANTAR' })).not.toBeOnTheScreen();
 });
 
 test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera la respuesta', async () => {

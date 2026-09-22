@@ -4,6 +4,7 @@ import { journeyLesson } from '../../tests/fixtures/journey';
 import { initialProgress } from '../domain/lesson';
 import { createFlow, reduceFlow } from './conversation-flow';
 import type { Message } from './messages';
+import { mixedJourneyLesson } from '../../tests/fixtures/mixedJourney';
 
 test('Continuar espera colocación y no adelanta al siguiente jugador', () => {
   let s = createFlow(conversation, initialProgress(conversation), false);
@@ -118,4 +119,44 @@ test('J07: el recorrido final espera la respuesta explícita del jugador', () =>
   state = reduceFlow(lesson, state, { type: 'PLACED', token: routeToken });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: routeToken, messageId: state.messages[state.revealed].id });
   expect(state.messages[state.revealed]).toMatchObject({ role: 'master', label: 'Tu recorrido', text: 'Viaje → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → Nadar' });
+});
+
+test('R17: el viatge espera EXPLICA-M\'HO abans del repte textual', () => {
+  const lesson = { ...mixedJourneyLesson, startWithStudent: undefined };
+  const history = ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a']
+    .map(optionId => ({ challengeId: 'viaje-palabras', optionId }));
+  let state = createFlow(lesson, { ...initialProgress(lesson), started: true, history }, true);
+  state = reduceFlow(lesson, state, { type: 'ANSWER', controlId: 'n6-a', optionId: 'n6-a' });
+  const answerToken = state.token;
+  for (const event of [
+    { type: 'PRESS_DONE' as const, token: answerToken },
+    { type: 'MOVE_DONE' as const, token: answerToken },
+    { type: 'PLACED' as const, token: answerToken },
+  ]) state = reduceFlow(lesson, state, event);
+  while (!(state.phase === 'waiting-student' && state.messages[state.revealed]?.action === 'VER MI RECORRIDO')) {
+    state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
+  }
+  state = reduceFlow(lesson, state, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
+  const routeToken = state.token;
+  for (const event of [
+    { type: 'PRESS_DONE' as const, token: routeToken },
+    { type: 'MOVE_DONE' as const, token: routeToken },
+    { type: 'PLACED' as const, token: routeToken },
+  ]) state = reduceFlow(lesson, state, event);
+  while (state.phase === 'writing')
+    state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
+  expect(state.phase).toBe('waiting-student');
+  expect(state.messages[state.revealed]).toMatchObject({
+    role: 'player', action: "EXPLICA-M'HO", text: 'Vull aprendre el truc.',
+  });
+  state = reduceFlow(lesson, state, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
+  const explainToken = state.token;
+  for (const event of [
+    { type: 'PRESS_DONE' as const, token: explainToken },
+    { type: 'MOVE_DONE' as const, token: explainToken },
+    { type: 'PLACED' as const, token: explainToken },
+  ]) state = reduceFlow(lesson, state, event);
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: explainToken, messageId: state.messages[state.revealed].id });
+  state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
+  expect(state.phase).toBe('waiting-choice');
 });

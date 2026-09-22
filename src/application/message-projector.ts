@@ -1,4 +1,4 @@
-import type { Challenge, Lesson } from '../domain/schemas';
+import { isScoredChallenge, type Challenge, type Lesson } from '../domain/schemas';
 import type { LessonProgress } from '../domain/lesson-progress';
 import { challengesOf } from '../domain/lesson';
 import type { Message } from './messages';
@@ -10,7 +10,8 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
   let challengeIndex = 0;
   for (const [scriptIndex, item] of lesson.script.entries()) {
     if (item.type === 'master') {
-      messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text, kind: 'verse', label: item.label });
+      messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text,
+        kind: item.kind === 'prose' ? undefined : 'verse', label: item.label });
       continue;
     }
     if (item.type === 'student') {
@@ -32,7 +33,7 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
       if (entry.challengeId !== challenge.id) return;
       const option = challenge.options.find(o => o.id === entry.optionId)!;
       messages.push({ id: `answer-${index}`, role: 'player', text: option.text });
-      if (challenge.type === 'single-choice') {
+      if (isScoredChallenge(challenge)) {
         const correct = option.id === challenge.correctOptionId;
         messages.push({ id: `feedback-${index}`, role: 'master', text: correct ? challenge.success : challenge.retry, kind: correct ? 'success' : undefined });
       }

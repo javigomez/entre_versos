@@ -3,6 +3,7 @@ import { conversation } from '../../tests/fixtures/conversation';
 import { initialProgress, submitChallengeAnswer } from '../domain/lesson';
 import { messagesFor } from './message-projector';
 import type { Message } from './messages';
+import { mixedJourneyLesson } from '../../tests/fixtures/mixedJourney';
 
 test('no revela el bloque posterior a un reto incompleto', () => {
   const p = { ...initialProgress(conversation), started: true };
@@ -45,4 +46,33 @@ test('no expone q2 ni completion antes de sus turnos y los añade una vez al fin
   expect(texts.filter((text: string) => text === 'Fin del entrenamiento.')).toHaveLength(1);
   expect(texts.filter((text: string) => text === 'Una última pregunta.')).toHaveLength(1);
   expect(messages.find((m: Message) => m.id === 'completion')?.label).toBe('Lección completada');
+});
+
+test('R17: projecta J07, la resposta narrativa i el primer repte en ordre', () => {
+  let afterJourney = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a'])
+    afterJourney = submitChallengeAnswer(mixedJourneyLesson, afterJourney, id);
+  const messages = messagesFor(mixedJourneyLesson, afterJourney);
+  expect(messages.slice(-8).map(message => message.id)).toEqual([
+    'viaje-palabras-revelation',
+    'viaje-palabras-route-question',
+    'viaje-palabras-route-action',
+    'viaje-palabras-route',
+    'viaje-palabras-teaching',
+    'master-7',
+    'student-8',
+    'porta-musica-master',
+  ]);
+  expect(messages.at(-2)).toMatchObject({
+    role: 'player', action: "EXPLICA-M'HO", text: 'Vull aprendre el truc.',
+  });
+});
+
+test('R15: un error text-choice projecta resposta i feedback sense avançar', () => {
+  let progress = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a', 'pintar'])
+    progress = submitChallengeAnswer(mixedJourneyLesson, progress, id);
+  const messages = messagesFor(mixedJourneyLesson, progress);
+  expect(messages.slice(-2).map(message => message.text)).toEqual(['PINTAR', 'Busca el significat.']);
+  expect(progress.completed).toEqual(['viaje-palabras']);
 });
