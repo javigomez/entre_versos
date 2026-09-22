@@ -170,6 +170,34 @@ test('R17: el viatge mostra EXPLICA-M\'HO abans de les opcions textuals', async 
   expect(screen.queryByRole('button', { name: 'CANTAR' })).not.toBeOnTheScreen();
 });
 
+test('R15: el repte textual bloqueja el doble toc, dona feedback i permet reintentar', async () => {
+  const viewport = createControlledViewport();
+  let progress = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a'])
+    progress = submitChallengeAnswer(mixedJourneyLesson, progress, id);
+  await render(<TrainingSession lesson={mixedJourneyLesson} initialProgress={progress} restored
+    onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
+
+  expect(screen.getAllByRole('button').filter(button =>
+    ['CANTAR', 'PINTAR', 'NEDAR', 'TANCAR'].includes(button.props.accessibilityLabel))).toHaveLength(4);
+  const wrong = screen.getByRole('button', { name: 'PINTAR' });
+  await act(async () => { await fireEvent.press(wrong); await fireEvent.press(wrong); });
+  await act(async () => { jest.advanceTimersByTime(80); });
+  expect(viewport.moves).toHaveLength(1);
+  await act(async () => { viewport.finishMove(); });
+  await act(async () => { viewport.finishPlacement(); });
+  await completeActiveMessageIfNeeded();
+  expect(screen.getAllByText('PINTAR')).toHaveLength(1);
+  await completeActiveMessageIfNeeded();
+  expect(screen.getByText('Busca el significat.')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'CANTAR' })).toBeOnTheScreen();
+
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'CANTAR' })); });
+  await finishTransition(viewport);
+  await completeActiveMessageIfNeeded();
+  expect(screen.queryByRole('button', { name: 'PINTAR' })).not.toBeOnTheScreen();
+});
+
 test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera la respuesta', async () => {
   const viewport = createControlledViewport();
   const lesson = { ...journeyLesson, startWithStudent: undefined, script: journeyLesson.script.map(step =>
