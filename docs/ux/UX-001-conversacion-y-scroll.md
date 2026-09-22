@@ -23,7 +23,7 @@ UX-001.5 y UX-001.11 y los escenarios R02, R03 y R09.
 | UX-001.2 | El control pulsado, cualquiera que sea su posición vertical, asciende suavemente hasta el inicio del área de conversación, debajo de la cabecera y del margen superior. No se oculta bajo la botonera. |
 | UX-001.3 | Después del desplazamiento, el control se transforma en una burbuja del jugador en esa posición. Continuar utiliza el texto del turno del jugador; selección única utiliza el texto de la opción elegida. La respuesta aparece sin recargar. |
 | UX-001.4 | El maestro comienza a escribir debajo después de completarse la respuesta del jugador. No adelantar turnos del jugador que requieren Continuar. |
-| UX-001.5 | `single-choice` conserva cuatro opciones, acierto/error y reintento. `image-choice` ofrece dos opciones libres: cualquier selección completa el reto y continúa el guion sin feedback de acierto/error ni reintento. |
+| UX-001.5 | `single-choice` conserva cuatro opciones, acierto/error y reintento. `text-choice` conserva acierto/error y reintento, muestra dos o cuatro opciones textuales en filas sin emoji y usa dos únicamente para una oposición binaria. Las filas crecen con el texto; en viewport bajo o texto ampliado se aplica UX-001.8 y el acceso restante es manual. `image-choice` ofrece dos opciones libres: cualquier selección completa el reto y continúa el guion sin feedback de acierto/error ni reintento. |
 | UX-001.6 | El ancla de toda la interacción es el inicio de la burbuja del jugador. El scroll automático nunca la sobrepasa durante los mensajes siguientes del maestro. Una nueva acción del jugador establece una nueva ancla. |
 | UX-001.7 | Sin respuesta previa del jugador, el ancla es el inicio del mensaje del maestro. El scroll acompaña la escritura solo cuando esta necesita espacio y solo hasta alcanzar el ancla. |
 | UX-001.8 | El contenido que no cabe se recorta en el borde inferior del área de conversación. No reducir tipografía, comprimir mensajes, truncar con puntos suspensivos ni forzar el scroll para mostrar el siguiente botón. El contenido íntegro y los controles se alcanzan mediante scroll manual. |
@@ -71,6 +71,9 @@ Cuando se habla de conservar toda la burbuja del jugador se presupone que cabe e
 | R12 | Pulsar Continuar o una opción y completar su desplazamiento | La burbuja del jugador se escribe con cursor tras ocupar el ancla; Mostrar completo la finaliza una vez; .2–.4, .12, .14 |
 | R13 | Pulsar Continuar con una respuesta larga | La burbuja del jugador abre con su anchura final y el texto aparece desde el borde izquierdo hacia la derecha, sin crecer visualmente desde la derecha; .14–.15 |
 | R14 | Iniciar un mensaje animado de maestro o jugador | Ambos respetan la misma cadencia configurable de escritura; .12 |
+| R15 | Reto `text-choice` de cuatro opciones, error y acierto | La opción se convierte en burbuja, el error repone las cuatro filas y el acierto avanza; .1–.6, .11, .14–.16 |
+| R16 | Reto `text-choice` binario con texto ampliado | Se conservan dos filas legibles, sin emoji, truncado ni compresión; si no caben, el acceso es por scroll manual; .8–.10 |
+| R17 | Viaje completado seguido de acción y reto textual | J07 termina antes de mostrar la acción; su respuesta se escribe antes del reto y ninguna respuesta aparece automáticamente; .3–.4, .11, .14–.16 |
 
 ## Variantes image-choice
 

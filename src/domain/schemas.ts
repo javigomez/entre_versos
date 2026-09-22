@@ -6,6 +6,7 @@ const nonempty = z.string().trim().min(1);
 const optionSchema = z.object({ id: nonempty, text: nonempty, emoji: nonempty });
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const imageOptionSchema = z.object({ id: slug, text: z.string().trim().min(1).refine(v => !/\s/.test(v), 'La opción debe ser una palabra'), image: z.object({ file: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*\.jpg$/), description: nonempty }).strict() }).strict();
+const textOptionSchema = z.object({ id: slug, text: z.string().trim().min(1).max(44) }).strict();
 
 /** Valida cuatro opciones con IDs únicos y una solución que referencia una de ellas. */
 export const challengeSchema = z.object({
@@ -29,10 +30,21 @@ export const imageChoiceChallengeSchema = z.object({
 }).strict().superRefine((challenge, ctx) => {
   if (new Set(challenge.options.map(o => o.id)).size !== challenge.options.length) ctx.addIssue({ code: 'custom', message: 'Las opciones deben tener IDs únicos', path: ['options'] });
 });
+export const textChoiceChallengeSchema = z.object({
+  type: z.literal('text-choice'), id: slug, master: nonempty, prompt: nonempty,
+  options: z.array(textOptionSchema).refine(options => options.length === 2 || options.length === 4,
+    'El reto textual necesita dos o cuatro opciones'),
+  correctOptionId: slug, success: nonempty, retry: nonempty,
+}).strict().superRefine((challenge, ctx) => {
+  if (new Set(challenge.options.map(option => option.id)).size !== challenge.options.length)
+    ctx.addIssue({ code: 'custom', message: 'Las opciones deben tener IDs únicos', path: ['options'] });
+  if (!challenge.options.some(option => option.id === challenge.correctOptionId))
+    ctx.addIssue({ code: 'custom', message: 'La respuesta correcta debe existir', path: ['correctOptionId'] });
+});
 const scriptItemSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('master'), text: nonempty, label: nonempty.optional() }),
+  z.object({ type: z.literal('master'), text: nonempty, label: nonempty.optional(), kind: z.enum(['verse', 'prose']).optional() }),
   z.object({ type: z.literal('student'), action: nonempty, text: nonempty }),
-  challengeSchema, imageChoiceChallengeSchema, imageJourneySchema,
+  challengeSchema, textChoiceChallengeSchema, imageChoiceChallengeSchema, imageJourneySchema,
 ]);
 /** Valida el contenido de una lección: guion no vacío, al menos un reto e IDs de reto únicos. */
 export const lessonSchema = z.object({
@@ -47,8 +59,8 @@ export const lessonSchema = z.object({
   if (new Set(challenges.map(c => c.id)).size !== challenges.length)
     ctx.addIssue({ code: 'custom', message: 'Los retos deben tener IDs únicos', path: ['script'] });
   const journeys = lesson.script.filter(item => item.type === 'image-journey');
-  if (journeys.length && (journeys.length !== 1 || challenges.length !== 1 || lesson.script.at(-1)?.type !== 'image-journey'))
-    ctx.addIssue({ code: 'custom', message: 'El viaje debe ser el único reto y cerrar el guion', path: ['script'] });
+  if (journeys.length > 1)
+    ctx.addIssue({ code: 'custom', message: 'La lección admite como máximo un viaje', path: ['script'] });
   if (lesson.startWithStudent) {
     const firstReply = lesson.script[1];
     if (lesson.script[0]?.type !== 'master' || firstReply?.type !== 'student' || firstReply.action !== lesson.startAction)
@@ -56,9 +68,14 @@ export const lessonSchema = z.object({
   }
 });
 export type SingleChoiceChallenge = z.infer<typeof challengeSchema>;
+export type TextChoiceChallenge = z.infer<typeof textChoiceChallengeSchema>;
+export type ScoredChallenge = SingleChoiceChallenge | TextChoiceChallenge;
 export type ImageChoiceChallenge = z.infer<typeof imageChoiceChallengeSchema>;
 export function isChallenge(step: LessonStep): step is Challenge {
-  return step.type === 'single-choice' || step.type === 'image-choice' || step.type === 'image-journey';
+  return step.type === 'single-choice' || step.type === 'text-choice' || step.type === 'image-choice' || step.type === 'image-journey';
+}
+export function isScoredChallenge(challenge: Challenge): challenge is ScoredChallenge {
+  return challenge.type === 'single-choice' || challenge.type === 'text-choice';
 }
 /**
  * Elemento del guion: intervención del maestro, turno prefijado del alumno
@@ -71,7 +88,7 @@ export type LessonStep = z.infer<typeof lessonSchema>['script'][number];
  * Su ID lo identifica dentro de la lección aunque se edite su contenido.
  * Contiene el enunciado y el feedback; no contiene las respuestas del jugador.
  */
-export type Challenge = SingleChoiceChallenge | ImageChoiceChallenge | ImageJourneyChallenge;
+export type Challenge = ScoredChallenge | ImageChoiceChallenge | ImageJourneyChallenge;
 /**
  * Unidad de aprendizaje presentada mediante un guion ordenado de
  * intervenciones y retos. Su identidad se conserva al mejorar su contenido.
