@@ -6,6 +6,7 @@ import trainingRaw from './training.yaml';
 import campSemanticRaw from './camp-semantic.yaml';
 import campSemanticV2Raw from './camp-semantic-v2.yaml';
 import campSemanticV3Raw from './camp-semantic-v3.yaml';
+import campSemanticV4Raw from './camp-semantic-v4.yaml';
 import type { ContentKey } from './content-selection';
 
 const rawByKey = {
@@ -14,6 +15,7 @@ const rawByKey = {
   'camp-semantic': campSemanticRaw,
   'camp-semantic-v2': campSemanticV2Raw,
   'camp-semantic-v3': campSemanticV3Raw,
+  'camp-semantic-v4': campSemanticV4Raw,
 } as const;
 
 /** Carga contenido editorial desde su fuente registrada, YAML o TypeScript. */
