@@ -3,6 +3,8 @@ import { conversation } from '../../tests/fixtures/conversation';
 import { lessonSchema } from './schemas';
 import { submitChallengeAnswer, challengesOf, initialProgress, restoreProgress } from './lesson';
 import { journeyLesson } from '../../tests/fixtures/journey';
+import { mixedJourneyLesson } from '../../tests/fixtures/mixedJourney';
+import type { Lesson } from './schemas';
 
 test('challengesOf devuelve solo los retos single-choice en orden', () => {
   const challenges = challengesOf(conversation);
@@ -95,4 +97,38 @@ test('J06: rechaza guardados contradictorios del viaje', () => {
   expect(restoreProgress(journeyLesson, {
     ...fresh, started: true, history: [{ challengeId: 'viaje-palabras', optionId: 'n3-a' }],
   })).toEqual(fresh);
+});
+
+test('R17: restaura el viatge complet i el repte textual posterior', () => {
+  let progress = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a'])
+    progress = submitChallengeAnswer(mixedJourneyLesson, progress, id);
+  const wrong = submitChallengeAnswer(mixedJourneyLesson, progress, 'pintar');
+  expect(wrong.completed).toEqual(['viaje-palabras']);
+  expect(restoreProgress(mixedJourneyLesson, structuredClone(wrong))).toEqual(wrong);
+  const correct = submitChallengeAnswer(mixedJourneyLesson, wrong, 'cantar');
+  expect(restoreProgress(mixedJourneyLesson, structuredClone(correct))).toEqual(correct);
+});
+
+test('J06/R17: un viatge complet necessita les sis eleccions encara que hi hagi reptes posteriors', () => {
+  const raw = {
+    ...initialProgress(mixedJourneyLesson), started: true,
+    completed: ['viaje-palabras'], history: [],
+  };
+  expect(restoreProgress(mixedJourneyLesson, raw)).toEqual(initialProgress(mixedJourneyLesson));
+});
+
+test('P01/R17: conserva el recorregut si canvia la solució d’un repte textual superat', () => {
+  let saved = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a', 'cantar'])
+    saved = submitChallengeAnswer(mixedJourneyLesson, saved, id);
+  const updated = {
+    ...mixedJourneyLesson,
+    script: mixedJourneyLesson.script.map(step => step.type === 'text-choice'
+      ? { ...step, correctOptionId: 'pintar' }
+      : step),
+  } satisfies Lesson;
+  const restored = restoreProgress(updated, structuredClone(saved));
+  expect(restored.completed).toEqual(['viaje-palabras', 'porta-musica']);
+  expect(restored.history.map(entry => entry.challengeId)).toEqual(Array(6).fill('viaje-palabras'));
 });

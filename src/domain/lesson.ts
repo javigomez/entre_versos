@@ -48,20 +48,20 @@ export function restoreProgress(lesson: Lesson, raw: unknown): LessonProgress {
   if (!parsed.success || parsed.data.lessonId !== lesson.id) return fresh;
   const saved = parsed.data;
   const challenges = challengesOf(lesson);
-  const journey = challenges.find(challenge => challenge.type === 'image-journey');
-  if (journey?.type === 'image-journey') {
-    if (!saved.started) return saved.completed.length || saved.history.length ? fresh : saved;
-    if (saved.history.some(entry => entry.challengeId !== journey.id)) return fresh;
-    const replay = replayJourney(journey, saved.history.map(entry => entry.optionId));
-    if (!replay) return fresh;
-    const expected = replay.ending ? [journey.id] : [];
-    if (saved.completed.length !== expected.length || saved.completed.some((id, index) => id !== expected[index])) return fresh;
-    return saved;
-  }
   if (saved.completed.some((id, i) => challenges[i]?.id !== id)) return fresh;
   if (!saved.started) return saved.completed.length || saved.history.length ? fresh : saved;
 
-  const baseline: LessonProgress = { ...saved, history: [] };
+  const completedChallenges = challenges.slice(0, saved.completed.length);
+  const completedJourney = completedChallenges.find(challenge => challenge.type === 'image-journey');
+  const journeyHistory = completedJourney?.type === 'image-journey'
+    ? saved.history.filter(entry => entry.challengeId === completedJourney.id)
+    : [];
+  if (completedJourney?.type === 'image-journey') {
+    const replay = replayJourney(completedJourney, journeyHistory.map(entry => entry.optionId));
+    if (!replay?.ending || journeyHistory.length !== 6) return fresh;
+  }
+
+  const baseline: LessonProgress = { ...saved, history: completedJourney ? journeyHistory : [] };
   if (!saved.history.length) return baseline;
   const incompatible = () => saved.completed.length ? baseline : fresh;
   const firstIndex = challenges.findIndex(c => c.id === saved.history[0].challengeId);

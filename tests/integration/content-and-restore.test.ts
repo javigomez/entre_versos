@@ -5,6 +5,7 @@ import { challengesOf, initialProgress, restoreProgress, submitChallengeAnswer }
 import { createYamlContentRepository } from '../../src/infrastructure/expo/content/yaml-content-repository';
 import type { Lesson, SingleChoiceChallenge, LessonStep } from '../../src/domain/schemas';
 import { conversation } from '../fixtures/conversation';
+import { mixedJourneyLesson } from '../fixtures/mixedJourney';
 
 const repo = createYamlContentRepository();
 
@@ -126,4 +127,16 @@ test('P07 / R03 / R09: persiste intentos nuevos después de descartar historial 
   expect(reloaded).toEqual(finished);
   expect(createFlow(updated, reloaded, true).phase).toBe('finished');
   expect(messagesFor(updated, reloaded).filter(message => message.id === 'completion')).toHaveLength(1);
+});
+
+test('R17: serialitza i restaura el recorregut més intents textuals', () => {
+  let progress = { ...initialProgress(mixedJourneyLesson), started: true };
+  for (const id of ['n1-a', 'n2-a', 'n3-a', 'n4-a', 'n5-a', 'n6-a', 'pintar', 'cantar'])
+    progress = submitChallengeAnswer(mixedJourneyLesson, progress, id);
+  const encoded = JSON.parse(JSON.stringify(progress));
+  const restored = restoreProgress(mixedJourneyLesson, encoded);
+  expect(restored.lessonId).toBe('mixed-journey-test-v1');
+  expect(restored.completed).toEqual(['viaje-palabras', 'porta-musica']);
+  expect(restored.history).toHaveLength(8);
+  expect(JSON.parse(JSON.stringify(restored))).not.toHaveProperty('sessionId');
 });
