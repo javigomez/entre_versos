@@ -19,6 +19,16 @@ test('App selecciona el contenido indicado por la query web', async () => {
   expect(await screen.findByRole('button', { name: 'LEVANTARME' })).toBeTruthy();
 });
 
+test('App obre camp-semantic-v4 des de la query web', async () => {
+  Object.defineProperty(Platform, 'OS', { configurable: true, value: 'web' });
+  Object.defineProperty(globalThis, 'location', {
+    configurable: true, value: { search: '?camp-semantic-v4' },
+  });
+  await render(<App />);
+  await fireEvent.press(await screen.findByRole('button', { name: 'Mostrar mensaje completo' }));
+  expect(await screen.findByRole('button', { name: 'AIXECAR-ME' })).toBeTruthy();
+});
+
 test('App muestra el error controlado para una query no registrada', async () => {
   Object.defineProperty(Platform, 'OS', { configurable: true, value: 'web' });
   Object.defineProperty(globalThis, 'location', { configurable: true, value: { search: '?no-existe' } });

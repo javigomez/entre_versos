@@ -58,14 +58,17 @@ test('camp-semantic-v4 encadena 64 recorreguts amb set reptes textuals concisos'
     .toEqual([4, 4, 4, 4, 4, 4, 2]);
   expect(challenges.slice(1).flatMap(challenge => 'options' in challenge
     ? challenge.options.map(option => option.text.length) : []).every(length => length <= 44)).toBe(true);
-  const prose = lesson.script.filter(step => step.type === 'master' && step.kind === 'prose')
-    .map(step => step.text).join(' ');
+  const prose = lesson.script.flatMap(step =>
+    step.type === 'master' && step.kind === 'prose' ? [step.text] : []).join(' ');
   expect(prose).toContain('«infeliç»');
   expect(prose.toLocaleLowerCase('ca')).not.toContain('trista');
   expect(lesson.script).toEqual(expect.arrayContaining([
     expect.objectContaining({ type: 'student', action: "EXPLICA-M'HO" }),
+    expect.objectContaining({ type: 'student', action: 'PRACTIQUEM' }),
     expect.objectContaining({ type: 'student', action: 'HO TINC' }),
   ]));
+  const firstTextChoiceIndex = lesson.script.findIndex(step => step.type === 'text-choice');
+  expect(lesson.script[firstTextChoiceIndex - 1]).toMatchObject({ type: 'student', action: 'PRACTIQUEM' });
 
   const journey = challenges[0];
   if (journey.type !== 'image-journey') throw new Error('Cal un viatge');

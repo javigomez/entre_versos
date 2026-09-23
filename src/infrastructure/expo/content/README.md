@@ -14,3 +14,12 @@ Les alternatives `camp-semantic-v2.yaml` i `camp-semantic-v3.yaml` s'obren amb
 progrés independent. `presentation.choiceHint` defineix la indicació sobre les
 imatges. Per validar una alternativa, passa el seu nom de fitxer com a segon
 argument de `validate-camp-semantic.mjs`.
+
+`camp-semantic-v4.yaml`, accessible amb `?camp-semantic-v4` o
+`?content=camp-semantic-v4`, continua després del viatge amb set reptes
+`text-choice`: sis mostren quatre files curtes i l'últim presenta una decisió
+binària. Aquest control no usa emojis, admet exactament dues o quatre opcions i
+no fixa l'alçada ni trunca el text. L'ordre editorial és viatge → explicació
+amb respostes explícites del jugador → pràctica → demostració final. La seva
+mètrica es valida amb `node scripts/validate-camp-semantic.mjs /ruta/heptasilabs
+camp-semantic-v4.yaml`.

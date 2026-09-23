@@ -53,7 +53,7 @@ Són dotze versos per partida i quinze versos diferents comptant les quatre
 variants del vers final. El recompte correspon a les lectures indicades pel
 motor; no és una comprovació de totes les pronunciacions dialectals.
 
-## Alternatives v2 i v3 · 2026-09-22
+## Variants v2–v4
 
 La v2 fa servir frases curtes i directes; la v3 explica el bloqueig amb un to
 més proper i tranquil. Totes dues adapten també els diàlegs en prosa.
@@ -86,6 +86,47 @@ VALID | i‿has a-ca-bat per grim-PAR, (7)
 VALID | i‿has a-ca-bat per vo-LAR, (7)
 15/15 versos vàlids; 4 finals comprovats.
 ```
+
+### Versió 4 · 2026-09-23
+
+La v4 reutilitza el graf visual verificat i continua amb pràctica textual. Els
+blocs en prosa es declaren explícitament i el validador només analitza passos
+`kind: verse` (a més del fallback compatible amb contingut anterior).
+
+`node scripts/validate-camp-semantic.mjs /Users/javigomez/Documents/projects/heptasilabs camp-semantic-v4.yaml`
+
+```text
+camp-semantic-v4.yaml
+VALID | La ba-ta-lla s'ha‿a-ca-BAT. (7)
+VALID | T'has que-dat sen-se res-POS-ta. (7)
+VALID | El ri-val ja t'ha gua-NYAT. (7)
+VALID | Po-sar-te dret tam-bé COS-ta. (7)
+VALID | Ja no hi que-da nin-GÚ. (7)
+VALID | El pa-per es-tà ple-GAT. (7)
+VALID | U-na no-ta. Va per TU. (7)
+VALID | No saps qui te l'ha dei-XAT. (7)
+VALID | El vi-at-ge‿o-bre‿el ca-MÍ, (7)
+VALID | a-ra‿a-pren-dràs a ri-MAR; (7)
+VALID | si‿et llan-cen un mot di-FÍ-cil, (7)
+VALID | tin-dràs per on es-ca-PAR. (7)
+VALID | Amb mú-si-ca faig ca-MÍ, (7)
+VALID | i‿em pre-pa-ro per can-TAR; (7)
+VALID | si la ri-ma fuig de MI, (7)
+VALID | bus-co un verb per ri-MAR. (7)
+VALID | No sa-bi-es què tri-AR, (7)
+VALID | i‿has a-nat tro-bant sor-TI-des; (7)
+VALID | a-ra‿et ve de gust na-DAR, (7)
+VALID | les pa-rau-les van se-GUI-des. (7)
+VALID | a-ra‿et ve de gust re-MAR, (7)
+VALID | a-ra‿et ve de gust grim-PAR, (7)
+VALID | a-ra‿et ve de gust vo-LAR, (7)
+23/23 versos vàlids; 4 finals comprovats.
+```
+
+L'explicació usa la categoria «paraula infeliç» de Díaz-Pimienta i no presenta
+`MÚSICA` com una categoria mètrica demostrada. Els quatre versos de transició,
+els quatre de demostració i les quatre variants de revelació estan inclosos en
+el recompte anterior.
 
 ### Versió 3
 

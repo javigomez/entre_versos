@@ -343,3 +343,33 @@ les imatges i la indicació després de carregar el YAML real.
 
 No s'han executat proves de navegador ni de dispositius reals. Es conserva el
 fitxer de pla aliè que ja era present al directori de treball.
+
+## Camp semàntic v4 · 2026-09-23
+
+R15–R17 cobreixen el nou repte textual, el bloqueig del doble toc, error i
+reintent, l'ordre pregunta–resposta després del viatge i la restauració de
+reptes normals posteriors. La integració recorre els 64 camins i resol els set
+reptes textuals de cadascun. Una prova antiga que exigia que el viatge tanqués
+el guió va fallar a la primera porta completa; es va actualitzar per protegir el
+contracte nou (passos posteriors permesos, segon viatge rebutjat).
+
+| Comanda | Resultat observat |
+| --- | --- |
+| `node scripts/validate-camp-semantic.mjs /Users/javigomez/Documents/projects/heptasilabs camp-semantic-v4.yaml` | PASS: 23/23 versos `VALID` i quatre finals comprovats. |
+| `npm test` | PASS: 4 proves Node, 153 Jest en 27 suites i 3 de desplegament; 0 fallades; 5,83 s. El log de l'ErrorBoundary per `?no-existe` és esperat. |
+| `npm run typecheck` | PASS: `tsc --noEmit`; 1,47 s. |
+| `npm run lint` | PASS: `eslint .`; 3,15 s. |
+| `npm run export:web` | PASS: 425 mòduls, 82 assets i 3 fitxers; 3,71 s. Avís conegut `NO_COLOR`/`FORCE_COLOR`. |
+
+Comprovació diagnòstica de l'exportació local en navegador integrat, viewport
+aproximat de 428 × 720: recorregut complet NEU → REFUGI → FINESTRA → PETJADES
+→ RIU → NADAR, error `PINTAR`, reintent `CANTAR`, sis encerts posteriors,
+decisió binària i finalització. L'observació inicial va detectar que
+l'explicació deixava les opcions sota el plec; el torn explícit `PRACTIQUEM`
+reancora la conversa i les quatre files entren juntes sense scroll inicial. La
+pregunta final mostra dues files completes. No s'ha simulat escala de text gran
+visualment; la prova de component comprova que no hi ha alçada fixa, límit de
+línies ni el·lipsi, i UX-001.8 conserva el scroll manual.
+
+No s'han validat DuckDuckGo Android, Chrome iPhone ni altres dispositius reals;
+la comprovació de navegador integrat no demostra pintura ni suavitat natives.

@@ -673,6 +673,9 @@ script:
     text: "Díaz-Pimienta classifica com a «infeliç» una paraula amb menys de cinc rimes consonants. No
       cal forçar-la al final del vers: la pots posar a dins i saltar, pel significat, cap a una
       paraula que et deixi una rima més ampla."
+  - type: student
+    action: PRACTIQUEM
+    text: Va, provem com obrir una rima pel significat.
   - type: text-choice
     id: porta-musica
     master: Troba una porta pel significat.
@@ -793,4 +796,3 @@ script:
     action: HO TINC
     text: Si un mot em tanca el final, el poso a dins i busco una paraula relacionada que m'obri la rima.
 completion: Ja tens una sortida per no quedar-te en blanc. Quan vulguis, torna a la batalla i posa-la a prova.
-
