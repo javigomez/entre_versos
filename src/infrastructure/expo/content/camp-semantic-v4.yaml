@@ -2,7 +2,7 @@ id: camp-semantic-viatge-v4
 startAction: AIXECAR-ME
 startWithStudent: true
 script:
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
       La batalla s'ha acabat.
@@ -13,22 +13,25 @@ script:
   - type: student
     action: AIXECAR-ME
     text: No m'ha tocat ningú. M'he quedat en blanc i no he sabut què dir.
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
-      Ja no hi queda ningú.
-      El paper està plegat.
-      Una nota. Va per tu.
-      No saps qui te l'ha deixat.
+      Trobes una simple nota,
+      a terra, al teu costat;
+      parla d’aquella derrota,
+      però... qui te l’ha deixat?
     kind: verse
   - type: student
     action: LLEGIR LA NOTA
-    text: "Desplego el paper. Hi diu: «Vols saber per què has perdut? Vine a trobar-me»."
-  - type: master
+    text: "Desplego el paper. Hi diu: «Vols saber per què has perdut? Vine a trobar-me». Signat: Mestre"
+  - type: mestre
     label: Nota
-    text: Aquí no hi ha cap resposta correcta. Mira les dues imatges, tria la que et vingui de gust i
-      continua.
-    kind: prose
+    text: |-
+      Vols saber com has perdut,
+      vine a trobar-me, valent;
+      tria el camí al teu gust
+      i deixa’t portar pel vent.
+    kind: verse
   - type: student
     action: COMENÇAR EL VIATGE
     text: D'acord. Trio una imatge i vaig seguint el que em vingui al cap.
@@ -646,20 +649,20 @@ script:
             ending: volar
     presentation:
       choiceHint: Tria una imatge per continuar el viatge
-      masterLabel: Mestre
+      mestreLabel: Mestre
       routeQuestion: Vols veure el camí que has fet?
       routeAction: VEURE EL MEU RECORREGUT
       routeAnswer: Vull veure el camí que he fet.
       routeLabel: El teu recorregut
       routeStart: Viatge
-  - type: master
+  - type: mestre
     kind: prose
     label: Mestre
     text: Vols que t’expliqui com convertir aquest camí en una sortida per rimar?
   - type: student
     action: EXPLICA-M'HO
     text: Vull aprendre el truc.
-  - type: master
+  - type: mestre
     kind: verse
     label: Mestre
     text: |-
@@ -667,7 +670,7 @@ script:
       ara aprendràs a rimar;
       si et llancen un mot difícil,
       tindràs per on escapar.
-  - type: master
+  - type: mestre
     kind: prose
     label: Mestre
     text: "Díaz-Pimienta classifica com a «infeliç» una paraula amb menys de cinc rimes consonants. No
@@ -678,7 +681,7 @@ script:
     text: Va, provem com obrir una rima pel significat.
   - type: text-choice
     id: porta-musica
-    master: Troba una porta pel significat.
+    mestre: Troba una porta pel significat.
     prompt: MÚSICA → ?
     options:
       - id: cantar
@@ -694,7 +697,7 @@ script:
     retry: Busca un verb en -AR relacionat directament amb MÚSICA.
   - type: text-choice
     id: porta-silenci
-    master: Mantén el mateix criteri.
+    mestre: Mantén el mateix criteri.
     prompt: SILENCI → ?
     options:
       - id: callar
@@ -710,7 +713,7 @@ script:
     retry: Busca l'acció que expressa directament SILENCI.
   - type: text-choice
     id: porta-llum
-    master: Busca l'acció més directa.
+    mestre: Busca l'acció més directa.
     prompt: LLUM → ?
     options:
       - id: brillar
@@ -726,7 +729,7 @@ script:
     retry: Quina acció associes de manera directa amb LLUM?
   - type: text-choice
     id: porta-foc
-    master: Una última associació directa.
+    mestre: Una última associació directa.
     prompt: FOC → ?
     options:
       - id: cremar
@@ -742,7 +745,7 @@ script:
     retry: Quina acció pertany clarament al món del FOC?
   - type: text-choice
     id: sortida-musica
-    master: Ara totes pertanyen al mateix camp.
+    mestre: Ara totes pertanyen al mateix camp.
     prompt: Quina et prepara una rima en -AR?
     options:
       - id: cantar-facil
@@ -758,7 +761,7 @@ script:
     retry: Ara busca significat i també la terminació -AR.
   - type: text-choice
     id: sortida-silenci
-    master: Tria significat i una terminació ampla.
+    mestre: Tria significat i una terminació ampla.
     prompt: Quina et dona una sortida directa en -AR?
     options:
       - id: callar-facil
@@ -774,7 +777,7 @@ script:
     retry: Tria l'opció relacionada que acaba en -AR.
   - type: text-choice
     id: estrategia-musica
-    master: "Última prova: et llancen MÚSICA."
+    mestre: "Última prova: et llancen MÚSICA."
     prompt: Quina estratègia et manté rimant?
     options:
       - id: final-musica
@@ -784,7 +787,7 @@ script:
     correctOptionId: pont-cantar
     success: Exacte. MÚSICA queda dins del vers i CANTAR n'obre la rima.
     retry: No forcis MÚSICA al final; canvia-la de posició.
-  - type: master
+  - type: mestre
     kind: verse
     label: Mestre
     text: |-
@@ -795,4 +798,8 @@ script:
   - type: student
     action: HO TINC
     text: Si un mot em tanca el final, el poso a dins i busco una paraula relacionada que m'obri la rima.
+completionLabel: Lliçó completada
+completionTitle: Ja hi ha espurna.
+completionSummary: "Has superat {COUNT} reptes. Continua jugant amb la teva veu."
+restartAction: Tornar a entrenar
 completion: Ja tens una sortida per no quedar-te en blanc. Quan vulguis, torna a la batalla i posa-la a prova.

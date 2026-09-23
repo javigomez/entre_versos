@@ -45,7 +45,7 @@ test('no expone q2 ni completion antes de sus turnos y los añade una vez al fin
   const texts = messages.map((m: Message) => m.text);
   expect(texts.filter((text: string) => text === 'Fin del entrenamiento.')).toHaveLength(1);
   expect(texts.filter((text: string) => text === 'Una última pregunta.')).toHaveLength(1);
-  expect(messages.find((m: Message) => m.id === 'completion')?.label).toBe('Lección completada');
+  expect(messages.find((m: Message) => m.id === 'completion')?.label).toBe('Entrenamiento completado');
 });
 
 test('R17: projecta J07, la resposta narrativa i el primer repte en ordre', () => {
@@ -59,9 +59,9 @@ test('R17: projecta J07, la resposta narrativa i el primer repte en ordre', () =
     'viaje-palabras-route-action',
     'viaje-palabras-route',
     'viaje-palabras-teaching',
-    'master-7',
+    'mestre-7',
     'student-8',
-    'porta-musica-master',
+    'porta-musica-mestre',
   ]);
   expect(messages.at(-2)).toMatchObject({
     role: 'player', action: "EXPLICA-M'HO", text: 'Vull aprendre el truc.',

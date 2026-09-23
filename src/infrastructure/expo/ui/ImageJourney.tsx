@@ -7,7 +7,7 @@ import type { ControlTarget } from './viewport/useConversationViewport';
 
 type Props = { challengeId: string; choiceHint?: string; options: readonly JourneyOption[]; selectedOptionId?: string; disabled?: boolean; resolveImage: ChallengeImageResolver; onAnswer: (optionId: string, target: ControlTarget) => void };
 
-export function ImageJourney({ challengeId, choiceHint = 'Elige una imagen para continuar el viaje', options, disabled = false, selectedOptionId, resolveImage, onAnswer }: Props) {
+export function ImageJourney({ challengeId, choiceHint = 'Tria una imatge per continuar el viatge', options, disabled = false, selectedOptionId, resolveImage, onAnswer }: Props) {
   return <View style={s.container}>
     <Text style={s.hint}>{choiceHint}</Text>
     <View style={s.row}>{options.map(option => <JourneyCard key={option.id} option={option} challengeId={challengeId}
@@ -20,7 +20,7 @@ function JourneyCard({ option, challengeId, resolveImage, disabled, selected, on
 }) {
   const ref = useRef<View | null>(null); const [failed, setFailed] = useState(false);
   const visual = (preview = false, highlighted = selected) => <View style={[s.card, preview && s.preview, highlighted && s.selected]}>
-    <View style={s.photo}>{failed ? <Text style={s.fallback}>Imagen no disponible</Text>
+    <View style={s.photo}>{failed ? <Text style={s.fallback}>Imatge no disponible</Text>
       : <Image testID={`journey-photo-${option.id}`} source={resolveImage(challengeId, option.image.file)}
           resizeMode="cover" style={s.image} accessible={false} onError={() => setFailed(true)} />}</View>
   </View>;

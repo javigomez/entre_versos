@@ -8,9 +8,9 @@ type ChoiceProps = { challenge: SingleChoiceContent; onAnswer: (id: string, targ
 export function SingleChoiceChallenge({ challenge, onAnswer, disabled = false, selectedOptionId }: ChoiceProps) {
   return <View style={s.container}>
     <Text style={s.prompt}>{challenge.prompt}</Text>
-    <Text style={s.hint}>Elige una respuesta</Text>
+    <Text style={s.hint}>Tria una resposta</Text>
     <View style={s.options}>{challenge.options.map(option => <ChoiceOption key={option.id} option={option} disabled={disabled} selected={selectedOptionId === option.id} onAnswer={onAnswer} />)}</View>
-    <Text style={s.note}>Sin prisa. Cada intento te enseña algo.</Text>
+    <Text style={s.note}>Sense presses. Cada intent t’ensenya alguna cosa.</Text>
   </View>;
 }
 function ChoiceOption({ option, disabled, selected, onAnswer }: { option: SingleChoiceContent['options'][number]; disabled: boolean; selected: boolean; onAnswer: ChoiceProps['onAnswer'] }) {

@@ -51,7 +51,7 @@ test.each(['solution', 'option', 'text'])('P01: conserva logro al cambiar %s', k
       if (kind === 'solution') return { ...item, correctOptionId: 'b' };
       if (kind === 'option') return { ...item, correctOptionId: 'new-a',
         options: item.options.map(o => o.id === 'a' ? { ...o, id: 'new-a' } : o) };
-      return { ...item, prompt: 'Enunciado mejorado', master: 'Nueva explicación',
+      return { ...item, prompt: 'Enunciado mejorado', mestre: 'Nueva explicación',
         success: 'Bien hecho', retry: 'Otra oportunidad',
         options: item.options.map(o => ({ ...o, text: `${o.text}!`, emoji: '✨' })) };
     }) });

@@ -17,5 +17,5 @@ test.each([
 
 test.each(['?training.yaml', '?../training', '?campo%20semantico', '?training=', '?training=otro', '?training&campo_semantico', '?desconocido'])
   ('rechaza la query no segura %s', search => {
-    expect(() => contentKeyFromSearch(search)).toThrow(/contenido/i);
+  expect(() => contentKeyFromSearch(search)).toThrow(/contingut/i);
   });

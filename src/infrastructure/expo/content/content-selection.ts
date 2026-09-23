@@ -8,7 +8,7 @@ export function contentKeyFromSearch(search: string): ContentKey {
   const rawKey = search.slice(1);
   const key = rawKey.startsWith('content=') ? rawKey.slice('content='.length) : rawKey;
   if (!search.startsWith('?') || !safeKey.test(key) || !knownKeys.has(key as ContentKey)) {
-    throw new Error(`Contenido no válido: ${search}`);
+    throw new Error(`Contingut no vàlid: ${search}`);
   }
   return key as ContentKey;
 }

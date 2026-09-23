@@ -5,10 +5,10 @@ import { ChatMessage } from '../../src/infrastructure/expo/ui/ChatMessage';
 beforeEach(() => { jest.useFakeTimers(); });
 afterEach(async () => { await cleanup(); jest.clearAllTimers(); jest.useRealTimers(); });
 
-test('R08: Mostrar completo y fin del reloj completan una sola vez', async () => {
+test('R08: Mostrar complet i la fi del rellotge completen una sola vegada', async () => {
   const onDone = jest.fn();
-  await render(<ChatMessage message={{ id: 'm1', role: 'master', text: 'Verso completo.' }} animate reducedMotion={false} token={7} onDone={onDone} />);
-  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Mostrar mensaje completo' })); });
+  await render(<ChatMessage message={{ id: 'm1', role: 'mestre', text: 'Verso completo.' }} animate reducedMotion={false} token={7} onDone={onDone} />);
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Mostrar missatge complet' })); });
   await act(async () => { jest.advanceTimersByTime(1000); });
   expect(screen.getByText('Verso completo.')).toBeOnTheScreen();
   expect(onDone).toHaveBeenCalledTimes(1);
@@ -25,7 +25,7 @@ test('movimiento reducido muestra el texto y notifica una vez', async () => {
 
 test('desmontar cancela el temporizador', async () => {
   const onDone = jest.fn();
-  const view = await render(<ChatMessage message={{ id: 'm3', role: 'master', text: 'Texto largo.' }} animate reducedMotion={false} token={1} onDone={onDone} />);
+  const view = await render(<ChatMessage message={{ id: 'm3', role: 'mestre', text: 'Texto largo.' }} animate reducedMotion={false} token={1} onDone={onDone} />);
   await view.unmount();
   await act(async () => { jest.advanceTimersByTime(1000); });
   expect(onDone).not.toHaveBeenCalled();
@@ -42,7 +42,7 @@ test('R13: la burbuja del jugador reserva su tamaño antes de escribir', async (
 
 test('R14: la escritura espera la cadencia general antes del primer tramo', async () => {
   const onDone = jest.fn();
-  await render(<ChatMessage message={{ id: 'm5', role: 'master', text: 'Texto largo.' }} animate reducedMotion={false} token={5} onDone={onDone} />);
+  await render(<ChatMessage message={{ id: 'm5', role: 'mestre', text: 'Texto largo.' }} animate reducedMotion={false} token={5} onDone={onDone} />);
 
   await act(async () => { jest.advanceTimersByTime(29); });
   expect(screen.queryByText(/Tex/)).not.toBeOnTheScreen();
@@ -53,7 +53,7 @@ test('R14: la escritura espera la cadencia general antes del primer tramo', asyn
 
 test('verso usa escalado del sistema y peso regular', async () => {
   await render(<ChatMessage
-    message={{ id: 'verse-1', role: 'master', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto\notra línea\núltima línea' }}
+    message={{ id: 'verse-1', role: 'mestre', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto\notra línea\núltima línea' }}
     animate={false}
     reducedMotion={false}
     token={1}
@@ -67,7 +67,7 @@ test('verso usa escalado del sistema y peso regular', async () => {
 
 test('verso reduce el tamaño solo hasta que caben sus líneas explícitas', async () => {
   await render(<ChatMessage
-    message={{ id: 'verse-2', role: 'master', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto' }}
+    message={{ id: 'verse-2', role: 'mestre', kind: 'verse', text: 'línea corta\nla línea más larga del cuarteto' }}
     animate={false}
     reducedMotion={false}
     token={1}
@@ -103,7 +103,7 @@ test('reserva y contenido del jugador comparten la tipografía del verso', async
 
 test('mensajes que no son versos no desactivan el escalado del sistema', async () => {
   await render(<ChatMessage
-    message={{ id: 'plain-1', role: 'master', text: 'Texto normal.' }}
+    message={{ id: 'plain-1', role: 'mestre', text: 'Texto normal.' }}
     animate={false}
     reducedMotion={false}
     token={1}

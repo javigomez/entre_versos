@@ -21,8 +21,44 @@ test('rechaza respuesta inexistente, IDs repetidos y opciones incompletas', () =
   expect(duplicateResult.success).toBe(false);
 });
 
+test('el vocabulari del contingut identifica el mestre i aporta l’etiqueta final', () => {
+  const content = {
+    id: 'vocabulari-catala',
+    startAction: 'COMENÇAR',
+    completionLabel: 'Lliçó completada',
+    completion: 'Has acabat.',
+    completionTitle: 'Ja hi ha espurna.',
+    completionSummary: 'Has superat {COUNT} reptes.',
+    restartAction: 'Tornar a entrenar',
+    script: [
+      { type: 'mestre', text: 'Comencem.' },
+      {
+        type: 'single-choice', id: 'prova', mestre: 'Tria la resposta.', prompt: 'Quina és?',
+        options: [
+          { id: 'a', text: 'A', emoji: 'A' },
+          { id: 'b', text: 'B', emoji: 'B' },
+          { id: 'c', text: 'C', emoji: 'C' },
+          { id: 'd', text: 'D', emoji: 'D' },
+        ],
+        correctOptionId: 'a', success: 'Correcte.', retry: 'Torna-ho a provar.',
+      },
+    ],
+  };
+  const lesson = lessonSchema.parse(content);
+
+  expect(lesson).toMatchObject({
+    completionLabel: 'Lliçó completada',
+    completionTitle: 'Ja hi ha espurna.',
+    completionSummary: 'Has superat {COUNT} reptes.',
+    restartAction: 'Tornar a entrenar',
+  });
+  expect(lesson.script[0]).toMatchObject({ type: 'mestre', text: 'Comencem.' });
+  expect(lesson.script[1]).toMatchObject({ mestre: 'Tria la resposta.' });
+  expect(lessonSchema.safeParse({ ...content, completionSummary: 'Has superat molts reptes.' }).success).toBe(false);
+});
+
 test('acepta exactamente dos opciones image-choice y rechaza campos de evaluación', () => {
-  const challenge = { type: 'image-choice', id: 'viaje-inicial', master: 'Elige', prompt: '¿Por dónde?', options: [
+  const challenge = { type: 'image-choice', id: 'viaje-inicial', mestre: 'Elige', prompt: '¿Por dónde?', options: [
     { id: 'nieve', text: 'NIEVE', image: { file: 'nieve.jpg', description: 'Sendero nevado' } },
     { id: 'playa', text: 'PLAYA', image: { file: 'playa.jpg', description: 'Camino al mar' } },
   ] };
@@ -32,7 +68,7 @@ test('acepta exactamente dos opciones image-choice y rechaza campos de evaluaci�
 
 const textChoice = {
   type: 'text-choice', id: 'estrategia-musica',
-  master: 'Et llancen MÚSICA.', prompt: 'Què fas?',
+  mestre: 'Et llancen MÚSICA.', prompt: 'Què fas?',
   options: [
     { id: 'forcar', text: 'La poso al final i en forço la rima' },
     { id: 'pont', text: 'La poso dins i tanco amb CANTAR' },

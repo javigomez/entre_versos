@@ -9,8 +9,8 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
   const messages: Message[] = [];
   let challengeIndex = 0;
   for (const [scriptIndex, item] of lesson.script.entries()) {
-    if (item.type === 'master') {
-      messages.push({ id: `master-${scriptIndex}`, role: 'master', text: item.text,
+    if (item.type === 'mestre') {
+      messages.push({ id: `mestre-${scriptIndex}`, role: 'mestre', text: item.text,
         kind: item.kind === 'prose' ? undefined : 'verse', label: item.label });
       continue;
     }
@@ -28,20 +28,20 @@ export function messagesFor(lesson: Lesson, progress: LessonProgress): Message[]
       if (challengeIndex > progress.completed.length) break;
       continue;
     }
-    messages.push({ id: `${challenge.id}-master`, role: 'master', text: challenge.master });
+    messages.push({ id: `${challenge.id}-mestre`, role: 'mestre', text: challenge.mestre });
     progress.history.forEach((entry, index) => {
       if (entry.challengeId !== challenge.id) return;
       const option = challenge.options.find(o => o.id === entry.optionId)!;
       messages.push({ id: `answer-${index}`, role: 'player', text: option.text });
       if (isScoredChallenge(challenge)) {
         const correct = option.id === challenge.correctOptionId;
-        messages.push({ id: `feedback-${index}`, role: 'master', text: correct ? challenge.success : challenge.retry, kind: correct ? 'success' : undefined });
+        messages.push({ id: `feedback-${index}`, role: 'mestre', text: correct ? challenge.success : challenge.retry, kind: correct ? 'success' : undefined });
       }
     });
     challengeIndex += 1;
     if (challengeIndex > progress.completed.length) break;
   }
   if (progress.completed.length === challenges.length)
-    messages.push({ id: 'completion', role: 'master', text: lesson.completion, label: 'Lección completada' });
+    messages.push({ id: 'completion', role: 'mestre', text: lesson.completion, label: lesson.completionLabel });
   return messages;
 }

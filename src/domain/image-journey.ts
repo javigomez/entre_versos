@@ -1,6 +1,6 @@
 import { z } from 'zod';
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-const word = z.string().trim().min(1).refine(value => !/\s/.test(value), 'Una sola palabra');
+const word = z.string().trim().min(1).refine(value => !/\s/.test(value), 'Una sola paraula');
 const endingSchema = z.enum(['nadar', 'remar', 'volar', 'trepar', 'grimpar']);
 const optionSchema = z.object({
   id: slug, text: word,
@@ -20,7 +20,7 @@ export const imageJourneySchema = z.object({
   revelation: z.string().trim().min(1), teaching: z.string().trim().min(1),
   presentation: z.object({
     choiceHint: z.string().trim().min(1).optional(),
-    masterLabel: z.string().trim().min(1),
+    mestreLabel: z.string().trim().min(1),
     routeQuestion: z.string().trim().min(1),
     routeAction: z.string().trim().min(1),
     routeAnswer: z.string().trim().min(1),
@@ -30,17 +30,17 @@ export const imageJourneySchema = z.object({
 }).strict().superRefine((journey, ctx) => {
   const fail = (message: string) => ctx.addIssue({ code: 'custom', message });
   const nodes = new Map(journey.nodes.map(node => [node.id, node]));
-  if (nodes.size !== journey.nodes.length) fail('IDs de nodo duplicados');
-  if (nodes.get(journey.startNodeId)?.layer !== 1) fail('La raíz debe estar en capa 1');
+  if (nodes.size !== journey.nodes.length) fail('IDs de node duplicats');
+  if (nodes.get(journey.startNodeId)?.layer !== 1) fail('L’arrel ha d’estar a la capa 1');
   const ids = new Set<string>();
   for (const node of journey.nodes) for (const option of node.options) {
-    if (ids.has(option.id)) fail('IDs de opción duplicados');
+    if (ids.has(option.id)) fail('IDs d’opció duplicats');
     ids.add(option.id);
     if (node.layer < 6) {
       if (option.ending || !option.next || nodes.get(option.next)?.layer !== node.layer + 1)
-        fail(`Salida inválida: ${node.id}/${option.id}`);
+        fail(`Sortida no vàlida: ${node.id}/${option.id}`);
     } else if (option.next || !option.ending || option.text !== option.ending.toUpperCase()) {
-      fail(`Terminal inválido: ${node.id}/${option.id}`);
+      fail(`Final no vàlid: ${node.id}/${option.id}`);
     }
   }
   const visited = new Set<string>();
@@ -50,9 +50,9 @@ export const imageJourneySchema = z.object({
     nodes.get(id)?.options.forEach(option => { if (option.next) visit(option.next); });
   };
   visit(journey.startNodeId);
-  if (journey.nodes.some(node => !visited.has(node.id))) fail('Nodo inalcanzable');
+  if (journey.nodes.some(node => !visited.has(node.id))) fail('Node inabastable');
   if ((journey.revelation.match(/\{VERBO\}/g) ?? []).length !== 1)
-    fail('La revelación necesita exactamente un {VERBO}');
+    fail('La revelació necessita exactament un {VERBO}');
 });
 export type ImageJourneyChallenge = z.infer<typeof imageJourneySchema>;
 export type JourneyNode = ImageJourneyChallenge['nodes'][number];

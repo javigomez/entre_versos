@@ -30,8 +30,8 @@ test('Continuar espera colocación y no adelanta al siguiente jugador', () => {
 test('rechaza activaciones, respuestas y callbacks duplicados o antiguos', () => {
   const initial = createFlow(conversation, initialProgress(conversation), false);
   expect(reduceFlow(conversation, initial, { type: 'START' })).toBe(initial);
-  const afterMaster = reduceFlow(conversation, initial, { type: 'MESSAGE_DONE', token: 0, messageId: initial.messages[0].id });
-  const started = reduceFlow(conversation, afterMaster, { type: 'START' });
+  const afterMestre = reduceFlow(conversation, initial, { type: 'MESSAGE_DONE', token: 0, messageId: initial.messages[0].id });
+  const started = reduceFlow(conversation, afterMestre, { type: 'START' });
   const pressing = reduceFlow(conversation, started, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
   const old = reduceFlow(conversation, pressing, { type: 'RESET' });
   expect(reduceFlow(conversation, old, { type: 'PRESS_DONE', token: pressing.token })).toBe(old);

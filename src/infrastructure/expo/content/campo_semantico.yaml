@@ -1,11 +1,11 @@
 id: campo-semantico
 startAction: Empezar contenido alternativo.
 script:
-- type: master
+- type: mestre
   text: Contenido alternativo
 - id: campo-semantico-001
   type: single-choice
-  master: Elige el elemento que pertenece al campo semántico.
+  mestre: Elige el elemento que pertenece al campo semántico.
   prompt: ¿Cuál pertenece al grupo?
   options:
   - id: estrofa
@@ -23,4 +23,8 @@ script:
   correctOptionId: estrofa
   success: Respuesta correcta.
   retry: Inténtalo de nuevo.
+completionLabel: Lección completada
+completionTitle: Ya hay chispa.
+completionSummary: "{COUNT} retos superados. Sigue jugando con tu voz."
+restartAction: Volver a entrenar
 completion: Contenido alternativo completado.

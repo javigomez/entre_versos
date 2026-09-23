@@ -12,7 +12,7 @@ import { createChallengeImageResolver } from './content/content-images';
 class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  render() { return this.state.failed ? <View style={styles.error}><Text style={{ color: c.text }}>No se ha podido abrir el entrenamiento. Revisa el contenido y recarga la app.</Text></View> : this.props.children; }
+  render() { return this.state.failed ? <View style={styles.error}><Text style={{ color: c.text }}>No s’ha pogut obrir l’entrenament. Revisa el contingut i torna a carregar l’app.</Text></View> : this.props.children; }
 }
 
 function ContentApp() {

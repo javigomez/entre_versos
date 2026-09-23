@@ -156,9 +156,9 @@ Los textos de apertura se adaptan a la interfaz; no son una transcripción liter
 2. Inicio `LEVANTARME` arranca la sesión y produce una burbuja `No me han dado ningún golpe. Me quedé sin palabras delante de todos.`. Para que el inicio sea una acción real, el reducer consume el primer `student` junto con START **solo si** la lección declara `startWithStudent: true` (ver tarea 4). No duplicar dos botones LEVANTARME.
 3. Voz: `Ya no queda aquí tu gente,\nni el rival que te venció;\npero ves, sorprendentemente,\nun papel que alguien dejó.`
 4. Acción `VER NOTA` → jugador: `Recojo el papel y leo: «Si quieres saber por qué has perdido, encuéntrame».`
-5. Nota (master del reto): `No busques una respuesta correcta. Elige lo que te sugiera cada imagen y sigue el viaje.`
+5. Nota (mestre del reto): `No busques una respuesta correcta. Elige lo que te sugiera cada imagen y sigue el viaje.`
 6. Acción `EMPEZAR EL VIAJE` → jugador: `Cierro los ojos. Esta vez voy a dejar que una palabra me lleve a otra.`
-7. Pantalla de parejas, seis taps, sin texto de maestro. El `master` del reto se proyecta **antes** de la acción del punto 6; representarlo como un master normal del script y dar al viaje `master` vacío opcional/no proyectado, no repetirlo. El esquema definitivo de tarea 1 no tiene campo `master` en `image-journey`.
+7. Pantalla de parejas, seis taps, sin texto de maestro. El `mestre` del reto se proyecta **antes** de la acción del punto 6; representarlo como un mestre normal del script y dar al viaje `mestre` vacío opcional/no proyectado, no repetirlo. El esquema definitivo de tarea 1 no tiene campo `mestre` en `image-journey`.
 8. Negro breve; maestro: `Un viaje fue tu partida,\ncada elección, un lugar;\nuna palabra dio vida\na otra, hasta {VERBO}.`
 9. Recorrido, como mensaje del jugador sin acción, con etiqueta `Tu recorrido`: `VIAJE → {seis palabras reales}`.
 10. Maestro, explicación: `Eso es un campo semántico: palabras conectadas por su significado. Aquí lo hemos explorado como una cadena de asociaciones: una palabra te sugiere otra, aunque cambies de paisaje. No tienen que rimar.\n\nEn la batalla te quedaste en blanco. No te aferres a la palabra que te dan: úsala para encontrar la siguiente.`
@@ -197,11 +197,11 @@ export const journey: ImageJourneyChallenge = {
 export const journeyLesson: Lesson = {
   id: 'journey-test-v1', startAction: 'LEVANTARME', startWithStudent: true,
   script: [
-    { type: 'master', text: 'Has perdido la batalla.', label: 'Voz' },
+    { type: 'mestre', text: 'Has perdido la batalla.', label: 'Voz' },
     { type: 'student', action: 'LEVANTARME', text: 'Me quedé sin palabras.' },
-    { type: 'master', text: 'Encuentras una nota.', label: 'Voz' },
+    { type: 'mestre', text: 'Encuentras una nota.', label: 'Voz' },
     { type: 'student', action: 'VER NOTA', text: 'Leo la nota.' },
-    { type: 'master', text: 'Elige sin buscar aciertos.', label: 'Nota' },
+    { type: 'mestre', text: 'Elige sin buscar aciertos.', label: 'Nota' },
     { type: 'student', action: 'EMPEZAR EL VIAJE', text: 'Cierro los ojos.' },
     journey,
   ],
@@ -328,7 +328,7 @@ export function journeyOptions(journey: ImageJourneyChallenge, optionIds: readon
 }
 ```
 
-- [ ] **4. Incorporar el tipo al esquema de lección.** Importar `imageJourneySchema` y `ImageJourneyChallenge` en `schemas.ts`; incluirlo en `scriptItemSchema`; ampliar `Challenge` y `isChallenge`. Añadir `label: nonempty.optional()` al objeto master y `startWithStudent: z.boolean().optional()` a la lección. Refinar las lecciones con viaje: exactamente un viaje, último ítem del script, sin otros retos; `startWithStudent` requiere primer elemento master y segundo student cuya action coincide con startAction. Este incremento no pretende soportar múltiples viajes y pruebas de examen dentro de la misma lección.
+- [ ] **4. Incorporar el tipo al esquema de lección.** Importar `imageJourneySchema` y `ImageJourneyChallenge` en `schemas.ts`; incluirlo en `scriptItemSchema`; ampliar `Challenge` y `isChallenge`. Añadir `label: nonempty.optional()` al objeto mestre y `startWithStudent: z.boolean().optional()` a la lección. Refinar las lecciones con viaje: exactamente un viaje, último ítem del script, sin otros retos; `startWithStudent` requiere primer elemento mestre y segundo student cuya action coincide con startAction. Este incremento no pretende soportar múltiples viajes y pruebas de examen dentro de la misma lección.
 
 ```ts
 // Dentro del superRefine de lessonSchema, después de las reglas existentes:
@@ -337,7 +337,7 @@ if (journeys.length && (journeys.length !== 1 || challenges.length !== 1 || less
   ctx.addIssue({ code: 'custom', message: 'El viaje debe ser el único reto y cerrar el guion' });
 if (lesson.startWithStudent) {
   const firstReply = lesson.script[1];
-  if (lesson.script[0]?.type !== 'master' || firstReply?.type !== 'student' || firstReply.action !== lesson.startAction)
+  if (lesson.script[0]?.type !== 'mestre' || firstReply?.type !== 'student' || firstReply.action !== lesson.startAction)
     ctx.addIssue({ code: 'custom', message: 'startWithStudent requiere respuesta inicial coincidente' });
 }
 ```
@@ -353,7 +353,7 @@ export function isChallenge(step: LessonStep): step is Challenge {
 
 En `challenge.ts`, cambiar únicamente el parámetro a `SingleChoiceChallenge | ImageChoiceChallenge`; el viaje se evalúa con historial en tarea 2. No añadir un resultado «completed» para cualquier opción de viaje. Las llamadas de `lesson.ts` deben estrechar el tipo antes de llamar al evaluador.
 
-- [ ] **5. Verde y revisión:** ejecutar test nuevo y `npx jest --runInBand src/domain/schemas.test.ts src/domain/challenge.test.ts`; corregir únicamente discriminación en consumidores. `rg -n 'challenge\.options|challenge\.master|Challenge\[' src tests` identifica accesos que necesitan `type !== 'image-journey'`. El cierre de tipado del conjunto se completa en tareas 2–5; no esconder errores con `as any`.
+- [ ] **5. Verde y revisión:** ejecutar test nuevo y `npx jest --runInBand src/domain/schemas.test.ts src/domain/challenge.test.ts`; corregir únicamente discriminación en consumidores. `rg -n 'challenge\.options|challenge\.mestre|Challenge\[' src tests` identifica accesos que necesitan `type !== 'image-journey'`. El cierre de tipado del conjunto se completa en tareas 2–5; no esconder errores con `as any`.
 - [ ] **6. Commit de esta tarea**, solo archivos enumerados, mensaje `feat: model six-step image journeys`.
 
 ### Task 2: Progreso, replay y restauración sin inventar elecciones
@@ -469,15 +469,15 @@ export function journeyMessages(challenge: ImageJourneyChallenge, optionIds: rea
   const replay = replayJourney(challenge, optionIds);
   if (!replay?.ending) return [];
   return [
-    { id: `${challenge.id}-revelation`, role: 'master', kind: 'verse', label: 'Maestro',
+    { id: `${challenge.id}-revelation`, role: 'mestre', kind: 'verse', label: 'Maestro',
       text: challenge.revelation.replace('{VERBO}', replay.ending.toUpperCase()) },
     { id: `${challenge.id}-route`, role: 'player', label: 'Tu recorrido', text: ['VIAJE', ...replay.words].join(' → ') },
-    { id: `${challenge.id}-teaching`, role: 'master', label: 'Maestro', text: challenge.teaching },
+    { id: `${challenge.id}-teaching`, role: 'mestre', label: 'Maestro', text: challenge.teaching },
   ];
 }
 ```
 
-- [ ] **4. Integrar proyección antes del acceso `challenge.master`.** En bloque master copiar también `label: item.label`. En viaje, no añadir `-master`, respuestas ni feedback por entrada de history:
+- [ ] **4. Integrar proyección antes del acceso `challenge.mestre`.** En bloque mestre copiar también `label: item.label`. En viaje, no añadir `-mestre`, respuestas ni feedback por entrada de history:
 
 ```ts
 if (challenge.type === 'image-journey') {
@@ -970,7 +970,7 @@ test('J06: alternar contenidos y reiniciar viaje conserva training', async () =>
 
 Añadir dos saves sin await individual, `await Promise.all([repo.save(p1), repo.save(p2)])`, comprobar p2 al cargar. Simular primer setItem rechazado con mockRejectedValueOnce, esperar rechazo y siguiente save exitoso; la cola no debe quedar envenenada. Probar JSON inválido devuelve null y getItem rechazado muestra aviso de TrainingScreen, sin bloquear una partida nueva.
 
-- [ ] **8. Actualizar expectativas editoriales del ejemplo**, y únicamente esas: en `App.test.tsx` esperar apertura nueva (puede esperar «Mostrar mensaje completo», pulsarlo y buscar cuarteta); en `content-and-restore.test.ts` ID nuevo y primer master exacto. Mantener pruebas query inválida, training por defecto, legacy y progreso P01–P08. No cambiar fixtures antiguas para evitar fallos del nuevo discriminante.
+- [ ] **8. Actualizar expectativas editoriales del ejemplo**, y únicamente esas: en `App.test.tsx` esperar apertura nueva (puede esperar «Mostrar mensaje completo», pulsarlo y buscar cuarteta); en `content-and-restore.test.ts` ID nuevo y primer mestre exacto. Mantener pruebas query inválida, training por defecto, legacy y progreso P01–P08. No cambiar fixtures antiguas para evitar fallos del nuevo discriminante.
 - [ ] **9. Verde dirigido:** dominio/integración raw YAML y namespaces deben pasar antes del arte. Los tests del repo/App con registro real pasan después de tarea 7. Commit `feat: register semantic journey content and isolate progress` cuando esa dependencia esté resuelta; no afirmar app utilizable sin assets.
 
 ### Task 7: Producir, registrar y revisar los assets del viaje
@@ -1098,7 +1098,7 @@ id: campo-semantico-viaje-v1
 startAction: LEVANTARME
 startWithStudent: true
 script:
-  - type: master
+  - type: mestre
     label: Voz
     text: |-
       Ya se ha marchado la gente,
@@ -1108,7 +1108,7 @@ script:
   - type: student
     action: LEVANTARME
     text: No me han dado ningún golpe. Me quedé sin palabras delante de todos.
-  - type: master
+  - type: mestre
     label: Voz
     text: |-
       Ya no queda aquí tu gente,
@@ -1118,7 +1118,7 @@ script:
   - type: student
     action: VER NOTA
     text: "Recojo el papel y leo: «Si quieres saber por qué has perdido, encuéntrame»."
-  - type: master
+  - type: mestre
     label: Nota
     text: No busques una respuesta correcta. Elige lo que te sugiera cada imagen y sigue el viaje.
   - type: student

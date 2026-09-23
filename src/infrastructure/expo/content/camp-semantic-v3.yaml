@@ -3,7 +3,7 @@ id: camp-semantic-viatge-v3
 startAction: AIXECAR-ME
 startWithStudent: true
 script:
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
       Avui no t'ha sortit res.
@@ -13,7 +13,7 @@ script:
   - type: student
     action: AIXECAR-ME
     text: Tenia coses al cap, però no em sortien. Com més hi pensava, més em costava dir res.
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
       Veus la nota al teu costat.
@@ -23,7 +23,7 @@ script:
   - type: student
     action: LLEGIR LA NOTA
     text: "Agafo la nota: «Si vols entendre què t'ha passat, vine a trobar-me»."
-  - type: master
+  - type: mestre
     label: Nota
     text: Pren-t'ho amb calma. Mira les imatges i queda't amb la que et suggereixi alguna cosa. No has d'encertar
       res.
@@ -649,11 +649,15 @@ script:
             ending: volar
     presentation:
       choiceHint: Tria una imatge per continuar el viatge
-      masterLabel: Mestre
+      mestreLabel: Mestre
       routeQuestion: Vols veure el camí que has fet?
       routeAction: VEURE EL MEU RECORREGUT
       routeAnswer: Vull veure el camí que he fet.
       routeLabel: El teu recorregut
       routeStart: Viatge
+completionLabel: Lliçó completada
+completionTitle: Ja hi ha espurna.
+completionSummary: "Has superat {COUNT} reptes. Continua jugant amb la teva veu."
+restartAction: Tornar a entrenar
 completion: Soc jo, qui t'ha deixat la nota. Avui t'has quedat en blanc, però això es pot treballar. Si et ve
   de gust, preparem la pròxima batalla.

@@ -46,7 +46,7 @@ trunca el text: preval UX-001.8 i queda disponible el scroll manual. En el
 viewport mòbil de referència, els textos editorials de v4 han de cabre sense
 scroll inicial.
 
-Els passos `master` admeten `kind: verse | prose`. Per compatibilitat, l'absència
+Els passos `mestre` admeten `kind: verse | prose`. Per compatibilitat, l'absència
 de `kind` conserva el comportament actual de vers. V4 marca cada bloc de forma
 explícita perquè la prosa no rebi cometes ni ajust tipogràfic de vers.
 

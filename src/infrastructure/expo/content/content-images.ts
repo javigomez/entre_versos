@@ -101,7 +101,7 @@ export const contentImageRegistry: ContentImageRegistry = {
 export function createContentImageResolver(registry: ContentImageRegistry) {
   return (contentKey: string, challengeId: string, file: string): ImageSourcePropType => {
     const image = registry[contentKey]?.[challengeId]?.[file];
-    if (!image) throw new Error(`Imagen no registrada: ${contentKey}/${challengeId}/${file}`);
+    if (!image) throw new Error(`Imatge no registrada: ${contentKey}/${challengeId}/${file}`);
     return image;
   };
 }

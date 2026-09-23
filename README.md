@@ -57,7 +57,7 @@ Referencias: [publicación web con Expo](https://docs.expo.dev/guides/publishing
 
 ## Estructura
 
-- `src/infrastructure/expo/content/training.yaml`: guion de la conversación. Cada entrada es `master`, `student` o `single-choice`; los textos `|-` conservan los saltos de línea de los versos. Editarlo actualiza el contenido mediante Metro.
+- `src/infrastructure/expo/content/training.yaml`: guion de la conversación. Cada entrada es `mestre`, `student` o `single-choice`; los textos `|-` conservan los saltos de línea de los versos. Editarlo actualiza el contenido mediante Metro.
 - `src/domain/`: esquema Zod, entidad `LessonProgress` y reglas puras de la lección (`submitChallengeAnswer`, `restoreProgress`, `initialProgress`, `challengesOf`). Sin dependencias de React, React Native ni AsyncStorage.
 - `src/application/`: proyección de mensajes, reducer de conversación (`conversation-flow`) y puertos de contenido/persistencia. Coordina el dominio sin acoplarse a la plataforma.
 - `src/infrastructure/expo/`: composition root, adaptadores de YAML y AsyncStorage, y toda la presentación React Native compartida por Android, iOS y web. Incluye la UI, los componentes de reto y el hook de viewport.
@@ -65,7 +65,7 @@ Referencias: [publicación web con Expo](https://docs.expo.dev/guides/publishing
 
 El diccionario del dominio está en el código: [schemas.ts](src/domain/schemas.ts) define el contenido, [lesson-progress.ts](src/domain/lesson-progress.ts) define el avance y [lesson.ts](src/domain/lesson.ts) documenta las operaciones. Sus comentarios JSDoc explican los conceptos y las pruebas muestran sus reglas. Los guardados antiguos con `sessionId` siguen siendo legibles; las escrituras nuevas utilizan `lessonId` en la misma clave de almacenamiento.
 
-El YAML se transforma durante el empaquetado y se valida con Zod al cargar y en los tests. Para añadir conversación, agrega entradas `master` o `student`; para añadir retos, usa una entrada `single-choice` siguiendo el esquema de `training.yaml`. Cambiar el ID de la lección invalida el progreso anterior. No hay cuentas ni sincronización entre dispositivos.
+El YAML se transforma durante el empaquetado y se valida con Zod al cargar y en los tests. Para añadir conversación, agrega entradas `mestre` o `student`; para añadir retos, usa una entrada `single-choice` siguiendo el esquema de `training.yaml`. Las etiquetas y frases del cierre se definen en `completionLabel`, `completion`, `completionTitle`, `completionSummary` y `restartAction`; el resumen incluye exactamente un marcador `{COUNT}`. Cambiar el ID de la lección invalida el progreso anterior. No hay cuentas ni sincronización entre dispositivos.
 
 ## Comprobaciones
 

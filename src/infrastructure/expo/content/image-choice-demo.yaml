@@ -1,11 +1,11 @@
 id: image-choice-demo-v1
 startAction: Empezar el viaje
 script:
-  - type: master
+  - type: mestre
     text: Dos caminos aparecen delante de ti.
   - type: image-choice
     id: viaje-inicial
-    master: Elige la escena que te llama.
+    mestre: Elige la escena que te llama.
     prompt: ¿Por dónde seguimos?
     options:
       - id: nieve
@@ -18,4 +18,8 @@ script:
         image:
           file: playa.jpg
           description: Camino de dunas frente al mar
+completionLabel: Lección completada
+completionTitle: Ya hay chispa.
+completionSummary: "{COUNT} retos superados. Sigue jugando con tu voz."
+restartAction: Volver a entrenar
 completion: El viaje acaba de empezar.

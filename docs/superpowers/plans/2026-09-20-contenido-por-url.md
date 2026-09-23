@@ -137,7 +137,7 @@
   });
   ```
 
-  Crear `campo_semantico.yaml` con un guion mínimo válido y claramente distinto, por ejemplo `id: campo-semantico`, un `startAction`, una intervención `master`, un reto `single-choice` con exactamente cuatro opciones, `correctOptionId` válido y `completion`.
+  Crear `campo_semantico.yaml` con un guion mínimo válido y claramente distinto, por ejemplo `id: campo-semantico`, un `startAction`, una intervención `mestre`, un reto `single-choice` con exactamente cuatro opciones, `correctOptionId` válido y `completion`.
 
 - [ ] **Step 2: Run test to verify it fails**
 

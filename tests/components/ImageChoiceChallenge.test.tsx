@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { ImageChoiceChallenge } from '../../src/infrastructure/expo/ui/ImageChoiceChallenge';
-const challenge = { type: 'image-choice' as const, id: 'viaje', master: 'M', prompt: '¿Por dónde?', options: [
+const challenge = { type: 'image-choice' as const, id: 'viaje', mestre: 'M', prompt: '¿Por dónde?', options: [
   { id: 'nieve', text: 'NIEVE', image: { file: 'nieve.jpg', description: 'Sendero nevado' } },
   { id: 'playa', text: 'PLAYA', image: { file: 'playa.jpg', description: 'Camino al mar' } },
 ] };

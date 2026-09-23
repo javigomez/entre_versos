@@ -6,11 +6,11 @@ export const mixedJourneyLesson: Lesson = {
   id: 'mixed-journey-test-v1',
   script: [
     ...journeyLesson.script,
-    { type: 'master', kind: 'prose', label: 'Mestre', text: 'Ara practiquem.' },
+    { type: 'mestre', kind: 'prose', label: 'Mestre', text: 'Ara practiquem.' },
     { type: 'student', action: "EXPLICA-M'HO", text: 'Vull aprendre el truc.' },
     {
       type: 'text-choice', id: 'porta-musica',
-      master: 'MÚSICA necessita una porta.', prompt: 'MÚSICA → ?',
+      mestre: 'MÚSICA necessita una porta.', prompt: 'MÚSICA → ?',
       options: [
         { id: 'cantar', text: 'CANTAR' },
         { id: 'pintar', text: 'PINTAR' },
@@ -20,5 +20,9 @@ export const mixedJourneyLesson: Lesson = {
       correctOptionId: 'cantar', success: 'CANTAR.', retry: 'Busca el significat.',
     },
   ],
+  completionLabel: 'Lliçó completada',
+  completionTitle: 'Viatge acabat.',
+  completionSummary: 'Has superat {COUNT} reptes.',
+  restartAction: 'Tornar a entrenar',
   completion: 'Lliçó completada.',
 };

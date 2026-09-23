@@ -3,7 +3,7 @@
 id: primera-batalla-v1
 startAction: Maestro, estoy listo.
 script:
-- type: master
+- type: mestre
   text: |-
     Dicen que quieres rimar,
     y entrar en la gran batalla;
@@ -14,7 +14,7 @@ script:
   text: |-
     Si vas a hacerme entrenar,
     empieza: quiero probar.
-- type: master
+- type: mestre
   text: |-
     No empezarás peleando,
     primero aprende el oficio;
@@ -25,7 +25,7 @@ script:
   text: |-
     Me guardo el gallo bravío;
     hoy entreno el desafío.
-- type: master
+- type: mestre
   text: |-
     Tu oído será primero,
     luego afilarás tu mente;
@@ -36,7 +36,7 @@ script:
   text: |-
     Pon la palabra delante,
     que respondo en un instante.
-- type: master
+- type: mestre
   text: |-
     Cuando termine el camino,
     te espera el gran escenario;
@@ -49,7 +49,7 @@ script:
     Esto se pone brutal.
 - id: antonimos-001
   type: single-choice
-  master: |-
+  mestre: |-
     Si te digo que es escaso,
     dale vuelta a la balanza;
     elige bien antes del paso,
@@ -77,7 +77,7 @@ script:
     pero no es su adversario.
 - id: antonimos-002
   type: single-choice
-  master: |-
+  mestre: |-
     Si te digo: voy sereno,
     dale vuelta a la jugada;
     no me traigas algo bueno,
@@ -105,7 +105,7 @@ script:
     busca el ánimo alterado.
 - id: antonimos-003
   type: single-choice
-  master: |-
+  mestre: |-
     Si me doblo, soy flexible,
     pero quiero oposición;
     busca el golpe incompatible,
@@ -133,7 +133,7 @@ script:
     pero busco el otro lado.
 - id: antonimos-004
   type: single-choice
-  master: |-
+  mestre: |-
     Si recordar es mi oficio,
     hazme perder la memoria;
     búscame justo el vicio
@@ -159,7 +159,7 @@ script:
   retry: |-
     Eso cambia la atención,
     no deshace la evocación.
-- type: master
+- type: mestre
   text: |-
     Ya sabes darles la vuelta,
     sin perder la dirección;
@@ -172,7 +172,7 @@ script:
     yo descubro la reunión.
 - id: campo-semantico-001
   type: single-choice
-  master: |-
+  mestre: |-
     Tres comparten vecindario,
     una cambia de escenario.
   prompt: Tres pertenecen a la estructura de una canción. ¿Cuál se ha colado?
@@ -198,7 +198,7 @@ script:
     busca otra habitación.
 - id: campo-semantico-002
   type: single-choice
-  master: |-
+  mestre: |-
     Busca el grupo verdadero,
     y descubre al pasajero.
   prompt: Tres pueden ser partes de una zapatilla. ¿Cuál pertenece más bien a una sudadera?
@@ -224,7 +224,7 @@ script:
     busca pieza de otro vuelo.
 - id: campo-semantico-003
   type: single-choice
-  master: |-
+  mestre: |-
     Cambio el barrio, cambia el juego;
     no respondas desde luego.
   prompt: Tres pertenecen al baloncesto. ¿Cuál viene de otro deporte?
@@ -250,7 +250,7 @@ script:
     mira bien, que aún no basta.
 - id: campo-semantico-004
   type: single-choice
-  master: |-
+  mestre: |-
     Bajo tierra va el convoy,
     dime cuál no viaja hoy.
   prompt: Tres son palabras propias del metro. ¿Cuál encaja mejor con una autopista?
@@ -276,7 +276,7 @@ script:
     busca al que no viaja en tren.
 - id: sinonimos-001
   type: single-choice
-  master: |-
+  mestre: |-
     Un buen gallo no repite,
     si otra voz puede encajar;
     busca el término que imite,
@@ -304,7 +304,7 @@ script:
     pero hay que precisar.
 - id: sinonimos-002
   type: single-choice
-  master: |-
+  mestre: |-
     Si una palabra se ausenta,
     otra puede hacer su oficio;
     busca aquella que representa,
@@ -332,7 +332,7 @@ script:
     pero no lo puede reemplazar.
 - id: sinonimos-003
   type: single-choice
-  master: |-
+  mestre: |-
     Quiero precisión, aprendiz,
     no me vale parecido;
     elige con buena raíz,
@@ -358,7 +358,7 @@ script:
   retry: |-
     Puede sonar conveniente,
     pero busca equivalente.
-- type: master
+- type: mestre
   text: |-
     Ya no eliges al azar,
     cada término va medido;
@@ -371,7 +371,7 @@ script:
     pon palabras a subir.
 - id: intensidad-001
   type: single-choice
-  master: |-
+  mestre: |-
     Si la emoción va subiendo,
     no te quedes a mitad;
     cada término va ardiendo,
@@ -399,7 +399,7 @@ script:
     pero busca mucho más fuego.
 - id: intensidad-002
   type: single-choice
-  master: |-
+  mestre: |-
     De la nube al chaparrón,
     mide ahora la presión.
   prompt: ¿Cuál expresa la lluvia con MENOR intensidad?
@@ -425,7 +425,7 @@ script:
     busca lluvia más liviana.
 - id: familias-001
   type: single-choice
-  master: |-
+  mestre: |-
     Las palabras tienen casa,
     y parientes al crecer;
     una copia la carcasa,
@@ -453,7 +453,7 @@ script:
     mira quién se cuela en el clan.
 - id: familias-002
   type: single-choice
-  master: |-
+  mestre: |-
     Una sílaba engañosa
     puede hacerte tropezar;
     tres nacieron de la rosa,
@@ -481,7 +481,7 @@ script:
     busca el falso imitador.
 - id: asociacion-001
   type: single-choice
-  master: |-
+  mestre: |-
     Una palabra da ambiente,
     otra ayuda a dibujar;
     elige la más coherente,
@@ -509,7 +509,7 @@ script:
     pero piensa en calle y coche.
 - id: asociacion-002
   type: single-choice
-  master: |-
+  mestre: |-
     Una escena no es inventario,
     también necesita emoción;
     si ya tienes escenario,
@@ -537,7 +537,7 @@ script:
     pero falta la emoción.
 - id: asociacion-003
   type: single-choice
-  master: |-
+  mestre: |-
     Último golpe de hoy,
     sin que te explote la frente;
     si digo examen, aquí voy,
@@ -563,6 +563,10 @@ script:
   retry: |-
     Puede estar sobre la mesa,
     pero estudiar no lo confiesa.
+completionLabel: Lección completada
+completionTitle: Ya hay chispa.
+completionSummary: "{COUNT} retos superados. Sigue jugando con tu voz."
+restartAction: Volver a entrenar
 completion: |-
   Hoy ganaste vocabulario,
   y aprendiste a precisar;

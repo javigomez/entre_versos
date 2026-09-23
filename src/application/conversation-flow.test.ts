@@ -33,8 +33,8 @@ test('Continuar espera colocación y no adelanta al siguiente jugador', () => {
 test('rechaza activaciones, respuestas y callbacks duplicados o antiguos', () => {
   const initial = createFlow(conversation, initialProgress(conversation), false);
   expect(reduceFlow(conversation, initial, { type: 'START' })).toBe(initial);
-  const afterMaster = reduceFlow(conversation, initial, { type: 'MESSAGE_DONE', token: 0, messageId: initial.messages[0].id });
-  const started = reduceFlow(conversation, afterMaster, { type: 'START' });
+  const afterMestre = reduceFlow(conversation, initial, { type: 'MESSAGE_DONE', token: 0, messageId: initial.messages[0].id });
+  const started = reduceFlow(conversation, afterMestre, { type: 'START' });
   const pressing = reduceFlow(conversation, started, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
   const old = reduceFlow(conversation, pressing, { type: 'RESET' });
   expect(reduceFlow(conversation, old, { type: 'PRESS_DONE', token: pressing.token })).toBe(old);
@@ -107,10 +107,10 @@ test('J07: el recorrido final espera la respuesta explícita del jugador', () =>
   expect(state.messages[state.revealed]).toMatchObject({ text: 'Nadar' });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: answerToken, messageId: state.messages[state.revealed].id });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
-  expect(state.messages[state.revealed]).toMatchObject({ text: '¿Quieres ver el recorrido que has trazado?' });
+  expect(state.messages[state.revealed]).toMatchObject({ text: 'Vols veure el recorregut que has traçat?' });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
   expect(state.phase).toBe('waiting-student');
-  expect(state.messages[state.revealed]).toMatchObject({ action: 'VER MI RECORRIDO', text: 'Quiero ver el recorrido que he hecho.' });
+  expect(state.messages[state.revealed]).toMatchObject({ action: 'VEURE EL MEU RECORREGUT', text: 'Vull veure el recorregut que he fet.' });
 
   state = reduceFlow(lesson, state, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });
   const routeToken = state.token;
@@ -118,7 +118,7 @@ test('J07: el recorrido final espera la respuesta explícita del jugador', () =>
   state = reduceFlow(lesson, state, { type: 'MOVE_DONE', token: routeToken });
   state = reduceFlow(lesson, state, { type: 'PLACED', token: routeToken });
   state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: routeToken, messageId: state.messages[state.revealed].id });
-  expect(state.messages[state.revealed]).toMatchObject({ role: 'master', label: 'Tu recorrido', text: 'Viaje → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → Nadar' });
+  expect(state.messages[state.revealed]).toMatchObject({ role: 'mestre', label: 'El teu recorregut', text: 'Viatge → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → Nadar' });
 });
 
 test('R17: el viatge espera EXPLICA-M\'HO abans del repte textual', () => {
@@ -133,7 +133,7 @@ test('R17: el viatge espera EXPLICA-M\'HO abans del repte textual', () => {
     { type: 'MOVE_DONE' as const, token: answerToken },
     { type: 'PLACED' as const, token: answerToken },
   ]) state = reduceFlow(lesson, state, event);
-  while (!(state.phase === 'waiting-student' && state.messages[state.revealed]?.action === 'VER MI RECORRIDO')) {
+  while (!(state.phase === 'waiting-student' && state.messages[state.revealed]?.action === 'VEURE EL MEU RECORREGUT')) {
     state = reduceFlow(lesson, state, { type: 'MESSAGE_DONE', token: state.token, messageId: state.messages[state.revealed].id });
   }
   state = reduceFlow(lesson, state, { type: 'ACTIVATE_STUDENT', controlId: 'continue' });

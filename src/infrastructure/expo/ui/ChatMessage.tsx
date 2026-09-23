@@ -4,7 +4,7 @@ import type { Message } from '../../../application/messages';
 import { colors as c } from './theme';
 import { findLargestVerseFontSize } from './verseTypography';
 
-/** Ajuste global de la cadencia de escritura de maestro y jugador. */
+/** Ajust global de la cadència d’escriptura del mestre i del jugador. */
 export const TYPEWRITER_TICK_MS = 30;
 const TYPEWRITER_CHARACTERS_PER_TICK = 3;
 const VERSE_PREFERRED_SIZE = 25;
@@ -76,7 +76,7 @@ export function ChatMessage({ message, animate, reducedMotion, token, onDone }: 
         <Text testID="typing-content" allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, player && s.playerText, verse && s.verseText, verseStyle, s.typingText]}>{visibleText}</Text>
       </View> : <Text testID={verse ? 'verse-text' : undefined} allowFontScaling={verse ? true : undefined} onTextLayout={verse ? handleVerseTextLayout : undefined} style={[s.text, player && s.playerText, verse && s.verseText, verseStyle]}>{visibleText}</Text>}
     </View>
-    {animate && count < message.text.length && <Pressable accessibilityRole="button" accessibilityLabel="Mostrar mensaje completo" onPress={() => setCount(message.text.length)} style={s.skip}><Text style={s.skipText}>Mostrar completo</Text></Pressable>}
+    {animate && count < message.text.length && <Pressable accessibilityRole="button" accessibilityLabel="Mostrar missatge complet" onPress={() => setCount(message.text.length)} style={s.skip}><Text style={s.skipText}>Mostrar complet</Text></Pressable>}
   </View>;
 }
 const s = StyleSheet.create({

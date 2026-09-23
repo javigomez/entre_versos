@@ -12,11 +12,11 @@ beforeEach(() => { jest.useFakeTimers(); jest.spyOn(AccessibilityInfo, 'isReduce
 afterEach(async () => { await cleanup(); jest.restoreAllMocks(); jest.clearAllTimers(); jest.useRealTimers(); });
 
 async function completeActiveMessage() {
-  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Mostrar mensaje completo' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Mostrar missatge complet' })); });
 }
 
 async function completeActiveMessageIfNeeded() {
-  const button = screen.queryByRole('button', { name: 'Mostrar mensaje completo' });
+  const button = screen.queryByRole('button', { name: 'Mostrar missatge complet' });
   if (button) await act(async () => { await fireEvent.press(button); });
 }
 
@@ -89,11 +89,30 @@ test('R01: tras reiniciar, el primer mensaje termina y vuelve a mostrar LEVANTAR
   await completeActiveMessage();
   expect(screen.getByRole('button', { name: 'LEVANTARME' })).toBeOnTheScreen();
 
-  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenamiento' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenament' })); });
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar' })); });
   await completeActiveMessageIfNeeded();
 
   expect(screen.getByRole('button', { name: 'LEVANTARME' })).toBeOnTheScreen();
+});
+
+test('el resum final i l’acció de reinici provenen del contingut', async () => {
+  const progress = {
+    ...initialProgress(conversation),
+    started: true,
+    completed: ['q1', 'q2'],
+    history: [
+      { challengeId: 'q1', optionId: 'a' },
+      { challengeId: 'q2', optionId: 'e' },
+    ],
+  };
+
+  await render(<TrainingSession lesson={conversation} initialProgress={progress} restored
+    onProgressChange={() => {}} viewportController={createControlledViewport().controller} />);
+
+  expect(screen.getByText('Entrenamiento terminado.')).toBeOnTheScreen();
+  expect(screen.getByText('Has superado 2 retos.')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Volver a entrenar' })).toBeOnTheScreen();
 });
 
 test('R01: la respuesta del jugador empieza a escribirse tras ocupar el ancla', async () => {
@@ -161,7 +180,7 @@ test('R17: el viatge mostra EXPLICA-M\'HO abans de les opcions textuals', async 
   await finishTransition(viewport);
   await completeActiveMessageIfNeeded();
   await completeActiveMessageIfNeeded();
-  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'VER MI RECORRIDO' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'VEURE EL MEU RECORREGUT' })); });
   await finishTransition(viewport);
   await completeActiveMessageIfNeeded();
   await completeActiveMessageIfNeeded();
@@ -202,7 +221,7 @@ test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera l
   const viewport = createControlledViewport();
   const lesson = { ...journeyLesson, startWithStudent: undefined, script: journeyLesson.script.map(step =>
     step.type === 'image-journey' ? { ...step, presentation: {
-      masterLabel: 'Mestre', routeQuestion: 'Vols veure el camí que has fet?',
+      mestreLabel: 'Mestre', routeQuestion: 'Vols veure el camí que has fet?',
       routeAction: 'VEURE EL MEU RECORREGUT', routeAnswer: 'Vull veure el camí que he fet.',
       routeLabel: 'El teu recorregut', routeStart: 'Viatge',
       choiceHint: 'Tria una imatge per continuar el viatge',
@@ -212,7 +231,6 @@ test('UX-001 / R02 / R09 / J07: el cierre respeta el idioma editorial y espera l
   await render(<TrainingSession lesson={lesson} initialProgress={progress} restored
     onProgressChange={() => {}} viewportController={viewport.controller} resolveImage={() => 1 as never} />);
   expect(screen.getByText('Tria una imatge per continuar el viatge')).toBeOnTheScreen();
-  expect(screen.queryByText('Elige una imagen para continuar el viaje')).not.toBeOnTheScreen();
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'NADAR' })); });
   await finishTransition(viewport);
   await completeActiveMessageIfNeeded();
@@ -286,7 +304,7 @@ test('reset durante moving invalida el callback tardío y guarda solo cambios de
   expect(onProgressChange).toHaveBeenCalledTimes(1);
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Continuar' })); });
   await act(async () => { jest.advanceTimersByTime(80); });
-  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenamiento' })); });
+  await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar entrenament' })); });
   await act(async () => { await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar' })); });
   await act(async () => { viewport.finishMove(); });
   expect(screen.queryByText('Quiero practicar.')).not.toBeOnTheScreen();

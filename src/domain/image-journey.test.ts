@@ -37,7 +37,7 @@ test('rechaza destino roto, opciones duplicadas y terminal adelantado', () => {
 
 test('J01: lección con viaje único, pasos posteriores, etiquetas y respuesta inicial', () => {
   expect(lessonSchema.parse(journeyLesson)).toEqual(journeyLesson);
-  expect(lessonSchema.safeParse({ ...journeyLesson, script: [...journeyLesson.script, { type: 'master', text: 'Más' }] }).success).toBe(true);
+  expect(lessonSchema.safeParse({ ...journeyLesson, script: [...journeyLesson.script, { type: 'mestre', text: 'Más' }] }).success).toBe(true);
   const journey = journeyLesson.script.find(step => step.type === 'image-journey')!;
   expect(lessonSchema.safeParse({
     ...journeyLesson,

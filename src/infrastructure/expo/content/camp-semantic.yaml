@@ -4,7 +4,7 @@ id: camp-semantic-viatge-v1
 startAction: AIXECAR-ME
 startWithStudent: true
 script:
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
       Ja se n'ha anat la gent,
@@ -14,7 +14,7 @@ script:
   - type: student
     action: AIXECAR-ME
     text: No m'han donat cap cop. M'he quedat sense paraules davant de tothom.
-  - type: master
+  - type: mestre
     label: Veu
     text: |-
       Ja no queda aquí la gent,
@@ -24,7 +24,7 @@ script:
   - type: student
     action: LLEGIR LA NOTA
     text: "Recullo el paper i llegeixo: «Si vols saber per què has perdut, troba'm»."
-  - type: master
+  - type: mestre
     label: Nota
     text: No busquis cap resposta correcta. Tria allò que et suggereixi cada imatge i segueix el viatge.
   - type: student
@@ -648,11 +648,15 @@ script:
             ending: volar
     presentation:
       choiceHint: Tria una imatge per continuar el viatge
-      masterLabel: Mestre
+      mestreLabel: Mestre
       routeQuestion: Vols veure el camí que has fet?
       routeAction: VEURE EL MEU RECORREGUT
       routeAnswer: Vull veure el camí que he fet.
       routeLabel: El teu recorregut
       routeStart: Viatge
+completionLabel: Lliçó completada
+completionTitle: Ja hi ha espurna.
+completionSummary: "Has superat {COUNT} reptes. Continua jugant amb la teva veu."
+restartAction: Tornar a entrenar
 completion: Ja has trobat el camí. Soc qui t'ha deixat la nota. Si vols tornar al combat, et puc ensenyar a
   trobar més paraules.

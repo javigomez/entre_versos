@@ -90,7 +90,7 @@ Afegir `ImageChoiceChallenge`, discriminat per `type: image-choice`:
 | Camp | Contracte |
 | --- | --- |
 | `id` | Obligatori; slug amb expressió `^[a-z0-9]+(?:-[a-z0-9]+)*$`; estable encara que canviï la pregunta. |
-| `master` | Text no buit, com als reptes actuals; introdueix aquest repte dins de la conversa. |
+| `mestre` | Text no buit, com als reptes actuals; introdueix aquest repte dins de la conversa. |
 | `prompt` | Text no buit. |
 | `options` | Exactament dos elements, ordenats, amb IDs diferents. |
 | `options[].id` | Slug amb la mateixa regla; únic dins del repte. |
@@ -123,7 +123,7 @@ Crear `src/domain/challenge.ts` per avaluar una selecció amb contracte:
 
 `messagesFor` continua produint `Message[]` i IDs estables:
 
-1. Tots dos tipus poden presentar `${challenge.id}-master` amb el text `master`.
+1. Tots dos tipus poden presentar `${challenge.id}-mestre` amb el text `mestre`.
 2. Cada selecció vàlida produeix `answer-${index}` amb `option.text`.
 3. Només `single-choice` produeix `feedback-${index}` amb encert/error.
 4. `image-choice` continua amb el següent pas del guió quan acaba la bombolla; no fabrica feedback buit, «Correcto», «Has elegido» ni un Continuar extra.
@@ -239,11 +239,11 @@ Contingut futur de `image-choice-demo.yaml`; aquesta definició dins del pla és
 id: image-choice-demo-v1
 startAction: Empezar el viaje
 script:
-  - type: master
+  - type: mestre
     text: Una palabra puede abrir más de un camino.
   - type: image-choice
     id: viaje-inicial
-    master: Mira los dos paisajes y déjate llevar.
+    mestre: Mira los dos paisajes y déjate llevar.
     prompt: ¿Dónde empieza tu viaje?
     options:
       - id: nieve
@@ -256,7 +256,7 @@ script:
         image:
           file: playa.jpg
           description: Un sendero entre dunas desciende hacia una playa de agua turquesa.
-  - type: master
+  - type: mestre
     text: Has elegido un punto de partida. Una palabra puede llevarte a otra.
 completion: Ya has dado el primer paso.
 ```

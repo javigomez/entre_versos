@@ -69,11 +69,11 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
 
   return <View style={s.safe}>
     <View style={s.header}>
-      <Pressable accessibilityRole="button" accessibilityLabel="Volver" style={s.round}><Text style={s.backText}>‹</Text></Pressable>
-      <View style={s.chatTitle}><Text style={s.brandName}>▱  app de rimas</Text><Text style={s.brandSub}>Chat</Text></View>
-      <Pressable accessibilityRole="button" accessibilityLabel="Reiniciar entrenamiento" onPress={() => setConfirmReset(value => !value)} style={s.round}><Text style={s.resetIcon}>•••</Text></Pressable>
+      <Pressable accessibilityRole="button" accessibilityLabel="Tornar" style={s.round}><Text style={s.backText}>‹</Text></Pressable>
+      <View style={s.chatTitle}><Text style={s.brandName}>▱  app de rimes</Text><Text style={s.brandSub}>Xat</Text></View>
+      <Pressable accessibilityRole="button" accessibilityLabel="Reiniciar entrenament" onPress={() => setConfirmReset(value => !value)} style={s.round}><Text style={s.resetIcon}>•••</Text></Pressable>
     </View>
-    {confirmReset && <View style={s.confirm}><Text style={s.confirmText}>¿Volver al principio? Se borrará esta sesión.</Text><View style={s.confirmActions}><Pressable accessibilityRole="button" onPress={() => setConfirmReset(false)} style={s.smallButton}><Text style={s.confirmText}>Cancelar</Text></Pressable><Pressable accessibilityRole="button" onPress={reset} style={s.smallButton}><Text style={s.accent}>Reiniciar</Text></Pressable></View></View>}
+    {confirmReset && <View style={s.confirm}><Text style={s.confirmText}>Vols tornar al principi? S’esborrarà aquesta sessió.</Text><View style={s.confirmActions}><Pressable accessibilityRole="button" onPress={() => setConfirmReset(false)} style={s.smallButton}><Text style={s.confirmText}>Cancel·lar</Text></Pressable><Pressable accessibilityRole="button" onPress={reset} style={s.smallButton}><Text style={s.accent}>Reiniciar</Text></Pressable></View></View>}
     <View style={s.viewport}>
       <ScrollView ref={viewport.scrollRef} style={s.scroll} contentContainerStyle={s.content} showsVerticalScrollIndicator={false} scrollEventThrottle={16} {...viewport.scrollProps}>
         <View {...viewport.bindRealContent}>
@@ -90,13 +90,13 @@ export function TrainingSession({ lesson, initialProgress, restored, onProgressC
             (challenge.type === 'image-journey'
               ? <ImageJourney challengeId={challenge.id} choiceHint={challenge.presentation?.choiceHint} options={journeyOptions(challenge, journeyOptionIds)} disabled={transition} selectedOptionId={pendingControl} resolveImage={resolveImage} onAnswer={answer} />
               : <ChallengeView challenge={challenge} disabled={transition} selectedOptionId={pendingControl} onAnswer={answer} resolveImage={resolveImage} />)}
-          {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>Ya hay chispa.</Text><Text style={s.finishText}>{state.progress.completed.length} retos superados. Sigue jugando con tu voz.</Text><Action label="Volver a entrenar" onPress={reset} secondary /></View>}
-          {storageNotice && <Text style={s.notice}>Guardado no disponible · puedes seguir jugando</Text>}
+          {state.phase === 'finished' && <View style={s.finish}><Text style={s.finishIcon}>✳</Text><Text style={s.finishTitle}>{lesson.completionTitle}</Text><Text style={s.finishText}>{lesson.completionSummary.replace('{COUNT}', String(state.progress.completed.length))}</Text><Action label={lesson.restartAction} onPress={reset} secondary /></View>}
+          {storageNotice && <Text style={s.notice}>No es pot desar · pots continuar jugant</Text>}
         </View>
         <View onLayout={viewport.onSpacerLayout} style={{ height: viewport.spacerHeight }} />
       </ScrollView>
       {viewport.transitionOverlay}
-      {viewport.hasContentBelow && <Pressable accessibilityRole="button" accessibilityLabel="Volver al último mensaje" style={s.jump} onPress={viewport.jumpToLatest}><Text style={s.jumpText}>↓</Text></Pressable>}
+      {viewport.hasContentBelow && <Pressable accessibilityRole="button" accessibilityLabel="Tornar a l’últim missatge" style={s.jump} onPress={viewport.jumpToLatest}><Text style={s.jumpText}>↓</Text></Pressable>}
     </View>
   </View>;
 }

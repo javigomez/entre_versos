@@ -19,13 +19,17 @@ export const journey: ImageJourneyChallenge = {
 export const journeyLesson: Lesson = {
   id: 'journey-test-v1', startAction: 'LEVANTARME', startWithStudent: true,
   script: [
-    { type: 'master', text: 'Has perdido la batalla.', label: 'Voz' },
+    { type: 'mestre', text: 'Has perdido la batalla.', label: 'Voz' },
     { type: 'student', action: 'LEVANTARME', text: 'Me quedé sin palabras.' },
-    { type: 'master', text: 'Encuentras una nota.', label: 'Voz' },
+    { type: 'mestre', text: 'Encuentras una nota.', label: 'Voz' },
     { type: 'student', action: 'VER NOTA', text: 'Leo la nota.' },
-    { type: 'master', text: 'Elige sin buscar aciertos.', label: 'Nota' },
+    { type: 'mestre', text: 'Elige sin buscar aciertos.', label: 'Nota' },
     { type: 'student', action: 'EMPEZAR EL VIAJE', text: 'Cierro los ojos.' },
     journey,
   ],
+  completionLabel: 'Lección completada',
+  completionTitle: 'Viaje terminado.',
+  completionSummary: 'Has superado {COUNT} retos.',
+  restartAction: 'Volver a entrenar',
   completion: 'Puedo enseñarte a seguir encontrando palabras.',
 };

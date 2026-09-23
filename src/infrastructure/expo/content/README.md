@@ -6,7 +6,7 @@ La versió catalana del viatge és `camp-semantic.yaml`, accessible amb
 `?camp-semantic` o `?content=camp-semantic`. Reutilitza les imatges de
 `campo_semantico`, amb progrés independent. La pregunta, l'acció i les etiquetes
 del recorregut es defineixen a `presentation`; si s'omet, es conserva el
-tancament castellà. La mètrica es pot comprovar amb
+tancament català per defecte. La mètrica es pot comprovar amb
 `node scripts/validate-camp-semantic.mjs /ruta/heptasilabs`.
 
 Les alternatives `camp-semantic-v2.yaml` i `camp-semantic-v3.yaml` s'obren amb

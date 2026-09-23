@@ -8,7 +8,7 @@ import type { ControlTarget } from '../../src/infrastructure/expo/ui/viewport/us
 afterEach(cleanup);
 
 const challenge: TextChoiceChallenge = {
-  type: 'text-choice', id: 'porta-musica', master: 'MÚSICA necessita una porta.',
+  type: 'text-choice', id: 'porta-musica', mestre: 'MÚSICA necessita una porta.',
   prompt: 'MÚSICA → ?',
   options: [
     { id: 'cantar', text: 'CANTAR' },

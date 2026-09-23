@@ -53,11 +53,11 @@ const ending = (value: string): value is 'nadar' | 'remar' | 'volar' | 'trepar' 
 export const campoSemanticoJourney: Lesson = {
   id: 'campo-semantico-viaje-v1', startAction: 'LEVANTARME', startWithStudent: true,
   script: [
-    { type: 'master', label: 'Voz', text: 'Ya se ha marchado la gente,\nqueda el eco del rival;\nte levantas lentamente:\ntu silencio fue el final.' },
+    { type: 'mestre', label: 'Voz', text: 'Ya se ha marchado la gente,\nqueda el eco del rival;\nte levantas lentamente:\ntu silencio fue el final.' },
     { type: 'student', action: 'LEVANTARME', text: 'No me han dado ningún golpe. Me quedé sin palabras delante de todos.' },
-    { type: 'master', label: 'Voz', text: 'Ya no queda aquí tu gente,\nni el rival que te venció;\npero ves, sorprendentemente,\nun papel que alguien dejó.' },
+    { type: 'mestre', label: 'Voz', text: 'Ya no queda aquí tu gente,\nni el rival que te venció;\npero ves, sorprendentemente,\nun papel que alguien dejó.' },
     { type: 'student', action: 'VER NOTA', text: 'Recojo el papel y leo: «Si quieres saber por qué has perdido, encuéntrame».' },
-    { type: 'master', label: 'Nota', text: 'No busques una respuesta correcta. Elige lo que te sugiera cada imagen y sigue el viaje.' },
+    { type: 'mestre', label: 'Nota', text: 'No busques una respuesta correcta. Elige lo que te sugiera cada imagen y sigue el viaje.' },
     { type: 'student', action: 'EMPEZAR EL VIAJE', text: 'Cierro los ojos. Esta vez voy a dejar que una palabra me lleve a otra.' },
     {
       type: 'image-journey', id: 'viaje-palabras', startNodeId: 'l1-viaje',
@@ -75,5 +75,9 @@ export const campoSemanticoJourney: Lesson = {
       })),
     },
   ],
+  completionLabel: 'Lección completada',
+  completionTitle: 'Ya hay chispa.',
+  completionSummary: '{COUNT} retos superados. Sigue jugando con tu voz.',
+  restartAction: 'Volver a entrenar',
   completion: 'Ya has encontrado el camino. Soy quien dejó la nota. Si quieres volver al ring, puedo enseñarte a seguir encontrando palabras.',
 };

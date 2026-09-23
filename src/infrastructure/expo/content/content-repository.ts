@@ -20,7 +20,7 @@ const rawByKey = {
 
 /** Carga contenido editorial desde su fuente registrada, YAML o TypeScript. */
 export function createContentRepository(key: ContentKey = 'training'): ContentRepository {
-  if (!(key in rawByKey)) throw new Error(`Contenido no registrado: ${key}`);
+  if (!(key in rawByKey)) throw new Error(`Contingut no registrat: ${key}`);
   return createValidatedContentRepository(rawByKey[key], createChallengeImageResolver(key));
 }
 

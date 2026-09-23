@@ -12,9 +12,9 @@ test.each(['nadar', 'remar', 'volar', 'trepar'] as const)('J07: pide ver el reco
   const closing = messages.slice(-5);
   expect(closing.map(message => message.id)).toEqual(['viaje-palabras-revelation', 'viaje-palabras-route-question', 'viaje-palabras-route-action', 'viaje-palabras-route', 'viaje-palabras-teaching']);
   expect(closing[0].text).toContain(ending);
-  expect(closing[1]).toMatchObject({ role: 'master', text: '¿Quieres ver el recorrido que has trazado?' });
-  expect(closing[2]).toMatchObject({ role: 'player', action: 'VER MI RECORRIDO', text: 'Quiero ver el recorrido que he hecho.' });
-  expect(closing[3]).toMatchObject({ role: 'master', label: 'Tu recorrido', text: `Viaje → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → ${ending[0].toUpperCase()}${ending.slice(1)}` });
+  expect(closing[1]).toMatchObject({ role: 'mestre', text: 'Vols veure el recorregut que has traçat?' });
+  expect(closing[2]).toMatchObject({ role: 'player', action: 'VEURE EL MEU RECORREGUT', text: 'Vull veure el recorregut que he fet.' });
+  expect(closing[3]).toMatchObject({ role: 'mestre', label: 'El teu recorregut', text: `Viatge → Paso1a → Paso2a → Paso3a → Paso4a → Paso5a → ${ending[0].toUpperCase()}${ending.slice(1)}` });
   expect(closing[4].text).toContain('no tienen que rimar');
 });
 

@@ -76,7 +76,7 @@ Afegir a `src/domain/schemas.test.ts` una fixture literal i tres casos:
 ```ts
 const textChoice = {
   type: 'text-choice', id: 'estrategia-musica',
-  master: 'Et llancen MÚSICA.', prompt: 'Què fas?',
+  mestre: 'Et llancen MÚSICA.', prompt: 'Què fas?',
   options: [
     { id: 'forcar', text: 'La poso al final i en forço la rima' },
     { id: 'pont', text: 'La poso dins i tanco amb CANTAR' },
@@ -141,7 +141,7 @@ const textOptionSchema = z.object({
 export const textChoiceChallengeSchema = z.object({
   type: z.literal('text-choice'),
   id: slug,
-  master: nonempty,
+  mestre: nonempty,
   prompt: nonempty,
   options: z.array(textOptionSchema).refine(
     options => options.length === 2 || options.length === 4,
@@ -179,7 +179,7 @@ if (journeys.length > 1)
   ctx.addIssue({ code: 'custom', message: 'La lección admite como máximo un viaje', path: ['script'] });
 ```
 
-Afegir `kind: z.enum(['verse', 'prose']).optional()` als passos `master` sense
+Afegir `kind: z.enum(['verse', 'prose']).optional()` als passos `mestre` sense
 fer `.strict()`, de manera que el contingut anterior continuï sent vàlid.
 
 - [ ] **Step 5: Generalitzar l'avaluació i provar-la**
@@ -234,11 +234,11 @@ Crear `tests/fixtures/mixedJourney.ts` exportant `mixedJourneyLesson: Lesson` a
 partir de `journeyLesson`, amb el viatge com a primer repte, després:
 
 ```ts
-{ type: 'master', kind: 'prose', label: 'Mestre', text: 'Ara practiquem.' },
+{ type: 'mestre', kind: 'prose', label: 'Mestre', text: 'Ara practiquem.' },
 { type: 'student', action: 'EXPLICA-M\'HO', text: 'Vull aprendre el truc.' },
 {
   type: 'text-choice', id: 'porta-musica',
-  master: 'MÚSICA necessita una porta.', prompt: 'MÚSICA → ?',
+  mestre: 'MÚSICA necessita una porta.', prompt: 'MÚSICA → ?',
   options: [
     { id: 'cantar', text: 'CANTAR' },
     { id: 'pintar', text: 'PINTAR' },
@@ -390,9 +390,9 @@ expect(messages.slice(-8).map(message => message.id)).toEqual([
   'viaje-palabras-route-action',
   'viaje-palabras-route',
   'viaje-palabras-teaching',
-  'master-7',
+  'mestre-7',
   'student-8',
-  'porta-musica-master',
+  'porta-musica-mestre',
 ]);
 expect(messages.at(-2)).toMatchObject({
   role: 'player', action: 'EXPLICA-M\'HO', text: 'Vull aprendre el truc.',
@@ -436,14 +436,14 @@ if (isScoredChallenge(challenge)) {
   const correct = option.id === challenge.correctOptionId;
   messages.push({
     id: `feedback-${index}`,
-    role: 'master',
+    role: 'mestre',
     text: correct ? challenge.success : challenge.retry,
     kind: correct ? 'success' : undefined,
   });
 }
 ```
 
-Projectar passos `master` amb:
+Projectar passos `mestre` amb:
 
 ```ts
 kind: item.kind === 'prose' ? undefined : 'verse'
@@ -732,7 +732,7 @@ pel significat, cap a una paraula que et deixi una rima més ampla.
 ```
 
 Afegir exactament aquests set reptes; cada fila indica
-`id | master | prompt | opcions | solució`:
+`id | mestre | prompt | opcions | solució`:
 
 ```text
 porta-musica | Troba una porta pel significat. | MÚSICA → ? | cantar:CANTAR, pintar:PINTAR, nedar:NEDAR, tancar:TANCAR | cantar
@@ -792,7 +792,7 @@ Canviar `validate-camp-semantic.mjs` perquè validi:
 ```js
 const verses = new Set([
   ...lesson.script
-    .filter(step => step.type === 'master' &&
+    .filter(step => step.type === 'mestre' &&
       (step.kind === 'verse' || (step.kind === undefined && step.text.includes('\n'))))
     .flatMap(step => step.text.split('\n')),
   ...[...endings].flatMap(ending => journey.revelation.replace('{VERBO}', ending).split('\n')),

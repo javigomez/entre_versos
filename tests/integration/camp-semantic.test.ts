@@ -59,7 +59,7 @@ test('camp-semantic-v4 encadena 64 recorreguts amb set reptes textuals concisos'
   expect(challenges.slice(1).flatMap(challenge => 'options' in challenge
     ? challenge.options.map(option => option.text.length) : []).every(length => length <= 44)).toBe(true);
   const prose = lesson.script.flatMap(step =>
-    step.type === 'master' && step.kind === 'prose' ? [step.text] : []).join(' ');
+    step.type === 'mestre' && step.kind === 'prose' ? [step.text] : []).join(' ');
   expect(prose).toContain('«infeliç»');
   expect(prose.toLocaleLowerCase('ca')).not.toContain('trista');
   expect(lesson.script).toEqual(expect.arrayContaining([
